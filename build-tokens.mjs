@@ -12,6 +12,18 @@ import config from './style-dictionary.config.mjs';
 const resolved = (t) => t.$value ?? t.value; // SD v4 puts the resolved value on $value (DTCG)
 const typeOf = (t) => t.$type ?? t.type;
 
+// ---- Unwrap the single token set ----------------------------------------
+// tokens.json wraps everything in ONE set ("global") so Tokens Studio keeps it
+// as a single set and {color.*} aliases resolve in-plugin (TS turns top-level
+// keys into separate sets, which would strip the `color.` prefix and break the
+// aliases). Style Dictionary doesn't want that wrapper in the token path, so we
+// hoist `global` back to the root before processing — output names (`--nk-color-…`)
+// and resolved hexes are identical to the unwrapped tree.
+StyleDictionary.registerPreprocessor({
+  name: 'nk/unwrap-global',
+  preprocessor: (dictionary) => dictionary.global ?? dictionary,
+});
+
 // ---- Dimensions: bare number in source -> px on output ------------------
 // The Figma name stores a bare number ("the platform renders the unit"); this
 // transform appends px for CSS/TS. Colours, numbers (opacity), and fontWeight
