@@ -5,9 +5,15 @@
   "type": "module",
   "description": "End-to-end demo of the Novakid design-token pipeline: Figma Variables -> Tokens Studio -> Git -> Style Dictionary -> --nk-* CSS / Dart / TS. Phase-0 foundations.",
   "scripts": {
-    "build:tokens": "node build-tokens.mjs"
+    "build:tokens": "node build-tokens.mjs",
+    "storybook": "npm run build:tokens && storybook dev -p 6006",
+    "build-storybook": "npm run build:tokens && storybook build"
   },
   "devDependencies": {
-    "style-dictionary": "^4.3.3"
+    "@storybook/addon-essentials": "^8.6.0",
+    "@storybook/html-vite": "^8.6.0",
+    "storybook": "^8.6.0",
+    "style-dictionary": "^4.3.3",
+    "vite": "^5.4.0"
   }
 }
