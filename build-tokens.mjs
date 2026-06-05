@@ -12,16 +12,31 @@ import config from './style-dictionary.config.mjs';
 const resolved = (t) => t.$value ?? t.value; // SD v4 puts the resolved value on $value (DTCG)
 const typeOf = (t) => t.$type ?? t.type;
 
-// ---- Flatten the two token sets -----------------------------------------
-// tokens.json is split into TWO Tokens Studio sets — `primitives` and `semantic` —
-// so the plugin creates two Figma Variable collections (Primitives + Semantic/Product)
-// per the spec. References stay path-based (`{color.violet.600}`) and resolve across
-// sets in-plugin because the set NAME isn't part of the token path (unlike when the
-// top-level group itself is the set name, which would strip the `color.` prefix).
-// Style Dictionary doesn't want the set layer in the token path, so we deep-merge
-// both sets back to one root tree — output names (`--nk-color-…`) and resolved hexes
-// are unchanged. Only `color` overlaps between the sets (hue groups vs surface groups,
-// no key collision), so the merge is clean.
+// ---- Flatten the domain token sets --------------------------------------
+// tokens.json mirrors the Figma SDS topology: one Tokens Studio set per Figma
+// Variable collection — `color-primitives`, `color`, `size`,
+// `typography-primitives`, `typography`, `effect`. In-plugin, references are
+// written WITHOUT the domain prefix (`{grey.800}`, `{scale.08}`) because Tokens
+// Studio strips the SET NAME from the token path (just like Figma names a var
+// `Grey/800` inside the `Color Primitives` collection, not `Color/Grey/800`).
+//
+// Style Dictionary resolves references by literal path and names CSS vars from
+// that path. So before SD runs we (1) re-nest each set under its DOMAIN group,
+// (2) DECOMPOSE the composite `typography`/`boxShadow` tokens into the flat
+// sub-tokens the code side wants (the composites exist in source only so Tokens
+// Studio can build Figma Text + Effect Styles), and (3) re-inject the domain
+// prefix into every reference (`{grey.800}` -> `{color.grey.800}`). Output
+// names (`--nk-color-grey-800`, `--nk-typography-title-xl-font-size`) and
+// resolved values are identical to a hand-decomposed single-tree source.
+const SET_DOMAIN = {
+  'color-primitives': 'color',
+  color: 'color',
+  size: 'size',
+  'typography-primitives': 'typography',
+  typography: 'typography',
+  effect: 'effect',
+};
+
 const isGroup = (v) => v && typeof v === 'object' && v.$value === undefined;
 const deepMerge = (a, b) => {
   const out = { ...a };
@@ -30,30 +45,97 @@ const deepMerge = (a, b) => {
   }
   return out;
 };
+
+// Decompose composite `typography` / `boxShadow` tokens (Figma Text/Effect Style
+// shapes) into flat sub-tokens SD can resolve and emit as individual CSS vars.
+const px = (v) => ({ $type: 'dimension', $value: v }); // bare number/ref -> px on output
+const bare = (v) => parseFloat(v); // strip any unit from a source string like "0.5px"
+const decomposeComposites = (node) => {
+  if (!node || typeof node !== 'object') return;
+  for (const key of Object.keys(node)) {
+    if (key.startsWith('$')) continue;
+    const child = node[key];
+    if (child && typeof child === 'object' && '$value' in child) {
+      const v = child.$value;
+      if (typeOf(child) === 'typography' && v && typeof v === 'object') {
+        node[key] = {
+          'font-family': { $type: 'fontFamily', $value: v.fontFamily },
+          'font-weight': { $type: 'fontWeight', $value: v.fontWeight },
+          'font-size': { $type: 'dimension', $value: v.fontSize },
+          'line-height': { $type: 'number', $value: v.lineHeight }, // e.g. "128%" — emitted verbatim
+          'letter-spacing': px(bare(v.letterSpacing ?? '0')),
+        };
+      } else if (typeOf(child) === 'boxShadow' && v && typeof v === 'object') {
+        node[key] = {
+          'offset-x': px(typeof v.x === 'string' && v.x.includes('{') ? v.x : bare(v.x)),
+          'offset-y': px(typeof v.y === 'string' && v.y.includes('{') ? v.y : bare(v.y)),
+          blur: px(typeof v.blur === 'string' && v.blur.includes('{') ? v.blur : bare(v.blur)),
+          spread: px(typeof v.spread === 'string' && v.spread.includes('{') ? v.spread : bare(v.spread)),
+          color: { $type: 'color', $value: v.color },
+        };
+      }
+    } else {
+      decomposeComposites(child);
+    }
+  }
+};
+
+// Re-inject the domain prefix into every `{ref}`.
+const rewriteRefs = (node, rootDomain) => {
+  if (!node || typeof node !== 'object') return;
+  const fix = (str) =>
+    String(str).replace(/\{([^}]+)\}/g, (m, ref) => {
+      const dom = rootDomain[ref.split('.')[0]];
+      return dom ? `{${dom}.${ref}}` : m;
+    });
+  if (node.$value !== undefined && typeof node.$value !== 'object') node.$value = fix(node.$value);
+  for (const k of Object.keys(node)) if (!k.startsWith('$')) rewriteRefs(node[k], rootDomain);
+};
+
 StyleDictionary.registerPreprocessor({
   name: 'nk/flatten-sets',
-  preprocessor: (d) =>
-    d.primitives || d.semantic
-      ? deepMerge(d.primitives ?? {}, d.semantic ?? {})
-      : d.global ?? d,
+  preprocessor: (d) => {
+    const domainSets = Object.keys(d).filter((k) => !k.startsWith('$') && SET_DOMAIN[k]);
+    if (domainSets.length) {
+      const rootDomain = {};
+      for (const s of domainSets)
+        for (const rk of Object.keys(d[s])) if (!rk.startsWith('$')) rootDomain[rk] = SET_DOMAIN[s];
+      const merged = {};
+      for (const s of domainSets) {
+        const dom = SET_DOMAIN[s];
+        merged[dom] = deepMerge(merged[dom] ?? {}, d[s]);
+      }
+      decomposeComposites(merged);
+      rewriteRefs(merged, rootDomain);
+      return merged;
+    }
+    // legacy fallbacks (primitives/semantic split, or single 'global' set)
+    return d.primitives || d.semantic ? deepMerge(d.primitives ?? {}, d.semantic ?? {}) : d.global ?? d;
+  },
 });
 
 // ---- Dimensions: bare number in source -> px on output ------------------
-// The Figma name stores a bare number ("the platform renders the unit"); this
-// transform appends px for CSS/TS. Colours, numbers (opacity), and fontWeight
-// are untouched. transitive so it runs after any reference resolves.
 StyleDictionary.registerTransform({
   name: 'nk/size-px',
   type: 'value',
   transitive: true,
   filter: (token) => typeOf(token) === 'dimension',
-  transform: (token) => `${resolved(token)}px`,
+  // guard against double-px: a dimension aliasing another dimension (font-size->scale,
+  // offset-y->depth) resolves to an already-suffixed value because the transform is transitive.
+  transform: (token) => {
+    const v = String(resolved(token));
+    return v.endsWith('px') ? v : `${v}px`;
+  },
 });
 
 // ---- Mobile: Flutter/Dart -----------------------------------------------
-// Emits a NkColors class of `static const Color` fields. Only color/* tokens
-// (primitives + semantic aliases) are emitted; aliases are already resolved to
-// the primitive hex by Style Dictionary.
+// Emits a NkColors class of `static const Color` fields. Handles opaque
+// `#RRGGBB` and the alpha shadow ramp `#RRGGBBAA` (Flutter wants `0xAARRGGBB`).
+const toDartHex = (value) => {
+  const hex = String(value).replace('#', '').toUpperCase();
+  if (hex.length === 8) return hex.slice(6, 8) + hex.slice(0, 6); // RRGGBBAA -> AARRGGBB
+  return 'FF' + hex; // RRGGBB -> opaque
+};
 StyleDictionary.registerFormat({
   name: 'nk/dart-colors',
   format: ({ dictionary }) => {
@@ -61,10 +143,7 @@ StyleDictionary.registerFormat({
       (t) => typeOf(t) === 'color' && t.path[0] === 'color',
     );
     const fields = colors
-      .map((t) => {
-        const hex = String(resolved(t)).replace('#', '').toUpperCase();
-        return `  static const Color ${t.name} = Color(0xFF${hex});`;
-      })
+      .map((t) => `  static const Color ${t.name} = Color(0x${toDartHex(resolved(t))});`)
       .join('\n');
     return `// GENERATED by Style Dictionary — do not edit by hand.
 // Source: Novakid Foundations tokens.json (Tokens Studio -> Git).
@@ -80,8 +159,6 @@ ${fields}
 });
 
 // ---- TypeScript: typed nested tree --------------------------------------
-// Rebuilds the token tree as a plain nested object with resolved values, so
-// callers get `tokens.color.background.brand.default` with full type inference.
 StyleDictionary.registerFormat({
   name: 'nk/ts-nested',
   format: ({ dictionary }) => {
