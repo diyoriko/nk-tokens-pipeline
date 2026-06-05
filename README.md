@@ -1,65 +1,89 @@
 # nk-tokens-pipeline-demo
 
 Runnable end-to-end demo of the **Novakid design-token pipeline** — one source of
-truth in Figma becomes `--nk-*` CSS, Dart, and TypeScript, automatically. Built to
-show the dev team how it works in ~5 minutes.
+truth becomes `--nk-*` CSS, Dart, and TypeScript, automatically.
 
-> Grammar & token values are **locked and eng-signed** (Confluence "Tokens arch &
-> naming"; `final-token-tree.md §7.1`). This repo *demonstrates* that contract — it
-> doesn't re-open it. The token set here is the **v3 generic real-only palette**
-> (2026-06-05): **42 colour primitives** (40 real + 2 brand-approved AA darks),
-> **54 live semantic aliases + 1 gated**.
+> **Foundations v1** — **our brand values × the Figma SDS topology.** The token
+> *values* come from Novakid research (parent-mf product code, Landing DS Variables,
+> Brand Book — Mikado type, the brand colour Mains). The *structure* mirrors Figma's
+> open-source Simple Design System: one collection per domain, primitive↔semantic
+> split, full colour ramps, shadows as effect styles.
+>
+> Colour ramps are **generated smooth (OKLCH)** anchored on the real brand Mains
+> (`violet/600 #6D46FC` and `lemon/200 #FFE60A` pinned exact) — the generated
+> intermediate steps are **pending brand sign-off**.
 
 **Live token catalogue (Storybook):** https://diyoriko.github.io/nk-tokens-pipeline-demo/
 
-**Truth sources** (design-code foundations, not in this repo):
-`primitive-palette.md` — authoritative real-only primitive inventory + legacy→token lookup ·
-`final-token-tree.md` — the v3 master token tree ·
-Confluence **["Token Tree"](https://novakidschool.atlassian.net/wiki/spaces/UD/pages/7245791234)**.
+**Truth sources** (design-code foundations, not in this repo): `primitive-palette.md`
+(real-source colour audit + legacy→token lookup) · `final-token-tree.md` · Confluence
+**["Token Tree"](https://novakidschool.atlassian.net/wiki/spaces/UD/pages/7245791234)**.
 
 ---
 
 ## The pipeline
 
 ```
-Figma Variables ──▶ Tokens Studio ──▶ tokens.json ──▶ Style Dictionary ──▶ build/
-(source of truth)   plugin: Push      (DTCG, in Git)   (CI, on push)        ├─ css/variables.css   --nk-*  → web (MUI)
-                                                                            ├─ dart/nk_colors.dart  NkColors → Flutter
-                                                                            └─ ts/tokens.ts         typed tree → TS
-                                                                                   │
-                                                                                   └─▶ Storybook (visual catalogue)
+tokens.json ──▶ Tokens Studio ──▶ Figma Variables + Styles   (designers)
+(source, Git)        ▲  │
+                Pull │  │ Push
+                     │  ▼
+   Git (main) ──▶ Style Dictionary ──▶ build/{css,dart,ts} ──▶ npm + Storybook   (CI, on push)
 ```
 
+`tokens.json` is the source of truth in Git. Tokens Studio **pulls** it to materialise
+Figma Variables + Text/Effect Styles, and **pushes** designer edits back as a PR. CI
+runs Style Dictionary on every push to produce `--nk-*` CSS, a `NkColors` Dart class,
+and a typed TS tree.
+
 **The one naming rule** (the Figma name *is* the contract): `/` → `-`, lowercase,
-prefix `--nk-`. Style Dictionary applies it per platform — designers never write
-platform-specific names.
+prefix `--nk-`. Applied per platform — nobody writes platform-specific names.
 
 | Figma Variable | Web (CSS) | Mobile (Dart) | TypeScript |
 |---|---|---|---|
-| `color/background/brand/default` | `var(--nk-color-background-brand-default)` | `NkColors.colorBackgroundBrandDefault` | `tokens.color.background.brand.default` |
+| `color/background/brand-violet/primary` | `--nk-color-background-brand-violet-primary` | `NkColors.colorBackgroundBrandVioletPrimary` | `tokens.color.background['brand-violet'].primary` |
 
 ---
 
-## Naming architecture — generic hue + step
+## Structure — 6 collections (SDS topology)
 
-Primitives are named **`color/<hue>/<step>`** — a generic perceptual hue plus a
-numeric step on the standard `{50,100,200,300,400,500,600,700,800,900}` ladder,
-light→dark. There are **8 hues + `white`**:
+`tokens.json` holds **6 Tokens Studio sets**, each becoming one Figma Variable
+collection:
 
-```
-violet · blue · magenta · green · lemon · coral · orange · grey   (+ white)
-```
+| Set / collection | Tier | Contents |
+|---|---|---|
+| `color-primitives` | primitive | 8 hue ramps `100→1000` (`violet · lemon · magenta · blue · green · orange · coral · grey`) + `white` + `black`/`white-alpha` ramps (overlays, shadows) |
+| `color` | semantic | `background · text · icon · border` surfaces aliasing the primitives |
+| `size` | primitive | `space · radius · stroke · icon · blur · depth` (SDS values 1:1) |
+| `typography-primitives` | primitive | `family` (Mikado) · `scale` (01–08) · `weight` (regular/bold) |
+| `typography` | semantic | role Text Styles (`title · heading · body · label · caption`) |
+| `effect` | — | `drop-shadow` + `inner-shadow` (100–600) → Figma Effect Styles |
 
-This ladder covers **all Landing DS colours *and* all Brand-Book colours**. The
-key move in v3: **marketing swatch names are NOT token names.** "Persian Indigo",
-"Daisy Bush", "Heliotrope" (now `magenta`), "Persimmon" (now `coral`), "Periwinkle"
-(folded into `blue`), "Melrose", "Gin Fizz"… each describes *one shade* and doesn't
-compose into a system. They survive losslessly as a **legacy→token lookup** in
-`primitive-palette.md` §D/§E — nothing is dropped, everything is findable. A rebrand
-re-shades a step in place and every consumer follows with no rename.
+References are written **without** the domain prefix (`{grey.800}`, `{scale.08}`) —
+Tokens Studio strips the set name, so the variable is `Grey/800` inside `Color
+Primitives`, not `Color/Grey/800`. The build re-injects the domain so CSS names stay
+`--nk-color-grey-800` (see [Scripts](#scripts)).
 
-Semantic tokens then alias the primitives through a closed dictionary:
-`color/{surface}/{intent}/{variant}`.
+### Colour — semantic surfaces
+
+- **Background** — full 6-variant matrix *(primary, primary-hover, secondary,
+  secondary-hover, tertiary, tertiary-hover)* for: `base · neutral · brand-{violet,
+  lemon, magenta, blue, green, orange, coral} · success · warning · danger` (+ `disabled`).
+- **Text / Icon** — `primary / secondary / tertiary` + `on-{intent}` (foreground on a
+  coloured fill). Hover lives on the background, not on text — per SDS practice.
+- **Border** — `default / hover` + `focus` + per-intent.
+
+All `on-{intent}` pairs are **AA-verified** (white on every status/brand fill ≥ 4.5:1; dark text on lemon 9.65:1).
+
+## Semantic intents — when to use what
+
+Lightweight intent contract (the *meaning*; detailed per-component usage is documented with each component, not here). Variants: **primary** (strong) → **secondary** (light tint) → **tertiary** (lightest); `-hover` = the interactive hover of each.
+
+**Background:** `base` page/card surfaces · `neutral` solid grey component fill (secondary button, chip) · `brand-violet` primary brand fill · `brand-lemon` accent (dark fg) · `brand-{magenta,blue,green,orange,coral}` decorative accents · `success/warning/danger` status surfaces · `disabled` inert.
+
+**Text / Icon:** `default` primary/secondary/tertiary body · `brand-*/success/warning/danger` coloured (links, status) · `on-*` foreground on a coloured fill (e.g. `on-brand-violet` = white on the violet button) · `disabled`.
+
+**Border:** `default` (+hover) neutral · `brand-*/success/warning/danger` status · `focus` ring · `disabled`.
 
 ---
 
@@ -71,13 +95,12 @@ npm run build:tokens     # tokens.json → build/{css,dart,ts}
 npm run storybook        # build tokens + open the catalogue at localhost:6006
 ```
 
-Check the round-trip: semantic aliases resolve to the primitive hex, no leaks in names.
 ```bash
-grep background-brand-default build/css/variables.css
-#  --nk-color-background-brand-default: #6d46fc;   (= color/violet/600, the brand anchor)
+grep background-brand-violet-primary build/css/variables.css
+#  --nk-color-background-brand-violet-primary: #6d46fc;   (brand anchor, pinned)
 
-grep on-lemon build/css/variables.css
-#  --nk-color-text-neutral-on-lemon: #2c2a33;      (= color/grey/800 — grey/900 is dropped)
+grep background-success-primary build/css/variables.css
+#  --nk-color-background-success-primary: #007d0b;        (green/700, white text AA 5.33)
 ```
 
 ---
@@ -86,33 +109,12 @@ grep on-lemon build/css/variables.css
 
 | Path | What it is |
 |---|---|
-| **`tokens/tokens.json`** | **Input.** The DTCG token set Tokens Studio pushes from Figma. Holds the **42 colour primitives** (8 hue ramps + white) + space/radius/stroke + atomic typography + atomic shadow, plus the **54 live semantic** role aliases. |
-| `tokens/gated.tokens.jsonc` | The **1 gated** token (`accent/default → lemon/100`), documented but **not built** — the `.jsonc` extension keeps it out of the Style Dictionary source glob. |
-| **`build-tokens.mjs`** | **The build runner** (`npm run build:tokens`). Registers the custom formats/transforms and runs Style Dictionary. See [Scripts](#scripts). |
-| **`style-dictionary.config.mjs`** | Style Dictionary platform config — which outputs (css/dart/ts), transforms, `--nk-` prefix. |
-| `tokens/` → `build/` | **Output** (generated, git-ignored): `css/variables.css`, `dart/nk_colors.dart`, `ts/tokens.ts`. |
-| `.storybook/` | Storybook config (`main.js`, `preview.js`). The catalogue renders from `build/`. |
-| `stories/*.stories.js` | Token catalogue stories: Colors, Sizing, Typography, Shadow. |
-| `.github/workflows/build-tokens.yml` | CI: on push to `tokens/`, rebuild + upload `build/` as an artifact. |
-| `.github/workflows/deploy-storybook.yml` | CI: on push to `main`, build Storybook + deploy to GitHub Pages. |
-
----
-
-## What's in here
-
-The build produces **175 `--nk-*` variables** from `tokens.json`:
-
-| Group | Count | Notes |
-|---|---:|---|
-| **Colour — primitives** | 42 | 8 generic hue ramps + `white`. 40 **real** (exist in Landing DS Variables and/or the Brand Book) + **2 brand-approved AA darks** (`green/700 #0E7A1E` 5.50:1, `blue/600 #1C6FB0` 5.32:1) added 2026-06-05 to clear AA for status text. No `grey/900` (dropped). |
-| **Colour — semantic** | 54 | `color/{surface}/{intent}/{variant}` aliases (background/text/border/icon × the intents). |
-| **Size** | 16 | `space` (10) + `radius` (4) + `stroke` (2). |
-| **Typography** | 33 | 10 roles × {size, font-weight, line-height} + `font-family/main` + 2 weights. |
-| **Shadow** | 30 | 5 tiers × 6 atoms (colour repointed `grey/900` → `grey/800`). |
-
-`gated.tokens.jsonc` holds the **1 gated** token — `accent/default → lemon/100` —
-documented but not built (`accent` is not yet in the closed intent dict). It is the
-only role still behind the gate.
+| **`tokens/tokens.json`** | **Input.** The DTCG token set (6 sets above). What Tokens Studio syncs with Figma. |
+| **`build-tokens.mjs`** | **The build runner** (`npm run build:tokens`). Custom preprocessor/transforms/formats, then Style Dictionary. See [Scripts](#scripts). |
+| **`style-dictionary.config.mjs`** | Style Dictionary platform config — outputs (css/dart/ts), transforms, `--nk-` prefix. |
+| `build/` | **Output** (generated, git-ignored): `css/variables.css`, `dart/nk_colors.dart`, `ts/tokens.ts`. |
+| `.storybook/`, `stories/*.stories.js` | Token catalogue (Colors, Sizing, Typography, Shadow). |
+| `.github/workflows/` | CI: `build-tokens` (rebuild on token change), `deploy-storybook` (Pages), `publish-tokens` (npm on `v*` tag). |
 
 ---
 
@@ -120,76 +122,69 @@ only role still behind the gate.
 
 | Command | Does |
 |---|---|
-| `npm run build:tokens` | Runs `build-tokens.mjs`: reads `tokens/tokens.json`, resolves aliases, writes `build/{css,dart,ts}`. |
-| `npm run storybook` | Builds tokens, then opens Storybook (catalogue) at `localhost:6006`. |
-| `npm run build-storybook` | Builds tokens, then a static Storybook into `storybook-static/` (what CI deploys). |
+| `npm run build:tokens` | `build-tokens.mjs`: reads `tokens.json`, resolves aliases, writes `build/{css,dart,ts}`. |
+| `npm run storybook` | Builds tokens, opens Storybook at `localhost:6006`. |
+| `npm run build-storybook` | Builds tokens + a static Storybook into `storybook-static/` (what CI deploys). |
 
-**Inside `build-tokens.mjs`** (all generated output is produced here, never hand-edited):
-- `nk/flatten-sets` *(preprocessor)* — merges the `primitives` + `semantic` sets back into one tree. They're split so Tokens Studio makes two Figma collections; Style Dictionary doesn't want the set layer in the token path.
-- `nk/size-px` *(transform)* — dimensions are bare numbers in source (`8`), rendered as px on output (`8px`). Colours, opacity, and font-weight are untouched.
-- `nk/dart-colors` *(format)* — emits the `NkColors` Dart class (colour tokens only).
-- `nk/ts-nested` *(format)* — emits the typed nested `tokens` tree.
-- CSS output uses Style Dictionary's `css/variables` with `outputReferences: false`, so semantic aliases resolve to the primitive hex.
+**Inside `build-tokens.mjs`** (all generated output produced here, never hand-edited):
+- `nk/flatten-sets` *(preprocessor)* — re-nests the 6 domain sets under their domain
+  group, **decomposes** the composite `typography`/`boxShadow` tokens into the flat
+  sub-tokens code wants (the composites exist in source only, so Tokens Studio can
+  build Figma Text + Effect Styles), and re-injects the domain prefix into references.
+- `nk/size-px` *(transform)* — bare-number dimensions (`8`) → `8px` on output.
+- `nk/dart-colors` *(format)* — emits `NkColors`; handles `#RRGGBB` and the `#RRGGBBAA`
+  alpha ramps (Flutter `0xAARRGGBB`).
+- `nk/ts-nested` *(format)* — typed nested `tokens` tree.
+- CSS uses `css/variables` with `outputReferences: false` — semantic aliases resolve to
+  the primitive value.
 
 ---
 
 ## Consuming the outputs (devs)
 
-The outputs are published as a versioned npm package — **`@diyoriko/nk-tokens`** — to
-**GitHub Packages** on every `v*` tag (see `.github/workflows/publish-tokens.yml`).
+Published as **`@diyoriko/nk-tokens`** to **GitHub Packages** on every `v*` tag
+(`.github/workflows/publish-tokens.yml`).
 
 ```ini
-# .npmrc in the consumer (e.g. parent-mf). GitHub Packages needs auth even for public packages.
+# .npmrc in the consumer (e.g. parent-mf)
 @diyoriko:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}   # a PAT with read:packages
-```
-```bash
-npm i @diyoriko/nk-tokens
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}   # PAT with read:packages
 ```
 ```ts
 import '@diyoriko/nk-tokens/css/variables.css';      // injects :root { --nk-* }
 import { tokens } from '@diyoriko/nk-tokens/tokens';  // typed token tree
 ```
-
-Use the vars directly — they coexist with MUI's `--mui-*` (different prefix, no clash):
 ```tsx
-<Button sx={{ bgcolor: 'var(--nk-color-background-brand-default)' }} />
+<Button sx={{ bgcolor: 'var(--nk-color-background-brand-violet-primary)' }} />
 ```
 
-A token change → new package version → Renovate/Dependabot opens a bump PR in the
-consumer, which the dev reviews and merges. Semver lets consumers upgrade deliberately.
-
-> **Production:** re-scope to `@novakid` under the org repo — GitHub Packages requires
-> the package scope to match the repo owner.
+> **Production:** re-scope to `@novakid` under the org repo (GitHub Packages requires
+> the package scope to match the repo owner).
 
 ---
 
-## Tokens Studio setup (designer side, free Starter — €0)
+## Tokens Studio setup (designer side)
 
-Once, in the Figma Foundations file:
+Git is the source of truth — pull it into Figma, don't hand-build variables:
 
 1. Install the **Tokens Studio** plugin.
-2. **Settings → Sync → GitHub** → this repo, branch `figma-changes`, file `tokens/tokens.json`, format **W3C DTCG**.
-3. Edit a token → **Push** (commits to `figma-changes` → open a PR to `main`). To update the Figma file itself, also run **Export to Figma** (Variables).
-
-> Free Starter covers the MVP (colour, dimension, number, **atomic** typography/shadow, single-file sync). Paywall (Starter Plus): multi-file split · Themes · **composite** token types · branch switching. That's why typography/shadow stay atomic here and composites live as Figma Styles.
+2. **Settings → Sync → GitHub** → this repo, branch `main`, file `tokens/tokens.json`,
+   format **W3C DTCG**.
+3. **Pull** → all 6 sets load → **Create Variables / Apply to Figma** → Variables +
+   Text/Effect Styles materialise.
+4. Edit a token → **Push** (PR to `main`). Never edit Figma variables outside Tokens
+   Studio — it desyncs from Git.
 
 ---
 
-## Scope (honoring the locked spec)
+## Scope (Foundations v1)
 
-Light mode only · **`warning` is LIVE (real LDS Orange — `orange/500 #B36007`, 4.57:1
-AA)**, not amber and not gated · `accent` is the **only** gated token (`lemon/100`;
-intent not in the closed dict) · **dark mode deferred** (no generated dark family to
-lean on — real-only by design) · `size/radius/300` reserved (not built).
+Light mode only · 8 generated colour ramps (brand sign-off pending on the generated
+steps; real anchors honoured — see `primitive-palette.md` for the real-source audit) ·
+Size + Effects adopted from Figma SDS · dark mode deferred · `black`/`white` are the
+only alpha ramps (overlays + shadow colour), every other surface colour is solid and
+background-independent.
 
-The palette is **generic real-only**: every primitive physically exists in the
-Landing DS colour Variables or the Brand Book, **except** the 2 brand-approved AA
-darks (`green/700 #0E7A1E`, `blue/600 #1C6FB0`) added as the minimum needed to clear
-AA for success/info text. `grey/900 #1A1A1A` is **dropped** — `grey/800 #2C2A33` is
-the darkest real grey and the on-lemon anchor. `lemon/100 #FFE60A` is the brand
-secondary-accent anchor (background/accent only — fails white at 1.27:1, so its
-foreground is always a dark grey).
-
-Every alias in `tokens.json` resolves to a real primitive, so the build is clean
-(no dangling `{…}` references).
+Every alias resolves to a real token — the build is clean (no dangling `{…}`).
+</content>
+</invoke>
