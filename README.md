@@ -55,8 +55,8 @@ collection:
 | `color-primitives` | primitive | 8 hue ramps `100→1000` (`violet · lemon · magenta · blue · green · orange · coral · grey`) + `white` + `black`/`white-alpha` ramps (overlays, shadows) |
 | `color` | semantic | `background · text · icon · border` surfaces aliasing the primitives |
 | `size` | primitive | `space · radius · stroke · icon · blur · depth` (SDS values 1:1) |
-| `typography-primitives` | primitive | `family` (Mikado) · `scale` (01–08) · `weight` (regular/bold) |
-| `typography` | semantic | role Text Styles (`title · heading · body · label · caption`) |
+| `typography-primitives` | primitive | `family` (Mikado) · `scale` (01–11) · `weight` (regular/bold) |
+| `typography` | semantic | role Text Styles (`title-hero · title · heading · body · label`) |
 | `effect` | — | `drop-shadow` + `inner-shadow` (100–600) → Figma Effect Styles |
 
 References are written **without** the domain prefix (`{grey.800}`, `{scale.08}`) —
