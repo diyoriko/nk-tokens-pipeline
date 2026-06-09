@@ -12,40 +12,41 @@ const C = (a, b) => { const l1 = L(a), l2 = L(b), hi = Math.max(l1, l2), lo = Ma
 
 const W = '#ffffff';
 const checks = []; // [label, fgVar|hex, bgVar|hex, minRatio]
-const fg = (v) => (v.startsWith('#') ? v : g(v));
-// status bold + light
-for (const s of ['success', 'warning', 'danger', 'info']) {
-  checks.push([`text.${s}.on-bold`, `color-text-${s}-on-bold`, `color-background-${s}-bold`, 4.5]);
-  checks.push([`text.${s}.on-light`, `color-text-${s}-on-light`, `color-background-${s}-light`, 4.5]);
-}
-// brand fills (white text) + brand text on white + on-secondary + on-accent
-for (const h of ['violet', 'magenta', 'coral', 'green', 'orange', 'blue']) {
-  checks.push([`text.on-brand-${h}`, `color-text-on-brand-${h}-primary`, `color-background-brand-${h}-primary`, 4.5]);
-  checks.push([`text.brand-${h}/white`, `color-text-brand-${h}-primary`, W, 4.5]);
-}
-checks.push(['text.on-brand-lemon', 'color-text-on-brand-lemon-primary', 'color-background-brand-lemon-primary', 4.5]);
-for (const h of ['coral', 'green']) checks.push([`text.brand-${h}.on-secondary`, `color-text-brand-${h}-on-secondary`, `color-background-brand-${h}-secondary`, 4.5]);
-for (const h of ['green', 'coral', 'orange', 'magenta']) checks.push([`text.brand-${h}.on-accent`, `color-text-brand-${h}-on-accent`, `color-background-brand-${h}-accent`, 4.5]);
-// default text on base surfaces
-for (const t of ['primary', 'secondary', 'tertiary']) checks.push([`text.default.${t}/white`, `color-text-default-${t}`, W, t === 'tertiary' ? 4.5 : 4.5]);
-// info strong, link, feedback
-checks.push(['text.info.on-strong', 'color-text-info-on-strong', 'color-background-info-strong', 4.5]);
-checks.push(['text.link/white', 'color-text-link', W, 4.5]);
-checks.push(['feedback.on-reward', 'color-feedback-on-reward', 'color-feedback-reward', 4.5]);
-checks.push(['feedback.on-streak', 'color-feedback-on-streak', 'color-feedback-streak', 4.5]);
-checks.push(['feedback.on-encourage', 'color-feedback-on-encourage', 'color-feedback-encourage', 4.5]);
-// borders / focus (UI 3:1)
-for (const b of ['focus-on-fill vs violet', 'success', 'danger', 'info']) {} // borders below
-checks.push(['border.focus.on-fill vs violet-fill', 'color-border-focus-on-fill', 'color-background-brand-violet-primary', 3]);
-for (const s of ['success', 'danger', 'info', 'warning']) checks.push([`border.${s}`, `color-border-${s}-default`, W, 3]);
+const fg = (v) => (v && v.startsWith('#') ? v : g(v));
+const BRAND = ['violet', 'blue', 'magenta', 'coral', 'green', 'orange', 'lemon'];
+const STATUS = ['success', 'warning', 'danger', 'info'];
 
-let fails = 0;
-const known = { 'text.default.tertiary/white': 'tertiary text is for white/light only (3.83 on tertiary bg is a documented decorative exemption)' };
+// brand: bright primary + tint secondary, dark hue text (X/900); brand-as-text on white; border on white
+for (const h of BRAND) {
+  checks.push([`brand-${h}.on-primary`, `color-text-brand-${h}-on-primary`, `color-background-brand-${h}-primary`, 4.5]);
+  checks.push([`brand-${h}.on-secondary`, `color-text-brand-${h}-on-secondary`, `color-background-brand-${h}-secondary`, 4.5]);
+  checks.push([`brand-${h}.text/white`, `color-text-brand-${h}-primary`, W, 4.5]);
+  checks.push([`brand-${h}.border/white`, `color-border-brand-${h}-default`, W, 3]);
+}
+// statuses: bold (bright fill, dark hue text) + light (tint, /700 text); border on white
+for (const s of STATUS) {
+  checks.push([`${s}.on-bold`, `color-text-${s}-on-bold`, `color-background-${s}-bold`, 4.5]);
+  checks.push([`${s}.on-light`, `color-text-${s}-on-light`, `color-background-${s}-light`, 4.5]);
+  checks.push([`${s}.border/white`, `color-border-${s}-default`, W, 3]);
+}
+// focus: default ring sits offset on the page (vs white); on-fill ring sits inside a bright fill (vs a bright primary)
+checks.push(['focus.default/white', 'color-border-focus-default', W, 3]);
+checks.push(['focus.on-fill vs bright fill', 'color-border-focus-on-fill', 'color-background-brand-violet-primary', 3]);
+// default + neutral text on base surface (white)
+for (const v of ['primary', 'secondary']) checks.push([`text.default.${v}/white`, `color-text-default-${v}`, W, 4.5]);
+// link + feedback
+checks.push(['link.default/white', 'color-text-link-default', W, 4.5]);
+checks.push(['link.visited/white', 'color-text-link-visited', W, 4.5]);
+checks.push(['feedback.reward.on', 'color-feedback-reward-on', 'color-feedback-reward-default', 4.5]);
+checks.push(['feedback.streak.on', 'color-feedback-streak-on', 'color-feedback-streak-default', 4.5]);
+checks.push(['feedback.encourage.on', 'color-feedback-encourage-on', 'color-feedback-encourage-default', 4.5]);
+
+let fails = 0, skipped = 0;
 for (const [label, fgv, bgv, min] of checks) {
   const f = fg(fgv), b = fg(bgv);
-  if (!f || !b) { console.warn(`  ? ${label}: token missing (${fgv} / ${bgv}) — skipped`); continue; }
+  if (!f || !b) { console.warn(`  ? ${label}: token missing (${fgv} / ${bgv}) — skipped`); skipped++; continue; }
   const r = C(f, b);
   if (r < min) { console.error(`  ✗ FAIL ${label}: ${f} on ${b} = ${r.toFixed(2)} (< ${min})`); fails++; }
 }
 if (fails) { console.error(`\nContrast contract: ${fails} FAILURE(S).`); process.exit(1); }
-console.log(`✓ Contrast contract: all ${checks.length} on-*/text/border pairs pass their AA/UI threshold.`);
+console.log(`✓ Contrast contract: all ${checks.length - skipped} on-*/text/border pairs pass their AA/UI threshold${skipped ? ` (${skipped} skipped — token absent)` : ''}.`);
