@@ -1,4 +1,4 @@
-# nk-tokens-pipeline-demo
+# nk-tokens-pipeline
 
 Runnable end-to-end demo of the **Novakid design-token pipeline** — one source of
 truth becomes `--nk-*` CSS, Dart, and TypeScript, automatically.
@@ -13,7 +13,7 @@ truth becomes `--nk-*` CSS, Dart, and TypeScript, automatically.
 > (`violet/600 #6D46FC` and `lemon/200 #FFE60A` pinned exact) — the generated
 > intermediate steps are **pending brand sign-off**.
 
-**Live token catalogue (Storybook):** https://diyoriko.github.io/nk-tokens-pipeline-demo/
+**Live token catalogue (Storybook):** https://diyoriko.github.io/nk-tokens-pipeline/
 
 **Truth sources** (design-code foundations, not in this repo): `primitive-palette.md`
 (real-source colour audit + legacy→token lookup) · `final-token-tree.md` · Confluence
@@ -57,7 +57,7 @@ collection:
 | `size` | primitive | `space · radius · stroke · icon · blur · depth` (SDS values 1:1) |
 | `typography-primitives` | primitive | `family` (Mikado) · `scale` (01–14) · `weight` (regular/bold) |
 | `typography` | semantic | role Text Styles (`title-hero · title · subtitle · heading · body · label`) |
-| `effect` | — | `drop-shadow` + `inner-shadow` (100–600) → Figma Effect Styles |
+| `effect` | — | `drop-shadow` (100–600) → Figma Effect Styles |
 
 References are written **without** the domain prefix (`{grey.800}`, `{scale.08}`) —
 Tokens Studio strips the set name, so the variable is `Grey/800` inside `Color
@@ -112,7 +112,7 @@ grep background-success-primary build/css/variables.css
 | **`tokens/tokens.json`** | **Input.** The DTCG token set (6 sets above). What Tokens Studio syncs with Figma. |
 | **`build-tokens.mjs`** | **The build runner** (`npm run build:tokens`). Custom preprocessor/transforms/formats, then Style Dictionary. See [Scripts](#scripts). |
 | **`style-dictionary.config.mjs`** | Style Dictionary platform config — outputs (css/dart/ts), transforms, `--nk-` prefix. |
-| `build/` | **Output** (generated, git-ignored): `css/variables.css`, `dart/nk_colors.dart`, `ts/tokens.ts`. |
+| `build/` | **Output** (generated, git-ignored): `css/variables.css`, `dart/nk_colors.dart`, `ts/{tokens.ts,.mjs,.cjs,.d.ts}`. |
 | `.storybook/`, `stories/*.stories.js` | Token catalogue (Colors, Sizing, Typography, Shadow). |
 | `.github/workflows/` | CI: `build-tokens` (rebuild on token change), `deploy-storybook` (Pages), `publish-tokens` (npm on `v*` tag). |
 
@@ -122,7 +122,7 @@ grep background-success-primary build/css/variables.css
 
 | Command | Does |
 |---|---|
-| `npm run build:tokens` | `build-tokens.mjs`: reads `tokens.json`, resolves aliases, writes `build/{css,dart,ts}`. |
+| `npm run build:tokens` | `build-tokens.mjs`: reads `tokens.json`, resolves aliases, writes `build/{css,dart,ts}` (ts = tokens.ts/.mjs/.cjs/.d.ts). |
 | `npm run storybook` | Builds tokens, opens Storybook at `localhost:6006`. |
 | `npm run build-storybook` | Builds tokens + a static Storybook into `storybook-static/` (what CI deploys). |
 

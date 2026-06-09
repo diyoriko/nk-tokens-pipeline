@@ -3,3 +3,5 @@ build/
 storybook-static/
 *.log
 .DS_Store
+foundations/_audit/*.html
+foundations/_archive/

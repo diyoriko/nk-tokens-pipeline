@@ -50,10 +50,10 @@ export default {
       transforms: ['attribute/cti', 'name/camel', 'nk/size-px'],
       buildPath: 'build/ts/',
       files: [
-        {
-          destination: 'tokens.ts',
-          format: 'nk/ts-nested',
-        },
+        { destination: 'tokens.ts', format: 'nk/ts-nested' },
+        { destination: 'tokens.mjs', format: 'nk/js-esm' },
+        { destination: 'tokens.cjs', format: 'nk/js-cjs' },
+        { destination: 'tokens.d.ts', format: 'nk/ts-dts' },
       ],
     },
   },

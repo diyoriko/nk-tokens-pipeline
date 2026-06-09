@@ -1,6 +1,6 @@
 {
   "name": "@diyoriko/nk-tokens",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "repository": {
@@ -14,15 +14,21 @@
     "build"
   ],
   "exports": {
+    ".": {
+      "types": "./build/ts/tokens.d.ts",
+      "import": "./build/ts/tokens.mjs",
+      "require": "./build/ts/tokens.cjs"
+    },
+    "./tokens.ts": "./build/ts/tokens.ts",
     "./css/variables.css": "./build/css/variables.css",
-    "./tokens": "./build/ts/tokens.ts",
     "./dart/nk_colors.dart": "./build/dart/nk_colors.dart"
   },
   "scripts": {
-    "build:tokens": "node build-tokens.mjs",
+    "build:tokens": "node build-tokens.mjs && node scripts/check-contrast.mjs",
     "storybook": "npm run build:tokens && storybook dev -p 6006",
     "build-storybook": "npm run build:tokens && storybook build",
-    "prepack": "npm run build:tokens"
+    "prepack": "npm run build:tokens",
+    "check:contrast": "node scripts/check-contrast.mjs"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.0",
@@ -30,5 +36,8 @@
     "storybook": "^8.6.0",
     "style-dictionary": "^4.3.3",
     "vite": "^5.4.0"
-  }
+  },
+  "main": "./build/ts/tokens.cjs",
+  "module": "./build/ts/tokens.mjs",
+  "types": "./build/ts/tokens.d.ts"
 }
