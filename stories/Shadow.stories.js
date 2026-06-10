@@ -11,7 +11,8 @@ function grid(group, inset) {
   const tiers = tokens.effect[group] || {};
   for (const tier of Object.keys(tiers)) {
     const s = tiers[tier];
-    const shadow = `${inset ? 'inset ' : ''}${s['offset-x']} ${s['offset-y']} ${s.blur} ${s.spread} ${s.color}`;
+    // build now emits ready CSS strings (incl. 2-layer + inset); legacy part-objects still composable
+    const shadow = typeof s === 'string' ? s : `${inset ? 'inset ' : ''}${s['offset-x']} ${s['offset-y']} ${s.blur} ${s.spread} ${s.color}`;
     const cell = document.createElement('div');
     cell.style.cssText = 'text-align:center;font-size:12px';
     cell.innerHTML = `

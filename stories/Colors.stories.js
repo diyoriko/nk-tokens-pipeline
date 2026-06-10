@@ -58,8 +58,17 @@ export const Primitives = () => {
 };
 
 // ---- SEMANTIC (with primitive reference) --------------------------------
+// tokens.json carries Figma-facing Capitalized names ("Color" / "Background/Brand-Violet");
+// normalise keys to lowercase so story lookups stay case-stable.
+const lcDeep = (o) => {
+  if (!o || typeof o !== 'object' || Array.isArray(o) || '$value' in o) return o;
+  const r = {};
+  for (const k of Object.keys(o)) r[k.toLowerCase()] = lcDeep(o[k]);
+  return r;
+};
+const rawColor = lcDeep(raw['Color'] ?? raw.color ?? {});
 const refOf = (surface, intent, variant) => {
-  const node = raw.color && raw.color[surface] && raw.color[surface][intent] && raw.color[surface][intent][variant];
+  const node = rawColor[surface] && rawColor[surface][intent] && rawColor[surface][intent][variant];
   const v = node && node.$value;
   if (typeof v !== 'string') return null;
   const m = /^\{([^}]+)\}$/.exec(v);

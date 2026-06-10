@@ -42,7 +42,7 @@ export const Semantic = () => {
       const s = t[role][v];
       const upper = role === 'overline' ? 'text-transform:uppercase;' : '';
       html += `<div style="padding:10px 0;border-bottom:1px solid ${BORDER}">
-        <div style="font-size:10.5px;color:${MUTED};margin-bottom:3px;font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace">${role}/${v} · ${s['font-size']} · ${s['font-weight']} · LH ${Math.round(parseFloat(s['line-height']) * 100)}%${parseFloat(s['letter-spacing']) ? ' · ls ' + s['letter-spacing'] : ''}</div>
+        <div style="font-size:10.5px;color:${MUTED};margin-bottom:3px;font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace">${role}/${v} · ${s['font-size']} · ${s['font-weight']} · LH ${String(s['line-height']).includes('%') ? s['line-height'] : Math.round(parseFloat(s['line-height']) * 100) + '%'}${parseFloat(s['letter-spacing']) ? ' · ls ' + s['letter-spacing'] : ''}</div>
         <div style="${upper}font-size:var(${base}-font-size);line-height:var(${base}-line-height);font-weight:var(${base}-font-weight);letter-spacing:var(${base}-letter-spacing);font-family:var(--nk-typography-family-sans)">${SAMPLE}</div>
       </div>`;
     }

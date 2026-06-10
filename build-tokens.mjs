@@ -29,12 +29,12 @@ const typeOf = (t) => t.$type ?? t.type;
 // names (`--nk-color-grey-800`, `--nk-typography-title-xl-font-size`) and
 // resolved values are identical to a hand-decomposed single-tree source.
 const SET_DOMAIN = {
-  'color-primitives': 'color',
-  color: 'color',
-  size: 'size',
-  'typography-primitives': 'typography',
-  typography: 'typography',
-  effect: 'effect',
+  'Color Primitives': 'color',
+  Color: 'color',
+  Size: 'size',
+  'Typography Primitives': 'typography',
+  Typography: 'typography',
+  Effect: 'effect',
   // code-only sets (live in tokens/code-only.json, NOT synced to Figma — no motion/z-index/opacity vars there):
   motion: 'motion',
   'z-index': 'z-index',
@@ -55,7 +55,7 @@ const deepMerge = (a, b) => {
 // shapes) into flat sub-tokens SD can resolve and emit as individual CSS vars.
 const px = (v) => ({ $type: 'dimension', $value: v }); // bare number/ref -> px on output
 const bare = (v) => parseFloat(v); // strip any unit from a source string like "0.5px"
-const decomposeComposites = (node) => {
+const decomposeComposites = (node, resolveRef, inInner) => {
   if (!node || typeof node !== 'object') return;
   for (const key of Object.keys(node)) {
     if (key.startsWith('$')) continue;
@@ -67,20 +67,23 @@ const decomposeComposites = (node) => {
           'font-family': { $type: 'fontFamily', $value: v.fontFamily },
           'font-weight': { $type: 'fontWeight', $value: v.fontWeight },
           'font-size': { $type: 'dimension', $value: v.fontSize },
-          'line-height': { $type: 'number', $value: v.lineHeight }, // e.g. "128%" — emitted verbatim
+          'line-height': { $type: 'number', $value: v.lineHeight }, // e.g. "140%" — emitted verbatim
           'letter-spacing': px(bare(v.letterSpacing ?? '0')),
         };
       } else if (typeOf(child) === 'boxShadow' && v && typeof v === 'object') {
-        node[key] = {
-          'offset-x': px(typeof v.x === 'string' && v.x.includes('{') ? v.x : bare(v.x)),
-          'offset-y': px(typeof v.y === 'string' && v.y.includes('{') ? v.y : bare(v.y)),
-          blur: px(typeof v.blur === 'string' && v.blur.includes('{') ? v.blur : bare(v.blur)),
-          spread: px(typeof v.spread === 'string' && v.spread.includes('{') ? v.spread : bare(v.spread)),
-          color: { $type: 'color', $value: v.color },
+        // compose a ready-to-use CSS box-shadow string (single object or 2-layer array)
+        const layers = Array.isArray(v) ? v : [v];
+        const num = (x) => {
+          const r = resolveRef(x);
+          return String(r).endsWith('px') ? String(r) : `${parseFloat(r)}px`;
         };
+        const str = layers
+          .map((l) => `${inInner ? 'inset ' : ''}${num(l.x)} ${num(l.y)} ${num(l.blur)} ${num(l.spread)} ${resolveRef(l.color)}`)
+          .join(', ');
+        node[key] = { $type: 'shadow', $value: str };
       }
     } else {
-      decomposeComposites(child);
+      decomposeComposites(child, resolveRef, inInner || /inner/.test(key));
     }
   }
 };
@@ -110,7 +113,17 @@ StyleDictionary.registerPreprocessor({
         const dom = SET_DOMAIN[s];
         merged[dom] = deepMerge(merged[dom] ?? {}, d[s]);
       }
-      decomposeComposites(merged);
+      const resolveRef = (val, depth = 0) => {
+        const s = String(val);
+        const m = /^\{([^}]+)\}$/.exec(s);
+        if (!m || depth > 4) return val;
+        const segs = m[1].split('.');
+        const dom = rootDomain[segs[0]];
+        let n = dom ? merged[dom] : undefined;
+        for (const seg of segs) n = n?.[seg];
+        return n && n.$value !== undefined ? resolveRef(n.$value, depth + 1) : val;
+      };
+      decomposeComposites(merged, resolveRef, false);
       rewriteRefs(merged, rootDomain);
       return merged;
     }
@@ -170,8 +183,11 @@ const buildTokenTree = (dictionary) => {
   const root = {};
   for (const t of dictionary.allTokens) {
     let node = root;
-    t.path.forEach((seg, i) => {
-      if (i === t.path.length - 1) node[seg] = resolved(t);
+    // lowercase path segments so the published tree keeps the code-side casing
+    // (tokens.color.background['brand-violet']) regardless of Figma-facing names.
+    const path = t.path.map((seg) => String(seg).toLowerCase());
+    path.forEach((seg, i) => {
+      if (i === path.length - 1) node[seg] = resolved(t);
       else node = node[seg] ??= {};
     });
   }

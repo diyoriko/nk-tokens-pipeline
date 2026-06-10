@@ -7,7 +7,7 @@ const SECTIONS = [
     ['base', 'Structural surfaces — page canvas + card/panel layers. primary=white, secondary/tertiary=grey layers.'],
     ['neutral', 'Solid neutral component fill with no brand colour — secondary button, neutral chip, toggle-off.'],
     ['brand-violet', 'Primary brand fill — primary button, brand emphasis. (the #6D46FC anchor)'],
-    ['brand-lemon', 'Accent fill — highlights, badges, marketing pops. Foreground is always dark.'],
+    ['brand-yellow', 'Accent fill — highlights, badges, marketing pops. Foreground is always dark.'],
     ['brand-magenta / blue / green / orange / coral', 'Decorative brand accents — illustrative surfaces, category colours.'],
     ['success', 'Positive status surface — confirmation banners, success states.'],
     ['warning', 'Caution status surface — warnings, attention-needed.'],
