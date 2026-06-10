@@ -39,6 +39,7 @@ const SET_DOMAIN = {
   motion: 'motion',
   'z-index': 'z-index',
   opacity: 'opacity',
+  'backdrop-blur': 'backdrop-blur',
 };
 
 const isGroup = (v) => v && typeof v === 'object' && v.$value === undefined;

@@ -5,3 +5,5 @@ storybook-static/
 .DS_Store
 foundations/_audit/*.html
 foundations/_archive/
+*.woff2
+

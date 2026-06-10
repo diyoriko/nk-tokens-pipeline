@@ -1,0 +1,98 @@
+{
+  "violet": {
+    "100": "= Magnolia",
+    "200": "≈ Melrose Mid",
+    "300": "≈ Melrose",
+    "400": "≈ Daisy Bush Mid",
+    "500": "Main",
+    "600": "≈ Daisy Bush",
+    "700": "≈ Daisy Bush",
+    "800": "= Daisy Bush Dark",
+    "900": "= Persian Indigo Dark",
+    "1000": ""
+  },
+  "blue": {
+    "100": "≈ Patterns Blue",
+    "200": "",
+    "300": "",
+    "400": "",
+    "500": "Main (gen true-blue)",
+    "600": "",
+    "700": "",
+    "800": "",
+    "900": "",
+    "1000": ""
+  },
+  "magenta": {
+    "100": "= Heliotrope Light",
+    "200": "",
+    "300": "= Heliotrope Mid",
+    "400": "",
+    "500": "Main",
+    "600": "≈ Heliotrope Dark",
+    "700": "≈ Heliotrope Dark",
+    "800": "",
+    "900": "",
+    "1000": ""
+  },
+  "coral": {
+    "100": "= Chablis",
+    "200": "≈ Persimmon Light",
+    "300": "≈ Persimmon Mid",
+    "400": "≈ Persimmon Mid",
+    "500": "Main",
+    "600": "≈ Persimmon Dark",
+    "700": "",
+    "800": "",
+    "900": "",
+    "1000": ""
+  },
+  "yellow": {
+    "100": "≈ Gin Fizz",
+    "200": "≈ Gin Fizz",
+    "300": "≈ Lemon Mid",
+    "400": "= Lemon Mid",
+    "500": "Main",
+    "600": "≈ Lemon Dark",
+    "700": "",
+    "800": "",
+    "900": "",
+    "1000": ""
+  },
+  "green": {
+    "100": "= White Ice",
+    "200": "≈ Green Mid",
+    "300": "= Green Mid",
+    "400": "≈ Green Mid",
+    "500": "Main",
+    "600": "≈ Apple",
+    "700": "≈ Snake",
+    "800": "",
+    "900": "",
+    "1000": ""
+  },
+  "orange": {
+    "100": "= Orange Light",
+    "200": "≈ Orange Light",
+    "300": "≈ Orange Mid",
+    "400": "≈ Orange Mid",
+    "500": "Main",
+    "600": "",
+    "700": "≈ Orange Dark",
+    "800": "",
+    "900": "",
+    "1000": ""
+  },
+  "grey": {
+    "100": "= Alabaster",
+    "200": "≈ Mischka",
+    "300": "≈ Silver",
+    "400": "",
+    "500": "≈ Jumbo",
+    "600": "≈ Jumbo",
+    "700": "= Outer Space",
+    "800": "≈ Black",
+    "900": "= Near-black",
+    "1000": ""
+  }
+}
