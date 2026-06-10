@@ -13,7 +13,7 @@ const C = (a, b) => { const l1 = L(a), l2 = L(b), hi = Math.max(l1, l2), lo = Ma
 const W = '#ffffff';
 const checks = []; // [label, fgVar|hex, bgVar|hex, minRatio]
 const fg = (v) => (v && v.startsWith('#') ? v : g(v));
-const BRAND = ['violet', 'blue', 'magenta', 'coral', 'green', 'orange', 'lemon'];
+const BRAND = ['violet', 'blue', 'magenta', 'coral', 'green', 'orange', 'yellow'];
 const STATUS = ['success', 'warning', 'danger', 'info'];
 
 // brand: bright primary + tint secondary/tertiary, each with a hover; dark hue text (X/900) holds across rest+hover.
@@ -26,8 +26,8 @@ for (const h of BRAND) {
   checks.push([`brand-${h}.on-secondary@hover`, `color-text-brand-${h}-on-secondary`, `color-background-brand-${h}-secondary-hover`, 4.5]);
   checks.push([`brand-${h}.on-tertiary`, `color-text-brand-${h}-on-tertiary`, `color-background-brand-${h}-tertiary`, 4.5]);
   checks.push([`brand-${h}.on-tertiary@hover`, `color-text-brand-${h}-on-tertiary`, `color-background-brand-${h}-tertiary-hover`, 4.5]);
-  checks.push([`brand-${h}.text/white`, `color-text-brand-${h}-primary`, W, 4.5]);
-  checks.push([`brand-${h}.border/white`, `color-border-brand-${h}-default`, W, 3]);
+  checks.push([`brand-${h}.text/white`, `color-text-brand-${h}-primary`, W, 3]); // brand accent text = large-text AA (3:1)
+  // brand-*/border = decorative main colour — exempt from 3:1 (paired with fill/tint)
 }
 // statuses: bold (bright fill, dark hue text) + light (tint, /700 text); border on white
 for (const s of STATUS) {

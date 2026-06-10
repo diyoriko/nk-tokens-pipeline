@@ -1,9 +1,10 @@
 import { tokens } from '../build/ts/tokens.ts';
 import { FONT, MUTED } from './_helpers.js';
+import blurBg from './assets/blur-bg.png';
 
 export default { title: 'Tokens/Shadow' };
 
-// Effect Styles in Figma; here recomposed from the atomic tokens the build emits.
+// Effect Styles in Figma; recomposed here from the atomic tokens the build emits.
 function grid(group, inset) {
   const wrap = document.createElement('div');
   wrap.style.cssText = `display:flex;gap:40px;flex-wrap:wrap;padding:48px;font-family:${FONT};background:var(--nk-color-background-base-primary)`;
@@ -24,3 +25,24 @@ function grid(group, inset) {
 
 export const DropShadow = () => grid('drop-shadow', false);
 export const InnerShadow = () => grid('inner-shadow', true);
+
+// ---- Backdrop blur (frosted / glass) — CSS backdrop-filter --------------
+export const BackdropBlur = () => {
+  const blur = tokens['backdrop-blur'] || {};
+  const wrap = document.createElement('div');
+  // Novakid Brand-book pattern behind the glass — blur reads clearly over the squiggle edges
+  wrap.style.cssText =
+    'min-height:560px;padding:48px;font-family:' + FONT +
+    ';display:flex;gap:32px;flex-wrap:wrap;align-items:center;' +
+    `background:url(${blurBg}) center/cover`;
+  for (const name of Object.keys(blur)) {
+    const cell = document.createElement('div');
+    cell.style.cssText =
+      `width:200px;height:130px;border-radius:18px;border:1px solid rgba(255,255,255,.4);` +
+      `box-shadow:0 8px 24px rgba(12,12,13,.16);padding:16px;color:#2c2a33;` +
+      `background:rgba(255,255,255,.3);backdrop-filter:blur(var(--nk-backdrop-blur-${name}));-webkit-backdrop-filter:blur(var(--nk-backdrop-blur-${name}))`;
+    cell.innerHTML = `<div style="font-weight:700;font-size:15px">blur/${name}</div><div style="font-size:12px;color:#444;margin-top:4px;font-family:ui-monospace,monospace">${blur[name]}</div>`;
+    wrap.appendChild(cell);
+  }
+  return wrap;
+};
