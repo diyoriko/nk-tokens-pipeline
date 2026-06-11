@@ -29,7 +29,7 @@ export const InnerShadow = () => grid('inner-shadow', true);
 
 // ---- Backdrop blur (frosted / glass) — CSS backdrop-filter --------------
 export const BackdropBlur = () => {
-  const blur = tokens['backdrop-blur'] || {};
+  const blur = (tokens.effect && tokens.effect.backdrop) || {};
   const wrap = document.createElement('div');
   // Novakid Brand-book pattern behind the glass — blur reads clearly over the squiggle edges
   wrap.style.cssText =
@@ -41,7 +41,7 @@ export const BackdropBlur = () => {
     cell.style.cssText =
       `width:200px;height:130px;border-radius:18px;border:1px solid rgba(255,255,255,.4);` +
       `box-shadow:0 8px 24px rgba(12,12,13,.16);padding:16px;color:#2c2a33;` +
-      `background:rgba(255,255,255,.3);backdrop-filter:blur(var(--nk-backdrop-blur-${name}));-webkit-backdrop-filter:blur(var(--nk-backdrop-blur-${name}))`;
+      `background:rgba(255,255,255,.3);backdrop-filter:blur(var(--nk-effect-backdrop-${name}));-webkit-backdrop-filter:blur(var(--nk-effect-backdrop-${name}))`;
     cell.innerHTML = `<div style="font-weight:700;font-size:15px">blur/${name}</div><div style="font-size:12px;color:#444;margin-top:4px;font-family:ui-monospace,monospace">${blur[name]}</div>`;
     wrap.appendChild(cell);
   }

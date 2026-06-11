@@ -58,33 +58,5 @@
       "$type": "number",
       "$value": 1400
     }
-  },
-  "opacity": {
-    "disabled": {
-      "$type": "number",
-      "$value": 0.4
-    },
-    "muted": {
-      "$type": "number",
-      "$value": 0.6
-    }
-  },
-  "backdrop-blur": {
-    "overlay": {
-      "$type": "dimension",
-      "$value": 8
-    },
-    "scrim": {
-      "$type": "dimension",
-      "$value": 16
-    },
-    "glass": {
-      "$type": "dimension",
-      "$value": 24
-    },
-    "heavy": {
-      "$type": "dimension",
-      "$value": 40
-    }
   }
 }

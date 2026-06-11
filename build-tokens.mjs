@@ -35,11 +35,9 @@ const SET_DOMAIN = {
   'Typography Primitives': 'typography',
   Typography: 'typography',
   Effect: 'effect',
-  // code-only sets (live in tokens/code-only.json, NOT synced to Figma — no motion/z-index/opacity vars there):
+  // code-only sets (live in tokens/code-only.json, NOT synced to Figma):
   motion: 'motion',
   'z-index': 'z-index',
-  opacity: 'opacity',
-  'backdrop-blur': 'backdrop-blur',
 };
 
 const isGroup = (v) => v && typeof v === 'object' && v.$value === undefined;
