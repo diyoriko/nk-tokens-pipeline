@@ -18,7 +18,7 @@ export default {
   platforms: {
     // ---- Web: CSS custom properties -------------------------------------
     css: {
-      transforms: ['attribute/cti', 'name/kebab', 'color/css', 'nk/size-px'],
+      transforms: ['attribute/cti', 'name/kebab', 'color/css', 'nk/size-px', 'nk/opacity-fraction'],
       prefix: 'nk',
       buildPath: 'build/css/',
       files: [
@@ -47,7 +47,7 @@ export default {
     // name/camel only to give each token a unique name (silences SD's collision
     // check); the format itself builds the tree from token.path, not token.name.
     ts: {
-      transforms: ['attribute/cti', 'name/camel', 'nk/size-px'],
+      transforms: ['attribute/cti', 'name/camel', 'nk/size-px', 'nk/opacity-fraction'],
       buildPath: 'build/ts/',
       files: [
         { destination: 'tokens.ts', format: 'nk/ts-nested' },
