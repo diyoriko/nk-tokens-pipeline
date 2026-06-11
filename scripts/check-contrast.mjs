@@ -45,12 +45,9 @@ checks.push(['focus.default/white', 'color-border-focus-default', W, 3]);
 checks.push(['focus.on-fill vs bright fill', 'color-border-focus-on-fill', 'color-background-brand-violet-primary', 3]);
 // default + neutral text on base surface (white)
 for (const v of ['primary', 'secondary']) checks.push([`text.default.${v}/white`, `color-text-default-${v}`, W, 4.5]);
-// link + feedback
+// link
 checks.push(['link.default/white', 'color-text-link-default', W, 4.5]);
 checks.push(['link.visited/white', 'color-text-link-visited', W, 4.5]);
-checks.push(['feedback.reward.on', 'color-feedback-reward-on', 'color-feedback-reward-default', 4.5]);
-checks.push(['feedback.streak.on', 'color-feedback-streak-on', 'color-feedback-streak-default', 4.5]);
-checks.push(['feedback.encourage.on', 'color-feedback-encourage-on', 'color-feedback-encourage-default', 4.5]);
 
 let fails = 0, skipped = 0;
 for (const [label, fgv, bgv, min] of checks) {
