@@ -27,7 +27,7 @@ for (const h of BRAND) {
   checks.push([`brand-${h}.on-tertiary`, `color-text-brand-${h}-on-tertiary`, `color-background-brand-${h}-tertiary`, 4.5]);
   checks.push([`brand-${h}.on-tertiary@hover`, `color-text-brand-${h}-on-tertiary`, `color-background-brand-${h}-tertiary-hover`, 4.5]);
   checks.push([`brand-${h}.text/white`, `color-text-brand-${h}-primary`, W, 3]); // brand accent text = large-text AA (3:1)
-  // brand-*/border = decorative main colour — exempt from 3:1 (paired with fill/tint)
+  // Border/Brand-*/Secondary = decorative main colour — exempt from 3:1; Primary (/700) is checked above
 }
 // statuses: bold (bright fill, dark hue text) + light (tint, /700 text); border on white
 for (const s of STATUS) {
@@ -35,11 +35,12 @@ for (const s of STATUS) {
   checks.push([`${s}.on-bold@hover`, `color-text-${s}-on-bold`, `color-background-${s}-bold-hover`, 4.5]);
   checks.push([`${s}.on-light`, `color-text-${s}-on-light`, `color-background-${s}-light`, 4.5]);
   checks.push([`${s}.on-light@hover`, `color-text-${s}-on-light`, `color-background-${s}-light-hover`, 4.5]);
-  checks.push([`${s}.border/white`, `color-border-${s}-default`, W, 3]);
+  checks.push([`${s}.border/white`, `color-border-${s}-primary`, W, 3]);
 }
 // functional input border — non-text contrast 3:1 on both base surfaces
-checks.push(['border.default.strong/white', 'color-border-default-strong', W, 3]);
-checks.push(['border.default.strong/secondary', 'color-border-default-strong', 'color-background-base-secondary', 3]);
+checks.push(['border.default.secondary/white', 'color-border-default-secondary', W, 3]);
+for (const h of BRAND) checks.push([`brand-${h}.border-primary/white`, `color-border-brand-${h}-primary`, W, 3]);
+checks.push(['border.default.secondary/surface', 'color-border-default-secondary', 'color-background-base-secondary', 3]);
 // focus: default ring sits offset on the page (vs white); on-fill ring sits inside a bright fill (vs a bright primary)
 checks.push(['focus.default/white', 'color-border-focus-default', W, 3]);
 checks.push(['focus.on-fill vs bright fill', 'color-border-focus-on-fill', 'color-background-brand-violet-primary', 3]);
