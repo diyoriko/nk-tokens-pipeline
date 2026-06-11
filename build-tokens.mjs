@@ -144,6 +144,15 @@ StyleDictionary.registerTransform({
   },
 });
 
+// ---- Opacity: designer-facing percent (40) -> code fraction (0.4) --------
+StyleDictionary.registerTransform({
+  name: 'nk/opacity-fraction',
+  type: 'value',
+  transitive: true,
+  filter: (token) => token.path[0] === 'effect' && String(token.path[1]).toLowerCase() === 'opacity',
+  transform: (token) => parseFloat(resolved(token)) / 100,
+});
+
 // ---- Mobile: Flutter/Dart -----------------------------------------------
 // Emits a NkColors class of `static const Color` fields. Handles opaque
 // `#RRGGBB` and the alpha shadow ramp `#RRGGBBAA` (Flutter wants `0xAARRGGBB`).
