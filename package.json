@@ -24,11 +24,12 @@
     "./dart/nk_colors.dart": "./build/dart/nk_colors.dart"
   },
   "scripts": {
-    "build:tokens": "node build-tokens.mjs && node scripts/check-contrast.mjs",
+    "build:tokens": "node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs",
     "storybook": "npm run build:tokens && storybook dev -p 6006",
     "build-storybook": "npm run build:tokens && storybook build",
     "prepack": "npm run build:tokens",
-    "check:contrast": "node scripts/check-contrast.mjs"
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "lint:tokens": "node scripts/lint-tokens.mjs"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.0",
