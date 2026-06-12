@@ -38,6 +38,8 @@ const SET_DOMAIN = {
   // code-only sets (live in tokens/code-only.json, NOT synced to Figma):
   motion: 'motion',
   'z-index': 'z-index',
+  // responsive breakpoints (tokens/responsive.json; Figma collection maintained via API, not TS):
+  responsive: 'responsive',
 };
 
 const isGroup = (v) => v && typeof v === 'object' && v.$value === undefined;

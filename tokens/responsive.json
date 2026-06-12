@@ -1,0 +1,100 @@
+{
+  "responsive": {
+    "Desktop": {
+      "Device": {
+        "$type": "string",
+        "$value": "desktop",
+        "$description": "Breakpoint name for variant binding - matches component Platform/Device variant options."
+      },
+      "Device-Width": {
+        "$type": "dimension",
+        "$value": 1440,
+        "$description": "Canonical desktop frame width (1440px, legacy Brand-book grid). Bind frame width to snap templates per mode. XXL 1920 exists for marketing heroes - same 12 columns at 104px with 32 gutter."
+      },
+      "Columns": {
+        "$type": "number",
+        "$value": 12,
+        "$description": "Grid columns at desktop (12). Reference value - layout is auto-layout-first, no Figma grid styles."
+      },
+      "Gutter": {
+        "$type": "dimension",
+        "$value": 16,
+        "$description": "Gutter between columns at desktop (16px). Use as item spacing in column rows."
+      },
+      "Margin": {
+        "$type": "dimension",
+        "$value": 152,
+        "$description": "Outer page margin at desktop (152px, centers the 12x80 grid at 1440). Bind to template frame side padding."
+      },
+      "Root-Font-Size": {
+        "$type": "dimension",
+        "$value": 16,
+        "$description": "Root rem base (16px) - matches Typography Primitives Size/16. Constant across breakpoints until code adopts responsive type scaling."
+      }
+    },
+    "Tablet": {
+      "Device": {
+        "$type": "string",
+        "$value": "tablet",
+        "$description": "Breakpoint name for variant binding - matches component Platform/Device variant options."
+      },
+      "Device-Width": {
+        "$type": "dimension",
+        "$value": 768,
+        "$description": "Canonical tablet frame width (768px, legacy Brand-book grid). Bind frame width to snap templates per mode."
+      },
+      "Columns": {
+        "$type": "number",
+        "$value": 8,
+        "$description": "Grid columns at tablet (8). Reference value - layout is auto-layout-first, no Figma grid styles."
+      },
+      "Gutter": {
+        "$type": "dimension",
+        "$value": 16,
+        "$description": "Gutter between columns at tablet (16px). Use as item spacing in column rows."
+      },
+      "Margin": {
+        "$type": "dimension",
+        "$value": 24,
+        "$description": "Outer page margin at tablet (24px). Bind to template frame side padding."
+      },
+      "Root-Font-Size": {
+        "$type": "dimension",
+        "$value": 16,
+        "$description": "Root rem base (16px) - matches Typography Primitives Size/16. Constant across breakpoints until code adopts responsive type scaling."
+      }
+    },
+    "Mobile": {
+      "Device": {
+        "$type": "string",
+        "$value": "mobile",
+        "$description": "Breakpoint name for variant binding - matches component Platform/Device variant options."
+      },
+      "Device-Width": {
+        "$type": "dimension",
+        "$value": 375,
+        "$description": "Canonical mobile frame width (375px, legacy Brand-book grid). Bind frame width to snap templates per mode."
+      },
+      "Columns": {
+        "$type": "number",
+        "$value": 2,
+        "$description": "Grid columns at mobile (2). Reference value - layout is auto-layout-first, no Figma grid styles."
+      },
+      "Gutter": {
+        "$type": "dimension",
+        "$value": 16,
+        "$description": "Gutter between columns at mobile (16px). Use as item spacing in column rows."
+      },
+      "Margin": {
+        "$type": "dimension",
+        "$value": 16,
+        "$description": "Outer page margin at mobile (16px). Bind to template frame side padding."
+      },
+      "Root-Font-Size": {
+        "$type": "dimension",
+        "$value": 16,
+        "$description": "Root rem base (16px) - matches Typography Primitives Size/16. Constant across breakpoints until code adopts responsive type scaling."
+      }
+    }
+  }
+}
