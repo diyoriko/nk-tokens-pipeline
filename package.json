@@ -21,13 +21,22 @@
     },
     "./tokens.ts": "./build/ts/tokens.ts",
     "./css/variables.css": "./build/css/variables.css",
-    "./dart/nk_colors.dart": "./build/dart/nk_colors.dart"
+    "./css/grid.css": "./build/css/grid.css",
+    "./dart/nk_colors.dart": "./build/dart/nk_colors.dart",
+    "./icons": { "types": "./build/icons/index.d.ts", "default": "./build/icons/index.js" },
+    "./icons/react": { "types": "./build/icons/react.d.ts", "default": "./build/icons/react.js" },
+    "./icons/sprite.svg": "./build/icons/sprite.svg",
+    "./icons/manifest.json": "./build/icons/manifest.json"
   },
   "scripts": {
+    "build": "npm run build:tokens && npm run build:grid && npm run build:assets",
     "build:tokens": "node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs",
+    "build:grid": "node scripts/build-grid-css.mjs",
+    "build:assets": "node scripts/build-assets.mjs",
+    "export:icons": "node scripts/export-figma-assets.mjs",
     "storybook": "npm run build:tokens && storybook dev -p 6006",
     "build-storybook": "npm run build:tokens && storybook build",
-    "prepack": "npm run build:tokens",
+    "prepack": "npm run build",
     "check:contrast": "node scripts/check-contrast.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs"
   },
