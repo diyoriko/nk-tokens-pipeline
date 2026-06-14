@@ -1,99 +1,114 @@
 {
   "responsive": {
-    "Desktop": {
+    "Mobile": {
       "Device": {
         "$type": "string",
-        "$value": "desktop",
-        "$description": "Breakpoint name for variant binding - matches component Platform/Device variant options."
+        "$value": "mobile",
+        "$description": "Breakpoint id. Media-query tier; also the Figma grid style Grid/Mobile."
+      },
+      "Breakpoint-Min": {
+        "$type": "dimension",
+        "$value": 0,
+        "$description": "min-width where the mobile tier activates (0px). Use for CSS media queries / container queries."
       },
       "Device-Width": {
         "$type": "dimension",
-        "$value": 1440,
-        "$description": "Canonical desktop frame width (1440px, legacy Brand-book grid). Bind frame width to snap templates per mode. XXL 1920 exists for marketing heroes - same 12 columns at 104px with 32 gutter."
+        "$value": 375,
+        "$description": "Canonical mobile design width (375px). From Brand-book Grid S. In Figma bind a template frame width; apply grid style Grid/Mobile."
       },
       "Columns": {
         "$type": "number",
-        "$value": 12,
-        "$description": "Grid columns at desktop (12). Reference value - layout is auto-layout-first, no Figma grid styles."
+        "$value": 2,
+        "$description": "Grid columns (2). Embodied by Figma grid style Grid/Mobile (Brand-book Grid S)."
       },
       "Gutter": {
         "$type": "dimension",
         "$value": 16,
-        "$description": "Gutter between columns at desktop (16px). Use as item spacing in column rows."
+        "$description": "Gutter between columns (16px). Column item-spacing."
       },
       "Margin": {
         "$type": "dimension",
-        "$value": 152,
-        "$description": "Outer page margin at desktop (152px, centers the 12x80 grid at 1440). Bind to template frame side padding."
+        "$value": 16,
+        "$description": "Outer page margin (16px). Template side padding."
       },
       "Root-Font-Size": {
         "$type": "dimension",
         "$value": 16,
-        "$description": "Root rem base (16px) - matches Typography Primitives Size/16. Constant across breakpoints until code adopts responsive type scaling."
+        "$description": "Root rem base (16px) = Typography Primitives Size/16. Constant across breakpoints."
       }
     },
     "Tablet": {
       "Device": {
         "$type": "string",
         "$value": "tablet",
-        "$description": "Breakpoint name for variant binding - matches component Platform/Device variant options."
+        "$description": "Breakpoint id. Media-query tier; also the Figma grid style Grid/Tablet."
+      },
+      "Breakpoint-Min": {
+        "$type": "dimension",
+        "$value": 768,
+        "$description": "min-width where the tablet tier activates (768px). Use for CSS media queries / container queries."
       },
       "Device-Width": {
         "$type": "dimension",
         "$value": 768,
-        "$description": "Canonical tablet frame width (768px, legacy Brand-book grid). Bind frame width to snap templates per mode."
+        "$description": "Canonical tablet design width (768px). From Brand-book Grid M. In Figma bind a template frame width; apply grid style Grid/Tablet."
       },
       "Columns": {
         "$type": "number",
         "$value": 8,
-        "$description": "Grid columns at tablet (8). Reference value - layout is auto-layout-first, no Figma grid styles."
+        "$description": "Grid columns (8). Embodied by Figma grid style Grid/Tablet (Brand-book Grid M)."
       },
       "Gutter": {
         "$type": "dimension",
         "$value": 16,
-        "$description": "Gutter between columns at tablet (16px). Use as item spacing in column rows."
+        "$description": "Gutter between columns (16px). Column item-spacing."
       },
       "Margin": {
         "$type": "dimension",
         "$value": 24,
-        "$description": "Outer page margin at tablet (24px). Bind to template frame side padding."
+        "$description": "Outer page margin (24px). Template side padding."
       },
       "Root-Font-Size": {
         "$type": "dimension",
         "$value": 16,
-        "$description": "Root rem base (16px) - matches Typography Primitives Size/16. Constant across breakpoints until code adopts responsive type scaling."
+        "$description": "Root rem base (16px) = Typography Primitives Size/16. Constant across breakpoints."
       }
     },
-    "Mobile": {
+    "Desktop": {
       "Device": {
         "$type": "string",
-        "$value": "mobile",
-        "$description": "Breakpoint name for variant binding - matches component Platform/Device variant options."
+        "$value": "desktop",
+        "$description": "Breakpoint id. Media-query tier; also the Figma grid style Grid/Desktop."
+      },
+      "Breakpoint-Min": {
+        "$type": "dimension",
+        "$value": 1280,
+        "$description": "min-width where the desktop tier activates (1280px). Use for CSS media queries / container queries."
       },
       "Device-Width": {
         "$type": "dimension",
-        "$value": 375,
-        "$description": "Canonical mobile frame width (375px, legacy Brand-book grid). Bind frame width to snap templates per mode."
+        "$value": 1440,
+        "$description": "Canonical desktop design width (1440px). From Brand-book 12-columns L (1280) / XL (1440), 80px columns centered. In Figma bind a template frame width; apply grid style Grid/Desktop."
       },
       "Columns": {
         "$type": "number",
-        "$value": 2,
-        "$description": "Grid columns at mobile (2). Reference value - layout is auto-layout-first, no Figma grid styles."
+        "$value": 12,
+        "$description": "Grid columns (12). Embodied by Figma grid style Grid/Desktop (Brand-book 12-columns L (1280) / XL (1440), 80px columns centered)."
       },
       "Gutter": {
         "$type": "dimension",
         "$value": 16,
-        "$description": "Gutter between columns at mobile (16px). Use as item spacing in column rows."
+        "$description": "Gutter between columns (16px). Column item-spacing."
       },
       "Margin": {
         "$type": "dimension",
-        "$value": 16,
-        "$description": "Outer page margin at mobile (16px). Bind to template frame side padding."
+        "$value": 152,
+        "$description": "Outer page margin (152px - centers the 12x80 grid at 1440). Template side padding."
       },
       "Root-Font-Size": {
         "$type": "dimension",
         "$value": 16,
-        "$description": "Root rem base (16px) - matches Typography Primitives Size/16. Constant across breakpoints until code adopts responsive type scaling."
+        "$description": "Root rem base (16px) = Typography Primitives Size/16. Constant across breakpoints."
       }
     }
   }
