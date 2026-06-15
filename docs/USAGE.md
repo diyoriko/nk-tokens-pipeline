@@ -4,6 +4,26 @@ Package: `@diyoriko/nk-tokens`. One source of truth (Figma → Tokens Studio →
 repo), four consumable layers. Everything below is generated into `build/` and
 shipped in the npm package.
 
+## Layout model — grid for the page, flex for components (read first)
+
+Two layers, not either/or:
+
+- **CSS Grid for the page scaffold** — the 12 / 8 / 2 column system (`.nk-grid` + `.nk-col-*`).
+  Use it whenever blocks must align to the column ruler across breakpoints: page layouts,
+  card grids, content + sidebar. Exact and 2-dimensional.
+- **Flexbox for component internals** — toolbars, button rows, list items, nav, anything
+  arranged in one direction with a gap. This is exactly what Figma **auto-layout** is.
+
+Figma mapping (so design and code match):
+
+| Figma | CSS | Layer |
+|---|---|---|
+| **Layout grid** (column overlay) | `.nk-grid` / CSS Grid — or just an alignment guide | page |
+| **Auto layout** | `display:flex` (direction = gap = padding = fill→`flex:1`, hug→`fit-content`) | component |
+
+The Figma column overlay does **not** lay anything out — it's a ruler you align auto-layout
+(flex) content to. So: build with flex inside components, drop them onto the grid for the page.
+
 ## 1. Tokens (colour, type, size, effects, opacity)
 
 CSS variables — the default for web:
