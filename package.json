@@ -1,6 +1,6 @@
 {
   "name": "@diyoriko/nk-tokens",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "type": "module",
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "repository": {
@@ -34,8 +34,8 @@
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs",
     "export:icons": "node scripts/export-figma-assets.mjs",
-    "storybook": "npm run build:tokens && storybook dev -p 6006",
-    "build-storybook": "npm run build:tokens && storybook build",
+    "storybook": "npm run build && storybook dev -p 6006",
+    "build-storybook": "npm run build && storybook build",
     "prepack": "npm run build",
     "check:contrast": "node scripts/check-contrast.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs"
