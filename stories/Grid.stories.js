@@ -7,6 +7,23 @@ export default { title: 'Tokens/Grid' };
 const wrap = (inner) => { const d = document.createElement('div'); d.style.cssText = `padding:24px 28px;font-family:${FONT}`; d.innerHTML = inner; return d; };
 const px = (t) => String(t.$value).replace('px', '');
 
+export const LayoutModel = () => {
+  const card = (t, b) => `<div style="flex:1;border:1px solid ${BORDER};border-radius:12px;padding:16px 18px;background:#fff">
+    <div style="font-weight:700;font-size:14px;margin-bottom:6px">${t}</div><div style="color:${MUTED};font-size:12px;line-height:1.5">${b}</div></div>`;
+  const html = '<h1 style="font-size:20px;margin:0 0 4px">Layout model</h1>' +
+    `<p style="color:${MUTED};margin:0 0 18px;font-size:12px">Two layers, not either/or. The choice never changes the tokens — breakpoints / columns / gutter feed both.</p>` +
+    `<div style="display:flex;gap:16px;margin-bottom:20px">
+      ${card('CSS Grid → the page', 'The 12 / 8 / 2 column scaffold (<code>.nk-grid</code> + <code>.nk-col-*</code>). Use when blocks must align to the column ruler: page layouts, card grids, content + sidebar.')}
+      ${card('Flexbox → components', 'Toolbars, button rows, list items, nav — one-direction layouts with a gap. This is exactly Figma <b>auto-layout</b>.')}
+    </div>` +
+    `<table style="border-collapse:collapse;font-size:12px"><thead><tr>${['Figma', 'CSS', 'Layer'].map((h) => `<th style="text-align:left;padding:6px 24px 6px 0;color:${MUTED}">${h}</th>`).join('')}</tr></thead><tbody>
+      <tr style="border-top:1px solid ${BORDER}"><td style="padding:6px 24px 6px 0">Layout grid (column overlay)</td><td style="padding:6px 24px 6px 0"><code>.nk-grid</code> / CSS Grid — or an alignment guide</td><td style="padding:6px 24px 6px 0">page</td></tr>
+      <tr style="border-top:1px solid ${BORDER}"><td style="padding:6px 24px 6px 0">Auto layout</td><td style="padding:6px 24px 6px 0"><code>display:flex</code> (gap, padding, fill→flex:1, hug→fit-content)</td><td style="padding:6px 24px 6px 0">component</td></tr>
+    </tbody></table>` +
+    `<p style="color:${MUTED};margin:18px 0 0;font-size:12px">The Figma column overlay does <b>not</b> lay anything out — it's a ruler. Build with flex inside components, drop them onto the grid for the page.</p>`;
+  return wrap(html);
+};
+
 export const Responsive = () => {
   const r = raw.responsive ?? {};
   const order = ['Mobile', 'Tablet', 'Desktop'];
