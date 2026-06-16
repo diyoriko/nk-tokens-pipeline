@@ -22,11 +22,24 @@ feature branch ──PR──▶ develop ──promote PR (merge commit)──�
 
 ## Build & gates
 
-- `npm run build:tokens` = `lint-tokens.mjs` → `build-tokens.mjs` → `check-contrast.mjs`.
-  Both the lint and the contrast contract `exit 1` on failure and gate PRs.
+- `npm run build:tokens` = `lint-tokens.mjs` → `build-tokens.mjs` → `check-contrast.mjs` →
+  `check-scopes.mjs`. All gates `exit 1` on failure and gate PRs.
 - `npm run build` also runs `build:grid` + `build:assets`.
 - `build/` and `storybook-static/` are **git-ignored** — never commit generated output.
   `prepack` regenerates everything on publish.
+
+## Scopes
+
+Figma variable **scopes** (which property pickers a variable appears in) live only in Figma —
+Tokens Studio doesn't export them. They're versioned in `tokens/scopes.snapshot.json` and
+enforced by `scripts/check-scopes.mjs`:
+- **Laws** (run in `build:tokens`, no Figma needed): primitives hidden (`scopes=[]`), semantics
+  scoped to their surface (Text→`TEXT_FILL`, Icon→`SHAPE_FILL`, Border→`STROKE_COLOR`,
+  Background/Social→a fill), and **no `ALL_SCOPES`** anywhere.
+- **Drift** (run after a Tokens Studio re-import / scope change): dump live scopes via the
+  Figma plugin/MCP, then `node scripts/check-scopes.mjs --live <dump>` to diff; `--update`
+  refreshes the snapshot. CI can't fetch this on the Pro plan (REST variables API is
+  Enterprise-only), so the snapshot is refreshed by hand and reviewed in the PR diff.
 
 ## Tokens Studio
 
