@@ -5,7 +5,7 @@
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/diyoriko/nk-tokens-pipeline-demo.git"
+    "url": "git+https://github.com/diyoriko/nk-tokens-pipeline.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -23,6 +23,8 @@
     "./css/variables.css": "./build/css/variables.css",
     "./css/grid.css": "./build/css/grid.css",
     "./dart/nk_colors.dart": "./build/dart/nk_colors.dart",
+    "./logo/*": "./build/logo/*",
+    "./patterns/*": "./build/patterns/*",
     "./icons": { "types": "./build/icons/index.d.ts", "default": "./build/icons/index.js" },
     "./icons/react": { "types": "./build/icons/react.d.ts", "default": "./build/icons/react.js" },
     "./icons/sprite.svg": "./build/icons/sprite.svg",
@@ -39,6 +41,9 @@
     "prepack": "npm run build",
     "check:contrast": "node scripts/check-contrast.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.0",
