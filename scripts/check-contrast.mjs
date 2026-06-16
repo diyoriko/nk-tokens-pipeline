@@ -28,6 +28,10 @@ for (const h of BRAND) {
   checks.push([`brand-${h}.on-tertiary`, `color-text-brand-${h}-on-tertiary`, `color-background-brand-${h}-tertiary`, 4.5]);
   checks.push([`brand-${h}.on-tertiary@hover`, `color-text-brand-${h}-on-tertiary`, `color-background-brand-${h}-tertiary-hover`, 4.5]);
   checks.push([`brand-${h}.text/white`, `color-text-brand-${h}-primary`, W, 3]); // brand accent text = large-text AA (3:1)
+  // Strong = deep brand surface (X/700) + Strong-Hover (X/800), white on-colour. green/yellow land ~3.9 → large-text 3:1 (same exemption as their accent text); the rest pass 4.5.
+  const strongMin = (h === 'green' || h === 'yellow') ? 3 : 4.5;
+  checks.push([`brand-${h}.on-strong`, `color-text-brand-${h}-on-strong`, `color-background-brand-${h}-strong`, strongMin]);
+  checks.push([`brand-${h}.on-strong@hover`, `color-text-brand-${h}-on-strong`, `color-background-brand-${h}-strong-hover`, strongMin]);
   // Border/Brand-*/Secondary = decorative main colour — exempt from 3:1; Primary (/700) is checked above
 }
 // statuses: bold (bright fill, dark hue text) + light (tint, /700 text); border on white
@@ -47,6 +51,9 @@ checks.push(['focus.default/white', 'color-border-focus-default', W, 3]);
 checks.push(['focus.on-fill vs bright fill', 'color-border-focus-on-fill', 'color-background-brand-violet-primary', 3]);
 // default + neutral text on base surface (white)
 for (const v of ['primary', 'secondary']) checks.push([`text.default.${v}/white`, `color-text-default-${v}`, W, 4.5]);
+// inverse base surface (near-black) carries the inverse text
+checks.push(['base.inverse/text-inverse', 'color-text-default-primary-inverse', 'color-background-base-inverse', 4.5]);
+checks.push(['base.inverse-hover/text-inverse', 'color-text-default-primary-inverse', 'color-background-base-inverse-hover', 4.5]);
 // link
 checks.push(['link.default/white', 'color-text-link-default', W, 4.5]);
 checks.push(['link.visited/white', 'color-text-link-visited', W, 4.5]);
