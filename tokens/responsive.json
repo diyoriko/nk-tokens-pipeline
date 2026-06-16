@@ -110,6 +110,43 @@
         "$value": 16,
         "$description": "Root rem base (16px) = Typography Primitives Size/16. Constant across breakpoints."
       }
+    },
+    "Wide": {
+      "Device": {
+        "$type": "string",
+        "$value": "wide",
+        "$description": "Breakpoint id. Marketing / XXL tier; also the Figma grid style Grid/Wide."
+      },
+      "Breakpoint-Min": {
+        "$type": "dimension",
+        "$value": 1920,
+        "$description": "min-width where the wide (XXL) tier activates (1920px). Use for CSS media queries / container queries."
+      },
+      "Device-Width": {
+        "$type": "dimension",
+        "$value": 1920,
+        "$description": "Canonical wide design width (1920px). From Brand-book 12-columns XXL, 104px columns centered. In Figma bind a template frame width; apply grid style Grid/Wide."
+      },
+      "Columns": {
+        "$type": "number",
+        "$value": 12,
+        "$description": "Grid columns (12). Embodied by Figma grid style Grid/Wide (Brand-book 12-columns XXL, 104px columns centered)."
+      },
+      "Gutter": {
+        "$type": "dimension",
+        "$value": 32,
+        "$description": "Gutter between columns (32px on the XXL / wide tier). Column item-spacing."
+      },
+      "Margin": {
+        "$type": "dimension",
+        "$value": 160,
+        "$description": "Outer page margin (160px - centers the 12x104 grid at 1920). Template side padding."
+      },
+      "Root-Font-Size": {
+        "$type": "dimension",
+        "$value": 16,
+        "$description": "Root rem base (16px) = Typography Primitives Size/16. Constant across breakpoints."
+      }
     }
   }
 }
