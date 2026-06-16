@@ -33,7 +33,7 @@ collection:
 
 | Set / collection | Tier | Contents |
 |---|---|---|
-| `color-primitives` | primitive | 8 hue ramps `100→1000` (`violet · lemon · magenta · blue · green · orange · coral · grey`) + `white` + `black`/`white-alpha` ramps (overlays, shadows) |
+| `color-primitives` | primitive | 8 hue ramps `100→1000` (`violet · yellow · magenta · blue · green · orange · coral · grey`) + `white` + `black`/`white-alpha` ramps (overlays, shadows) |
 | `color` | semantic | `background · text · icon · border` surfaces aliasing the primitives |
 | `size` | primitive | `space · radius · stroke · icon · blur · depth` (SDS values 1:1) |
 | `typography-primitives` | primitive | `family` (Mikado) · `scale` (01–14) · `weight` (regular/bold) |
@@ -49,22 +49,22 @@ Primitives`, not `Color/Grey/800`. The build re-injects the domain so CSS names 
 
 - **Background** — full 6-variant matrix *(primary, primary-hover, secondary,
   secondary-hover, tertiary, tertiary-hover)* for: `base · neutral · brand-{violet,
-  lemon, magenta, blue, green, orange, coral} · success · warning · danger` (+ `disabled`).
+  yellow, magenta, blue, green, orange, coral} · success · warning · danger` (+ `disabled`).
 - **Text / Icon** — `primary / secondary / tertiary` + `on-{intent}` (foreground on a
   coloured fill). Hover lives on the background, not on text — per SDS practice.
-- **Border** — `default / hover` + `focus` + per-intent.
+- **Border** — `default` (3 tiers: primary / secondary / tertiary) + `focus` + per-intent. No hover token — states step between tiers (per SDS practice).
 
-All `on-{intent}` pairs are **AA-verified** (white on every status/brand fill ≥ 4.5:1; dark text on lemon 9.65:1).
+All `on-{intent}` pairs are **AA-verified** (white on every status/brand fill ≥ 4.5:1; dark text on yellow 9.65:1).
 
 ## Semantic intents — when to use what
 
 Lightweight intent contract (the *meaning*; detailed per-component usage is documented with each component, not here). Variants: **primary** (strong) → **secondary** (light tint) → **tertiary** (lightest); `-hover` = the interactive hover of each.
 
-**Background:** `base` page/card surfaces · `neutral` solid grey component fill (secondary button, chip) · `brand-violet` primary brand fill · `brand-lemon` accent (dark fg) · `brand-{magenta,blue,green,orange,coral}` decorative accents · `success/warning/danger` status surfaces · `disabled` inert.
+**Background:** `base` page/card surfaces · `neutral` solid grey component fill (secondary button, chip) · `brand-violet` primary brand fill · `brand-yellow` accent (dark fg) · `brand-{magenta,blue,green,orange,coral}` decorative accents · `success/warning/danger` status surfaces · `disabled` inert.
 
 **Text / Icon:** `default` primary/secondary/tertiary body · `brand-*/success/warning/danger` coloured (links, status) · `on-*` foreground on a coloured fill (e.g. `on-brand-violet` = white on the violet button) · `disabled`.
 
-**Border:** `default` (+hover) neutral · `brand-*/success/warning/danger` status · `focus` ring · `disabled`.
+**Border:** `default` (3 tiers) neutral · `brand-*/success/warning/danger` status · `focus` ring · `disabled`.
 
 ---
 
@@ -149,12 +149,13 @@ import { tokens } from '@diyoriko/nk-tokens/tokens';  // typed token tree
 Git is the source of truth — pull it into Figma, don't hand-build variables:
 
 1. Install the **Tokens Studio** plugin.
-2. **Settings → Sync → GitHub** → this repo, branch `main`, file `tokens/tokens.json`,
+2. **Settings → Sync → GitHub** → this repo, branch `develop`, file `tokens/tokens.json`,
    format **W3C DTCG**.
 3. **Pull** → all 6 sets load → **Create Variables / Apply to Figma** → Variables +
    Text/Effect Styles materialise.
-4. Edit a token → **Push** (PR to `main`). Never edit Figma variables outside Tokens
-   Studio — it desyncs from Git.
+4. Edit a token → **Push** (PR to `develop`). CI lints + checks contrast on the PR;
+   once merged, `develop` is promoted to `main` (prod). Never edit Figma variables
+   outside Tokens Studio — it desyncs from Git. See `CLAUDE.md` for the full flow.
 
 ---
 
