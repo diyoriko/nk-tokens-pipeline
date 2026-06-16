@@ -9,10 +9,11 @@
 //   FIGMA_TOKEN  (required) a Figma personal access token with file read scope
 //   FILE_KEY     (default aVwI61IYqufB2gWE6VbwOM — Novakid DS Foundations)
 //   ICON_PAGE    (default "Icons")
-//   ICON_SECTION (default "24" — the master 24px section; one SVG per concept)
+//   ICON_SECTION (default "24" — the master 24px container; one SVG per concept)
 //
-// The 6 size sections in Figma are a designer convenience; in code an icon is one
-// vector sized via CSS, so we export the 24px masters only.
+// The 6 size containers in Figma are a designer convenience; in code an icon is one
+// vector sized via CSS, so we export the 24px masters only. The container may be a
+// SECTION or a FRAME (Figma converts SECTIONs to FRAMEs when they're dragged).
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -34,10 +35,10 @@ fs.mkdirSync(outDir, { recursive: true });
 const file = await api(`/files/${FILE_KEY}?depth=3`);
 const page = file.document.children.find((p) => p.name === PAGE);
 if (!page) throw new Error(`page "${PAGE}" not found`);
-const section = page.children.find((n) => n.name === SECTION && n.type === 'SECTION');
-if (!section) throw new Error(`section "${SECTION}" not found on page ${PAGE}`);
+const section = page.children.find((n) => n.name === SECTION && (n.type === 'SECTION' || n.type === 'FRAME'));
+if (!section) throw new Error(`container "${SECTION}" (SECTION or FRAME) not found on page ${PAGE}`);
 const comps = (section.children || []).filter((n) => n.type === 'COMPONENT');
-if (!comps.length) throw new Error('no components in section');
+if (!comps.length) throw new Error(`no COMPONENT children in container "${SECTION}"`);
 
 // 2. batch-export as SVG (chunk to keep URLs short)
 const byId = {};

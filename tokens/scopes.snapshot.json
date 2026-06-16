@@ -241,7 +241,12 @@
     "Social/Whatsapp": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"],
     "Social/Telegram": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"],
     "Social/Facebook": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"],
-    "Social/Vk": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"]
+    "Social/Vk": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"],
+    "Social/Messenger": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"],
+    "Social/X": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"],
+    "Social/Viber": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"],
+    "Social/Line": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"],
+    "Social/Kakaotalk": ["FRAME_FILL", "SHAPE_FILL", "TEXT_FILL"]
   },
   "Size": {
     "Space/0": ["WIDTH_HEIGHT", "GAP"],
