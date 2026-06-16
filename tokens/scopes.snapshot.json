@@ -286,6 +286,7 @@
     "Space/Negative/3200": ["GAP"],
     "Space/Negative/4000": ["GAP"],
     "Space/Negative/050": ["GAP"],
+    "Radius/0": ["CORNER_RADIUS"],
     "Radius/100": ["CORNER_RADIUS"],
     "Radius/200": ["CORNER_RADIUS"],
     "Radius/300": ["CORNER_RADIUS"],
