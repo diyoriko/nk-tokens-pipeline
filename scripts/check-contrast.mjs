@@ -18,7 +18,8 @@ const STATUS = ['success', 'warning', 'danger', 'info'];
 
 // brand: bright primary + tint secondary/tertiary, each with a hover; dark hue text (X/900) holds across rest+hover.
 // on-primary is used on primary AND primary-hover; on-secondary on secondary(+hover); on-tertiary on tertiary(+hover).
-// green/lemon are 2-level (no tertiary) — those checks resolve to null and are skipped.
+// every brand hue now carries a full 3-level tertiary, so no pair is skipped by design;
+// the skip path below only fires if a token is genuinely absent (a real regression signal).
 for (const h of BRAND) {
   checks.push([`brand-${h}.on-primary`, `color-text-brand-${h}-on-primary`, `color-background-brand-${h}-primary`, 4.5]);
   checks.push([`brand-${h}.on-primary@hover`, `color-text-brand-${h}-on-primary`, `color-background-brand-${h}-primary-hover`, 4.5]);

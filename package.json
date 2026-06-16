@@ -5,7 +5,7 @@
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/diyoriko/nk-tokens-pipeline-demo.git"
+    "url": "git+https://github.com/diyoriko/nk-tokens-pipeline.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -23,6 +23,8 @@
     "./css/variables.css": "./build/css/variables.css",
     "./css/grid.css": "./build/css/grid.css",
     "./dart/nk_colors.dart": "./build/dart/nk_colors.dart",
+    "./logo/*": "./build/logo/*",
+    "./patterns/*": "./build/patterns/*",
     "./icons": { "types": "./build/icons/index.d.ts", "default": "./build/icons/index.js" },
     "./icons/react": { "types": "./build/icons/react.d.ts", "default": "./build/icons/react.js" },
     "./icons/sprite.svg": "./build/icons/sprite.svg",
@@ -30,7 +32,7 @@
   },
   "scripts": {
     "build": "npm run build:tokens && npm run build:grid && npm run build:assets",
-    "build:tokens": "node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs",
+    "build:tokens": "node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs",
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs",
     "export:icons": "node scripts/export-figma-assets.mjs",
@@ -38,7 +40,11 @@
     "build-storybook": "npm run build && storybook build",
     "prepack": "npm run build",
     "check:contrast": "node scripts/check-contrast.mjs",
+    "check:scopes": "node scripts/check-scopes.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.6.0",

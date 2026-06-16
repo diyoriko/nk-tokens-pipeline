@@ -50,3 +50,52 @@ export const Radius = () => {
   }
   return wrap(html + '</div>');
 };
+
+export const IconSizes = () => {
+  const ic = tokens.size.icon || {};
+  let html = '<h1 style="font-size:20px;margin:0 0 4px">Icon sizes</h1>' +
+    `<p style="color:${MUTED};margin:0 0 14px;font-size:12px">Icon box sizes — the rendered icon fills this square.</p>` +
+    '<div style="display:flex;gap:32px;align-items:flex-end;flex-wrap:wrap">';
+  for (const k of Object.keys(ic).sort((a, b) => parseFloat(ic[a]) - parseFloat(ic[b]))) {
+    html += `<div style="text-align:center;font-size:12px">
+      <div style="display:flex;align-items:flex-end;justify-content:center;height:40px"><div style="width:${ic[k]};height:${ic[k]};background:var(--nk-color-background-brand-violet-primary);border-radius:4px"></div></div>
+      <div style="margin-top:8px;font-weight:700">icon/${k}</div><div style="color:${MUTED}">${ic[k]}</div></div>`;
+  }
+  return wrap(html + '</div>');
+};
+
+export const Stroke = () => {
+  const st = tokens.size.stroke || {};
+  let html = '<h1 style="font-size:20px;margin:0 0 14px">Stroke</h1>';
+  for (const k of Object.keys(st)) html += bar(cssVar(['size', 'stroke', k]), k, st[k], `stroke/${k} = ${st[k]}`);
+  return wrap(html);
+};
+
+export const Blur = () => {
+  const bl = tokens.size.blur || {};
+  let html = '<h1 style="font-size:20px;margin:0 0 4px">Blur radii</h1>' +
+    `<p style="color:${MUTED};margin:0 0 14px;font-size:12px">Layer-blur radii (icon/image blur — distinct from backdrop blur).</p>` +
+    '<div style="display:flex;gap:20px;flex-wrap:wrap">';
+  for (const k of Object.keys(bl).sort((a, b) => parseFloat(bl[a]) - parseFloat(bl[b]))) {
+    html += `<div style="text-align:center;font-size:12px">
+      <div style="width:96px;height:96px;border-radius:12px;background:linear-gradient(135deg,#6d46fc,#c76ef2);filter:blur(var(${cssVar(['size', 'blur', k])}))"></div>
+      <div style="margin-top:8px;font-weight:700">blur/${k}</div><div style="color:${MUTED}">${bl[k]}</div></div>`;
+  }
+  return wrap(html + '</div>');
+};
+
+export const Depth = () => {
+  const dp = tokens.size.depth || {};
+  let html = '<h1 style="font-size:20px;margin:0 0 4px">Depth</h1>' +
+    `<p style="color:${MUTED};margin:0 0 14px;font-size:12px">Elevation / translate offsets — positive lifts, negative insets.</p>`;
+  for (const k of Object.keys(dp).sort((a, b) => parseFloat(dp[a]) - parseFloat(dp[b]))) html += bar(cssVar(['size', 'depth', k]), k, dp[k], `depth/${k} = ${dp[k]}`);
+  return wrap(html);
+};
+
+export const Focus = () => {
+  const fc = tokens.size.focus || {};
+  let html = '<h1 style="font-size:20px;margin:0 0 14px">Focus ring</h1>' +
+    `<div style="padding:8px 0 20px"><button style="font:inherit;font-size:13px;padding:8px 16px;border-radius:8px;border:1px solid ${BORDER};background:#fff;outline:var(--nk-size-focus-ring,2px) solid var(--nk-color-border-focus-default,#572bd7);outline-offset:var(--nk-size-focus-offset,2px)">Focused control</button></div>`;
+  for (const k of Object.keys(fc)) html += bar(cssVar(['size', 'focus', k]), k, fc[k], `focus/${k} = ${fc[k]}`);
+  return wrap(html);
+};

@@ -1,4 +1,4 @@
-// Build runner for the Novakid token pipeline demo.
+// Build runner for the Novakid token pipeline.
 // Registers the two custom output formats, then builds all platforms from
 // style-dictionary.config.mjs. Run via `npm run build:tokens`.
 //
