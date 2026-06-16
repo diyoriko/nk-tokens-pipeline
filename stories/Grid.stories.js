@@ -1,5 +1,5 @@
 import { FONT, MUTED, BORDER } from './_helpers.js';
-import raw from '../tokens/tokens.json';
+import responsiveRaw from '../tokens/responsive.json';
 import '../build/css/grid.css';
 
 export default { title: 'Tokens/Grid' };
@@ -25,8 +25,8 @@ export const LayoutModel = () => {
 };
 
 export const Responsive = () => {
-  const r = raw.responsive ?? {};
-  const order = ['Mobile', 'Tablet', 'Desktop'];
+  const r = responsiveRaw.responsive ?? {};
+  const order = Object.keys(r); // Mobile, Tablet, Desktop (+ Wide when present)
   let html = '<h1 style="font-size:20px;margin:0 0 4px">Responsive grid</h1>' +
     `<p style="color:${MUTED};margin:0 0 18px;font-size:12px">From the Brand-book Grids page. Three tiers; the Figma grid styles Grid/Mobile · Grid/Tablet · Grid/Desktop mirror these. CSS: <code>.nk-container</code> / <code>.nk-grid</code> / <code>.nk-col-*</code>.</p>`;
   // spec table
