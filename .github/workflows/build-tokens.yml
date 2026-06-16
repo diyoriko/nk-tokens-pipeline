@@ -1,7 +1,8 @@
 name: build-tokens
 
-# Demo CI: when Tokens Studio pushes an updated token file, rebuild the
-# generated outputs and publish them as a downloadable artifact.
+# CI: rebuild the generated outputs whenever the token sources change (push),
+# and GATE pull requests with the same lint + contrast checks that run locally,
+# so a token regression can't merge.
 #
 # Production CI for parent-mf (Bitbucket) is a SEPARATE concern — not here.
 
@@ -14,6 +15,8 @@ on:
       - 'style-dictionary.config.mjs'
       - 'build-tokens.mjs'
       - 'package.json'
+  pull_request:
+    branches: [develop, main]
   workflow_dispatch: {}
 
 jobs:

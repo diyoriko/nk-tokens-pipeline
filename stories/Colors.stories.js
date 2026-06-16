@@ -93,3 +93,12 @@ export const Semantic = () => {
   }
   return wrap(html);
 };
+
+// ---- DATA-VIZ (categorical chart palette) -------------------------------
+export const DataViz = () => {
+  const dv = tokens.color['data-viz'] || {};
+  let html = '<h1 style="font-size:20px;margin:0 0 4px">Data-Viz</h1>' +
+    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px">Categorical chart palette — 8 distinct series hues (each aliases a brand/grey primitive at /500).</p>`;
+  const cards = Object.keys(dv).map((k) => card(`data-viz/${k}`, cssVar(['color', 'data-viz', k]), dv[k], false, null)).join('');
+  return wrap(html + grid(cards));
+};

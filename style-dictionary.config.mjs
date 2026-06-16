@@ -1,4 +1,4 @@
-// Style Dictionary platform config for the Novakid token pipeline demo.
+// Style Dictionary platform config for the Novakid token pipeline.
 // Custom formats `nk/dart-colors` and `nk/ts-nested` are registered in build-tokens.mjs
 // (the runner) before the build runs. DTCG ($value/$type) is auto-detected by SD v4.
 //
