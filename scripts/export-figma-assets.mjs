@@ -42,7 +42,9 @@ if (!comps.length) throw new Error(`no COMPONENT children in container "${SECTIO
 
 // 2. batch-export as SVG (chunk to keep URLs short)
 const byId = {};
-for (const c of comps) byId[c.id] = c.name.replace(/^icon\//, '').replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+// Icons are named icon/<category>/<glyph> in Figma (category groups the Assets panel);
+// the code library is flat, so the filename is just the last segment (the glyph name).
+for (const c of comps) byId[c.id] = c.name.split('/').pop().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
 const ids = Object.keys(byId);
 const chunks = [];
 for (let i = 0; i < ids.length; i += 60) chunks.push(ids.slice(i, i + 60));
