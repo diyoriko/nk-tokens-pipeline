@@ -19,6 +19,7 @@
       "import": "./build/ts/tokens.mjs",
       "require": "./build/ts/tokens.cjs"
     },
+    "./package.json": "./package.json",
     "./tokens.ts": "./build/ts/tokens.ts",
     "./css/variables.css": "./build/css/variables.css",
     "./css/grid.css": "./build/css/grid.css",
@@ -58,6 +59,14 @@
     "storybook": "^8.6.0",
     "style-dictionary": "^4.3.3",
     "vite": "^5.4.0"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   },
   "main": "./build/ts/tokens.cjs",
   "module": "./build/ts/tokens.mjs",
