@@ -6,8 +6,10 @@
 // tokens.json is the file Tokens Studio pushes from Figma; this step is Phase 1
 // (code side). Outputs are GENERATED, never hand-edited.
 
+import fs from 'node:fs/promises';
 import StyleDictionary from 'style-dictionary';
 import config from './style-dictionary.config.mjs';
+import { CAPSULES } from './capsules/capsules.config.mjs';
 
 const resolved = (t) => t.$value ?? t.value; // SD v4 puts the resolved value on $value (DTCG)
 const typeOf = (t) => t.$type ?? t.type;
@@ -100,37 +102,48 @@ const rewriteRefs = (node, rootDomain) => {
   for (const k of Object.keys(node)) if (!k.startsWith('$')) rewriteRefs(node[k], rootDomain);
 };
 
-StyleDictionary.registerPreprocessor({
-  name: 'nk/flatten-sets',
-  preprocessor: (d) => {
-    const domainSets = Object.keys(d).filter((k) => !k.startsWith('$') && SET_DOMAIN[k]);
-    if (domainSets.length) {
-      const rootDomain = {};
-      for (const s of domainSets)
-        for (const rk of Object.keys(d[s])) if (!rk.startsWith('$')) rootDomain[rk] = SET_DOMAIN[s];
-      const merged = {};
-      for (const s of domainSets) {
-        const dom = SET_DOMAIN[s];
-        merged[dom] = deepMerge(merged[dom] ?? {}, d[s]);
-      }
-      const resolveRef = (val, depth = 0) => {
-        const s = String(val);
-        const m = /^\{([^}]+)\}$/.exec(s);
-        if (!m || depth > 4) return val;
-        const segs = m[1].split('.');
-        const dom = rootDomain[segs[0]];
-        let n = dom ? merged[dom] : undefined;
-        for (const seg of segs) n = n?.[seg];
-        return n && n.$value !== undefined ? resolveRef(n.$value, depth + 1) : val;
-      };
-      decomposeComposites(merged, resolveRef, false);
-      rewriteRefs(merged, rootDomain);
-      return merged;
+// Capsule overlay set(s) for the capsule currently building (setName -> domain).
+// Empty for the default + core builds, so they are byte-identical and ignore
+// every capsule set (a capsule set is just an unknown key to `nk/flatten-sets`).
+let CAPSULE_EXTRA = {};
+
+// The flatten body, parameterized by the active set->domain map. The default
+// preprocessor passes SET_DOMAIN verbatim (so its output is unchanged); the
+// capsule preprocessor passes SET_DOMAIN plus the active capsule's overlay set.
+const makeFlatten = (getSetDomain) => (d) => {
+  const SET = getSetDomain();
+  const domainSets = Object.keys(d).filter((k) => !k.startsWith('$') && SET[k]);
+  if (domainSets.length) {
+    const rootDomain = {};
+    for (const s of domainSets)
+      for (const rk of Object.keys(d[s])) if (!rk.startsWith('$')) rootDomain[rk] = SET[s];
+    const merged = {};
+    for (const s of domainSets) {
+      const dom = SET[s];
+      merged[dom] = deepMerge(merged[dom] ?? {}, d[s]);
     }
-    // legacy fallbacks (primitives/semantic split, or single 'global' set)
-    return d.primitives || d.semantic ? deepMerge(d.primitives ?? {}, d.semantic ?? {}) : d.global ?? d;
-  },
-});
+    const resolveRef = (val, depth = 0) => {
+      const s = String(val);
+      const m = /^\{([^}]+)\}$/.exec(s);
+      if (!m || depth > 4) return val;
+      const segs = m[1].split('.');
+      const dom = rootDomain[segs[0]];
+      let n = dom ? merged[dom] : undefined;
+      for (const seg of segs) n = n?.[seg];
+      return n && n.$value !== undefined ? resolveRef(n.$value, depth + 1) : val;
+    };
+    decomposeComposites(merged, resolveRef, false);
+    rewriteRefs(merged, rootDomain);
+    return merged;
+  }
+  // legacy fallbacks (primitives/semantic split, or single 'global' set)
+  return d.primitives || d.semantic ? deepMerge(d.primitives ?? {}, d.semantic ?? {}) : d.global ?? d;
+};
+
+// Default: core sets only. Output is identical to before this refactor.
+StyleDictionary.registerPreprocessor({ name: 'nk/flatten-sets', preprocessor: makeFlatten(() => SET_DOMAIN) });
+// Capsule: core sets + the active capsule overlay set (deep-merged last → wins).
+StyleDictionary.registerPreprocessor({ name: 'nk/flatten-sets-capsule', preprocessor: makeFlatten(() => ({ ...SET_DOMAIN, ...CAPSULE_EXTRA })) });
 
 // ---- Dimensions: bare number in source -> px on output ------------------
 StyleDictionary.registerTransform({
@@ -233,3 +246,28 @@ const sd = new StyleDictionary(config);
 await sd.cleanAllPlatforms().catch(() => {});
 await sd.buildAllPlatforms();
 console.log('✓ Tokens built → css/variables.css · dart/nk_colors.dart · ts/{tokens.ts,.mjs,.cjs,.d.ts}');
+
+// ---- Per-capsule builds (additive) --------------------------------------
+// Each capsule = the core build + its overlay set, emitted under
+// build/capsules/<slug>/. The default build above is finished and untouched;
+// every capsule remaps its buildPaths to build/capsules/<slug>/ and we rm that
+// dir first, so no capsule can ever write into build/css|dart|ts. The shared
+// register* hooks above are reused (no re-registration).
+if (process.env.NK_CAPSULES !== '0') {
+  for (const cap of CAPSULES) {
+    const outRoot = `build/capsules/${cap.slug}/`;
+    await fs.rm(outRoot, { recursive: true, force: true });
+    CAPSULE_EXTRA = cap.set ? { [cap.set]: 'color' } : {};
+    const capConfig = {
+      ...config,
+      preprocessors: ['nk/flatten-sets-capsule'],
+      platforms: Object.fromEntries(
+        Object.entries(config.platforms).map(([n, p]) => [n, { ...p, buildPath: p.buildPath.replace(/^build\//, outRoot) }]),
+      ),
+    };
+    const sdCap = new StyleDictionary(capConfig);
+    await sdCap.buildAllPlatforms();
+    console.log(`✓ Capsule ${cap.slug}${cap.set ? ` (+${cap.set})` : ''} → ${outRoot}{css,dart,ts}`);
+  }
+  CAPSULE_EXTRA = {};
+}
