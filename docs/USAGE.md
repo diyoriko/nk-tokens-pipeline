@@ -94,8 +94,7 @@ separately (not recoloured) — see the Figma `Social` group.
 import symbol from "@diyoriko/nk-tokens/logo/logo-symbol.svg";
 <img src={symbol} alt="Novakid" />
 ```
-Patterns are 480×286 brand backgrounds (CSS `background-image`). Heavy halftone
-patterns ship as @2× PNG; the rest are SVG.
+Patterns are 480×286 brand backgrounds (CSS `background-image`), all shipped as SVG.
 
 ## Refreshing assets from Figma
 
