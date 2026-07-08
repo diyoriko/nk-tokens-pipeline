@@ -62,17 +62,19 @@ build re-injects the domain so CSS names stay `--nk-color-grey-800`.
   text — per SDS practice.
 - **Border** — `default` (**3 tiers**: primary / secondary / tertiary) + `focus` +
   per-intent. **No hover token** — states step between tiers.
-- **Data-Viz / Social / Gradient** — categorical chart palette · vendor brand colours
-  (WhatsApp/Telegram/Facebook/VK) · 10 brand gradients (Figma paint styles).
+- **Data-Viz / Social / Gradient** — categorical chart palette · 9 vendor brand colours
+  (WhatsApp/Telegram/Facebook/VK/Messenger/X/Viber/LINE/Kakao) · 10 brand gradients (Figma
+  paint styles).
 
-The contrast contract (`scripts/check-contrast.mjs`, **84 pairs**) AA-verifies every
-`on-*` / text / functional-border pair at build time.
+The contrast contract (`scripts/check-contrast.mjs`, **100 pairs**) AA-verifies every
+`on-*` / text / border pair at build time.
 
 ### Design laws (encoded in `$description`)
 
-Main pinned at `/500` · hover steps *away* from its on-colour · white text only on
-violet + blue · border = 3 tiers, no hover · text 900 / 600 / 400 (tertiary = decorative) ·
-opacity stored as percent, divided to a fraction on build.
+Main pinned at `/500` · hover steps *away* from its on-colour · white on-text by tier
+(on-**primary**: violet + blue only; on-**strong**: all 7 brand hues) · border = 3 tiers, no
+hover · text 900 / 600 / 400 (tertiary = decorative) · opacity stored as percent, divided to
+a fraction on build.
 
 ---
 
@@ -100,12 +102,12 @@ grep background-brand-violet-primary build/css/variables.css
 | **`build-tokens.mjs`** | Build runner — custom preprocessor/transforms/formats, then Style Dictionary. |
 | **`style-dictionary.config.mjs`** | SD platform config — css / dart / ts outputs, `--nk-` prefix. |
 | `scripts/lint-tokens.mjs` | Pre-build gate: structure, references, formats, 100% semantic descriptions. |
-| `scripts/check-contrast.mjs` | Contrast contract gate (84 AA/UI pairs). |
+| `scripts/check-contrast.mjs` | Contrast contract gate (100 AA/UI pairs). |
 | `scripts/build-grid-css.mjs` | Emits `build/css/grid.css` (`.nk-container` / `.nk-grid` / `.nk-col-*`) from `responsive.json`. |
 | `scripts/build-assets.mjs` | `assets/{icons,logo,patterns}/*.svg` → sprite + React components + manifest (icons rebound to `currentColor`). |
 | `scripts/export-figma-assets.mjs` | Bulk-pull icons from Figma via REST (needs `FIGMA_TOKEN`). |
 | `build/` | **Output** (generated, git-ignored): `css/{variables,grid}.css`, `dart/nk_colors.dart`, `ts/{tokens.ts,.mjs,.cjs,.d.ts}`, `icons/`, `logo/`, `patterns/`. |
-| `.storybook/`, `stories/*.stories.js` | Token catalogue — Colors, Sizing, Typography, Shadow, Effects, Gradients, Grid, Motion, Z-Index, Usage. |
+| `.storybook/`, `stories/*.stories.js` | Token catalogue — Colors, Spacing, Typography, Shadow, Effects, Gradients, Grid, Motion, Z-Index, Usage. |
 | `.github/workflows/` | `build-tokens` (rebuild + **gate PRs**), `deploy-storybook` (Pages, from `main`), `publish-tokens` (npm, on `v*` tag). |
 
 ---
@@ -115,7 +117,7 @@ grep background-brand-violet-primary build/css/variables.css
 | Command | Does |
 |---|---|
 | `npm run build` | `build:tokens` + `build:grid` + `build:assets`. |
-| `npm run build:tokens` | **lint** → Style Dictionary build → **contrast contract**. Both gates `exit 1` on failure. |
+| `npm run build:tokens` | **lint** → Style Dictionary build → **contrast contract** → **scopes laws**. All gates `exit 1` on failure. |
 | `npm run build:grid` | Regenerates `build/css/grid.css` from `responsive.json`. |
 | `npm run build:assets` | Rebuilds the icon/logo/pattern bundle. |
 | `npm run export:icons` | `FIGMA_TOKEN=… npm run export:icons` — pulls icon SVGs from the Figma library. |
@@ -126,6 +128,18 @@ composite typography/shadow tokens, re-injects the domain prefix into refs) · `
 (bare-number dimensions → `px`) · `nk/opacity-fraction` (percent → fraction) · `nk/dart-colors`
 (`NkColors`, `#RRGGBBAA` → `0xAARRGGBB`) · `nk/ts-nested` (typed `tokens` tree). CSS resolves
 aliases to the primitive value (`outputReferences: false`).
+
+---
+
+## Authoring tokens (maintainers)
+
+Add or change a token in **`tokens/tokens.json`** (the only source of truth), then let the gates check you:
+
+1. **Name by role, not value** — `Background/<role>`, `Text/<role>`, `Icon/<role>`, `Border/<role>`. Reference a primitive by alias (`{violet.500}`), never a raw hex. The Figma name *is* the contract (`/` → `-`, lowercase, `--nk-` prefix).
+2. **Scope it** — semantics get a single scope (`FRAME_FILL` / `TEXT_FILL` / `SHAPE_FILL` / `STROKE_COLOR`), never `ALL_SCOPES`; primitives stay hidden. Scopes live only in Figma, so they're versioned in `tokens/scopes.snapshot.json` and enforced by `check:scopes` — refresh the snapshot (`node scripts/check-scopes.mjs --live <figma-dump.json> --update`) when you add a scoped variable.
+3. **Describe it** — every semantic needs a `$description` (the lint gate requires 100% coverage and the design laws are encoded there).
+4. **Run the gates** — `npm run build` chains `lint → build → contrast → scopes`, each `exit 1` on failure. Add the new `on-*` / text / border pairing to the contrast contract if you introduce one.
+5. **Branch flow** — edit on a feature branch → PR to `develop`; `main` is the released line (see [`CLAUDE.md`](./CLAUDE.md)). External teams building their *own* semantics on top of the primitives: [`foundations/BUILD-ON-PRIMITIVES.md`](./foundations/BUILD-ON-PRIMITIVES.md).
 
 ---
 

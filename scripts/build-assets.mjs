@@ -5,7 +5,7 @@
 //                            build/icons/sprite.svg   (one <symbol> per icon)
 //                            build/icons/manifest.json
 //                            build/icons/index.js + .d.ts  (raw-string map)
-//                            build/icons/react.jsx + .d.ts (React components)
+//                            build/icons/react.js + .d.ts (React components)
 //   assets/logo/*.svg    ->  build/logo/*  + manifest
 //   assets/patterns/*    ->  build/patterns/* + manifest
 //
@@ -29,7 +29,18 @@ function cleanIconSvg(raw) {
   body = body
     .replace(/<rect\b[^>]*fill="#[Ff]5[Ff]5[Ff]5"[^>]*\/>/g, '')
     .replace(/<path\b[^>]*fill="#[Ff]5[Ff]5[Ff]5"[^>]*\/>/g, '')
-    .replace(/<path\b[^>]*fill-opacity="0\.1"[^>]*\/>/g, '')
+    .replace(/<path\b[^>]*fill-opacity="0\.1"[^>]*\/>/g, '');
+  // Strip Figma's full-box clipPath chrome — but NOT for the loader (the only icon with a
+  // <foreignObject>): its <defs> carry the conic-gradient's angular clip-path, which is
+  // load-bearing, not a no-op. Every other icon's <defs> holds only a full-box clip.
+  if (!/<foreignObject/i.test(body)) {
+    body = body
+      .replace(/<defs>[\s\S]*?<\/defs>/g, '')           // full-box clipPath defs
+      .replace(/<clipPath\b[\s\S]*?<\/clipPath>/g, '')   // any stray clipPath outside <defs>
+      .replace(/<g\b[^>]*\bclip-path="[^"]*"[^>]*>/g, '') // the clip-path group wrapper (open tag)
+      .replace(/\s+clip-path="[^"]*"/g, '');             // any residual clip-path ref on a path
+  }
+  body = body
     .replace(/<g id="\d+">/g, '')        // the "<g id='24'>" size wrapper
     .replace(/<g id="icon\/[^"]*">/g, '') // the per-icon wrapper
     .replace(/<\/g>/g, '');
@@ -87,6 +98,17 @@ function copyAssets(kind) {
 }
 const logos = copyAssets('logo');
 const patterns = copyAssets('patterns');
+
+// Strip stray macOS .DS_Store from build/ so they never reach the npm tarball.
+function rmDsStore(dir) {
+  if (!fs.existsSync(dir)) return;
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) rmDsStore(p);
+    else if (e.name === '.DS_Store') fs.rmSync(p);
+  }
+}
+rmDsStore(B(''));
 
 console.log(`✓ Assets built: ${icons.length} icons (svg+sprite+react+manifest), ${logos.length} logo, ${patterns.length} pattern files.`);
 if (!icons.length) console.warn('  (assets/icons is empty — run `npm run export:icons` to pull them from Figma.)');
