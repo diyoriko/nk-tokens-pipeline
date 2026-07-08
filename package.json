@@ -1,6 +1,6 @@
 {
   "name": "@diyoriko/nk-tokens",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "type": "module",
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "repository": {
@@ -24,6 +24,18 @@
     "./css/variables.css": "./build/css/variables.css",
     "./css/grid.css": "./build/css/grid.css",
     "./dart/nk_colors.dart": "./build/dart/nk_colors.dart",
+    "./capsules/parent-area": {
+      "types": "./build/capsules/parent-area/ts/tokens.d.ts",
+      "import": "./build/capsules/parent-area/ts/tokens.mjs",
+      "require": "./build/capsules/parent-area/ts/tokens.cjs"
+    },
+    "./capsules/parent-area/css/variables.css": "./build/capsules/parent-area/css/variables.css",
+    "./capsules/demo-team": {
+      "types": "./build/capsules/demo-team/ts/tokens.d.ts",
+      "import": "./build/capsules/demo-team/ts/tokens.mjs",
+      "require": "./build/capsules/demo-team/ts/tokens.cjs"
+    },
+    "./capsules/demo-team/css/variables.css": "./build/capsules/demo-team/css/variables.css",
     "./logo/*": "./build/logo/*",
     "./patterns/*": "./build/patterns/*",
     "./icons": {
@@ -39,7 +51,7 @@
   },
   "scripts": {
     "build": "npm run build:tokens && npm run build:grid && npm run build:assets",
-    "build:tokens": "node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs",
+    "build:tokens": "node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-capsule-gates.mjs",
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs",
     "export:icons": "node scripts/export-figma-assets.mjs",
@@ -47,6 +59,7 @@
     "build-storybook": "npm run build && storybook build",
     "prepack": "npm run build",
     "check:contrast": "node scripts/check-contrast.mjs",
+    "check:capsules": "node scripts/check-capsule-gates.mjs",
     "check:scopes": "node scripts/check-scopes.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs"
   },

@@ -5,7 +5,7 @@ Single entry point for the Novakid colour/size/type/effect **token foundations**
 > Topology = Figma SDS collections · Values = Novakid (Landing DS + Brand Book + product code). Git is the source of truth.
 
 ## Layout — everything tokens lives in this repo
-This folder (`foundations/`) lives **inside the token repo** `~/Documents/Novakid/nk-tokens-pipeline` (its own git → remote `github.com/diyoriko/nk-tokens-pipeline-demo`). One home for both the buildable tokens and their docs:
+This folder (`foundations/`) lives **inside the token repo** `~/Documents/Novakid/nk-tokens-pipeline` (its own git → remote `github.com/diyoriko/nk-tokens-pipeline`). One home for both the buildable tokens and their docs:
 - `../tokens/tokens.json` — **source of truth** (Tokens Studio sets: `color-primitives`, `color`, `size`, `typography-primitives`, `typography`, `effect`).
 - `../build/` — generated `--nk-*` CSS / Dart / TS (gitignored). Build: `node build-tokens.mjs` from the repo root.
 - `../` Storybook token catalogue (deploys to GitHub Pages from `main`).
@@ -29,11 +29,14 @@ Research lives separately in `~/Documents/Novakid/design-code-research/`.
 | **Sync outputs** | `confluence-push/` (push.py + ADF) · `confluence-token-tree.adf.json` · `tokens-studio-sandbox/` · `prep/` |
 
 ## Design ↔ code sync pipeline (git is source of truth)
-```
-edit tokens.json (in nk-tokens-pipeline) → push main
+
+> Branch-flow canon: [`../CLAUDE.md`](../CLAUDE.md). Designers / Tokens Studio sync on **`develop`**; **`main`** is the released line (triggers deploy + tag-publish).
+
+```text
+edit tokens.json (in nk-tokens-pipeline) → PR to develop → release-merge to main
    ├─ deploy-storybook Action → GitHub Pages           (auto on push to main)
-   ├─ git tag v1.0.0 → publish-tokens Action → npm @diyoriko/nk-tokens   (needs the TAG)
-   ├─ Tokens Studio (Figma plugin): Pull main → Create Variables / Apply → Figma Variables + Text/Effect Styles
+   ├─ git tag v2.x → publish-tokens Action → npm @diyoriko/nk-tokens   (needs the TAG)
+   ├─ Tokens Studio (Figma plugin): Pull develop → Create Variables / Apply → Figma Variables + Text/Effect Styles
    └─ confluence-push/push.py → Confluence Token Tree 7253… (REST + Atlassian token)
    → Slack announce
 ```

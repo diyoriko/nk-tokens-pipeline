@@ -3,7 +3,13 @@
 // Run by `npm run check:contrast` (and at the tail of build:tokens).
 import fs from 'node:fs';
 
-const css = fs.readFileSync(new URL('../build/css/variables.css', import.meta.url), 'utf8');
+// No arg → the canonical build (byte-identical default behaviour). An optional
+// CSS path arg (cwd-relative) lets the per-capsule gate run the same contract
+// against build/capsules/<slug>/css/variables.css.
+const cssTarget = process.argv[2]
+  ? new URL(process.argv[2], `file://${process.cwd()}/`)
+  : new URL('../build/css/variables.css', import.meta.url);
+const css = fs.readFileSync(cssTarget, 'utf8');
 const g = (n) => { const m = css.match(new RegExp('--nk-' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ':\\s*([^;]+);')); return m ? m[1].trim() : null; };
 const lin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
 const hex = (h) => { h = h.replace('#', ''); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); };
