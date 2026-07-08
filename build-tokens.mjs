@@ -102,9 +102,8 @@ const rewriteRefs = (node, rootDomain) => {
   for (const k of Object.keys(node)) if (!k.startsWith('$')) rewriteRefs(node[k], rootDomain);
 };
 
-// Capsule overlay set(s) for the capsule currently building (setName -> domain).
-// Empty for the default + core builds, so they are byte-identical and ignore
-// every capsule set (a capsule set is just an unknown key to `nk/flatten-sets`).
+// Team overlay set for the capsule currently building (setName -> domain).
+// Empty for the parent-area (base) build; the team's overlay for the others.
 let CAPSULE_EXTRA = {};
 
 // The flatten body, parameterized by the active set->domain map. The default
@@ -140,10 +139,13 @@ const makeFlatten = (getSetDomain) => (d) => {
   return d.primitives || d.semantic ? deepMerge(d.primitives ?? {}, d.semantic ?? {}) : d.global ?? d;
 };
 
-// Default: core sets only. Output is identical to before this refactor.
-StyleDictionary.registerPreprocessor({ name: 'nk/flatten-sets', preprocessor: makeFlatten(() => SET_DOMAIN) });
-// Capsule: core sets + the active capsule overlay set (deep-merged last → wins).
-StyleDictionary.registerPreprocessor({ name: 'nk/flatten-sets-capsule', preprocessor: makeFlatten(() => ({ ...SET_DOMAIN, ...CAPSULE_EXTRA })) });
+// Default: core sets + the Parent Area base brand overlay (the default team).
+// Value-identical to pre-B2 output — Parent Area reproduces the violet brand
+// that used to live inside the Color set (proven by the build diff on merge).
+const DEFAULT_DOMAIN = { ...SET_DOMAIN, 'Parent Area': 'color' };
+StyleDictionary.registerPreprocessor({ name: 'nk/flatten-sets', preprocessor: makeFlatten(() => DEFAULT_DOMAIN) });
+// Capsule: core + Parent Area base + the active team overlay (deep-merged last → wins).
+StyleDictionary.registerPreprocessor({ name: 'nk/flatten-sets-capsule', preprocessor: makeFlatten(() => ({ ...DEFAULT_DOMAIN, ...CAPSULE_EXTRA })) });
 
 // ---- Dimensions: bare number in source -> px on output ------------------
 StyleDictionary.registerTransform({
@@ -248,8 +250,8 @@ await sd.buildAllPlatforms();
 console.log('✓ Tokens built → css/variables.css · dart/nk_colors.dart · ts/{tokens.ts,.mjs,.cjs,.d.ts}');
 
 // ---- Per-capsule builds (additive) --------------------------------------
-// Each capsule = the core build + its overlay set, emitted under
-// build/capsules/<slug>/. The default build above is finished and untouched;
+// Each capsule = core + the Parent Area base + its own team overlay, emitted
+// under build/capsules/<slug>/. The default build above is finished and untouched;
 // every capsule remaps its buildPaths to build/capsules/<slug>/ and we rm that
 // dir first, so no capsule can ever write into build/css|dart|ts. The shared
 // register* hooks above are reused (no re-registration).
