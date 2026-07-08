@@ -32,7 +32,7 @@ Research lives separately in `~/Documents/Novakid/design-code-research/`.
 
 > Branch-flow canon: [`../CLAUDE.md`](../CLAUDE.md). Designers / Tokens Studio sync on **`develop`**; **`main`** is the released line (triggers deploy + tag-publish).
 
-```
+```text
 edit tokens.json (in nk-tokens-pipeline) → PR to develop → release-merge to main
    ├─ deploy-storybook Action → GitHub Pages           (auto on push to main)
    ├─ git tag v2.x → publish-tokens Action → npm @diyoriko/nk-tokens   (needs the TAG)

@@ -67,7 +67,7 @@ build re-injects the domain so CSS names stay `--nk-color-grey-800`.
   paint styles).
 
 The contrast contract (`scripts/check-contrast.mjs`, **100 pairs**) AA-verifies every
-`on-*` / text / functional-border pair at build time.
+`on-*` / text / border pair at build time.
 
 ### Design laws (encoded in `$description`)
 
@@ -136,7 +136,7 @@ aliases to the primitive value (`outputReferences: false`).
 Add or change a token in **`tokens/tokens.json`** (the only source of truth), then let the gates check you:
 
 1. **Name by role, not value** — `Background/<role>`, `Text/<role>`, `Icon/<role>`, `Border/<role>`. Reference a primitive by alias (`{violet.500}`), never a raw hex. The Figma name *is* the contract (`/` → `-`, lowercase, `--nk-` prefix).
-2. **Scope it** — semantics get a single scope (`FRAME_FILL` / `TEXT_FILL` / `SHAPE_FILL` / `STROKE_COLOR`), never `ALL_SCOPES`; primitives stay hidden. Scopes live only in Figma, so they're versioned in `tokens/scopes.snapshot.json` and enforced by `check:scopes` — refresh the snapshot (`node scripts/check-scopes.mjs --update <figma-dump.json>`) when you add a scoped variable.
+2. **Scope it** — semantics get a single scope (`FRAME_FILL` / `TEXT_FILL` / `SHAPE_FILL` / `STROKE_COLOR`), never `ALL_SCOPES`; primitives stay hidden. Scopes live only in Figma, so they're versioned in `tokens/scopes.snapshot.json` and enforced by `check:scopes` — refresh the snapshot (`node scripts/check-scopes.mjs --live <figma-dump.json> --update`) when you add a scoped variable.
 3. **Describe it** — every semantic needs a `$description` (the lint gate requires 100% coverage and the design laws are encoded there).
 4. **Run the gates** — `npm run build` chains `lint → build → contrast → scopes`, each `exit 1` on failure. Add the new `on-*` / text / border pairing to the contrast contract if you introduce one.
 5. **Branch flow** — edit on a feature branch → PR to `develop`; `main` is the released line (see [`CLAUDE.md`](./CLAUDE.md)). External teams building their *own* semantics on top of the primitives: [`foundations/BUILD-ON-PRIMITIVES.md`](./foundations/BUILD-ON-PRIMITIVES.md).
