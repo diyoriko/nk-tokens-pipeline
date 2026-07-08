@@ -10,19 +10,18 @@ change** to the foundation or to any other team.
 ## The shape
 
 ```
-Foundation (you own)            ← primitives: Color/Type/Size/Effect + base semantics
-   ▲ alias            ▲ alias
-Parent Area        Demo Team     ← capsules: a Token Set that overrides/extends the base
-   │                  │
-@nk/tokens         @nk/tokens
-(default `.`)      ./capsules/demo-team
+Foundation (you own)          ← primitives + structural semantics (Color/Size/Type/Effect)
+        ▲ base brand overlay
+Parent Area  (violet)         ← the default brand, layered into the default build
+   ▲ team delta      ▲ team delta
+Demo Team (magenta)  Team B…   ← per-team overlays, layered over core + Parent Area
 ```
 
-- **Parent Area** is the first capsule and is the current default semantics —
-  no overlay. It re-emits the core under `./capsules/parent-area` so every team
-  (including the original) has a stable per-capsule subpath.
-- **Demo Team** is a worked example: a 2-token overlay that swaps the violet
-  brand primary for magenta, proving per-capsule divergence end-to-end.
+- **Parent Area** is the **base brand overlay** — it holds the default (violet)
+  brand that used to live inside `Color`, and is layered into the default build
+  (`@nk/tokens` `.` = core + Parent Area) *and* under every other team's capsule.
+- **Demo Team** is a worked example: a full **magenta rebrand** of the brand slot
+  (25 tokens), proving a real, coherent per-team brand end-to-end.
 
 ## Where each piece lives
 
@@ -38,16 +37,18 @@ theme to "become" that capsule.
 
 ## Why the default package is safe
 
-The default build (`@diyoriko/nk-tokens` `.` entry → `build/css|dart|ts`) is the
-**core** build and is **byte-identical** no matter how many capsules exist. Its
-preprocessor (`nk/flatten-sets`) only ingests the sets in its `SET_DOMAIN`;
-capsule sets are unknown keys to it, so it ignores them. Capsule builds use a
-separate preprocessor (`nk/flatten-sets-capsule`) that adds the one active
-capsule set, deep-merged last so it wins, and write only to
-`build/capsules/<slug>/` (never into `build/css|dart|ts`).
+The default build (`@diyoriko/nk-tokens` `.` entry → `build/css|dart|ts`) is
+core + the **Parent Area** base brand, and is **value-identical** to the pre-B2
+output — Parent Area reproduces the exact violet brand that used to live inside
+`Color`. Its preprocessor (`nk/flatten-sets`) ingests core + Parent Area
+(`DEFAULT_DOMAIN`); other teams' overlay sets are unknown keys to it, so they are
+ignored. Capsule builds use `nk/flatten-sets-capsule`, which adds the active team
+overlay on top of core + Parent Area, deep-merged last so it wins, and write only
+to `build/capsules/<slug>/` (never into `build/css|dart|ts`).
 
-Proven on every build: the 6 canonical files are diffed against a pre-change
-baseline and must be identical (see the PR's verification).
+Proven on every change: every `--nk-*` variable in the default CSS/Dart/TS is
+diffed **by value** against a pre-change baseline and must be unchanged (order
+may shift as the brand block moves sets — values may not).
 
 ## Add a capsule (checklist)
 

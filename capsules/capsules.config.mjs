@@ -8,18 +8,20 @@
 //
 //   slug : output dir (build/capsules/<slug>/) AND npm subpath (./capsules/<slug>)
 //   name : human label (also the Tokens Studio theme name)
-//   set  : the tokens.json Token Set layered over the core, or null for "core"
-//          (Parent Area = the current default semantics, no overlay).
+//   set  : the tokens.json Token Set layered over the core. Parent Area is the
+//          BASE brand overlay — it holds the default (violet) brand and is
+//          layered into the default build and under every other team's capsule.
 //
 // Add a team:  the designer creates a Token Set in TS (e.g. "Team B"), pushes;
 // add { slug:'team-b', name:'Team B', set:'Team B' } here + 'Team B' to
 // lint-tokens.mjs KNOWN_SETS/SET_DOMAIN. The build then emits its own package.
 //
-// IMPORTANT: the default package (`.` / build/css|dart|ts) is the CORE build and
-// is byte-identical regardless of capsules — capsule sets are ignored by the
-// default `nk/flatten-sets` preprocessor (they are not in its SET_DOMAIN).
+// IMPORTANT: the default package (`.` / build/css|dart|ts) = core + Parent Area
+// (the base brand). It is VALUE-identical to the pre-B2 output because Parent
+// Area reproduces the violet brand that used to live inside the Color set. Other
+// teams' overlay sets are ignored by the default build (not in DEFAULT_DOMAIN).
 
 export const CAPSULES = [
-  { slug: 'parent-area', name: 'Parent Area', set: null },
+  { slug: 'parent-area', name: 'Parent Area', set: 'Parent Area' },
   { slug: 'demo-team', name: 'Demo Team', set: 'Demo Team' },
 ];
