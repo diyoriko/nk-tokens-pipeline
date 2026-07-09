@@ -14,5 +14,5 @@ export function leaves(obj, path = []) {
 export const cssVar = (path) => `--nk-${path.join('-')}`;
 
 export const FONT = 'var(--nk-typography-family-sans, Mikado, system-ui, sans-serif)';
-export const MUTED = 'var(--nk-color-text-default-secondary, #66656a)';
-export const BORDER = 'var(--nk-color-border-default-default, #cfcfd3)';
+export const MUTED = 'var(--nk-color-text-default-secondary, #636363)';
+export const BORDER = 'var(--nk-color-border-default-primary, #d7d7d7)'; // quiet hairline tier

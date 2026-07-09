@@ -42,21 +42,38 @@ if (!comps.length) throw new Error(`no COMPONENT children in container "${SECTIO
 
 // 2. batch-export as SVG (chunk to keep URLs short)
 const byId = {};
+const seen = new Map(); // filename -> Figma component name (collision guard)
 // Icons are named icon/<category>/<glyph> in Figma (category groups the Assets panel);
 // the code library is flat, so the filename is just the last segment (the glyph name).
-for (const c of comps) byId[c.id] = c.name.split('/').pop().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+for (const c of comps) {
+  const name = c.name.split('/').pop().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+  if (seen.has(name)) {
+    console.error(`✗ Filename collision: "${c.name}" and "${seen.get(name)}" both export as ${name}.svg — rename one in Figma.`);
+    process.exit(1);
+  }
+  seen.set(name, c.name);
+  byId[c.id] = name;
+}
 const ids = Object.keys(byId);
 const chunks = [];
 for (let i = 0; i < ids.length; i += 60) chunks.push(ids.slice(i, i + 60));
 
+// Fail closed on a partial export: a null render URL or a failed download must
+// not exit 0, or the package silently ships with icons missing.
+const failed = [];
 let n = 0;
 for (const chunk of chunks) {
   const res = await api(`/images/${FILE_KEY}?ids=${chunk.join(',')}&format=svg`);
   for (const [id, url] of Object.entries(res.images)) {
-    if (!url) continue;
-    const svg = await fetch(url).then((r) => r.text());
-    fs.writeFileSync(path.join(outDir, byId[id] + '.svg'), svg);
+    if (!url) { failed.push(`${byId[id]} (render returned null)`); continue; }
+    const r = await fetch(url);
+    if (!r.ok) { failed.push(`${byId[id]} (download HTTP ${r.status})`); continue; }
+    fs.writeFileSync(path.join(outDir, byId[id] + '.svg'), await r.text());
     n++;
   }
+}
+if (failed.length || n !== ids.length) {
+  console.error(`✗ Partial export: ${n}/${ids.length} icons. Failed: ${failed.join(', ') || 'unknown ids'}`);
+  process.exit(1);
 }
 console.log(`✓ Exported ${n}/${ids.length} icons to assets/icons/. Now run: npm run build:assets`);

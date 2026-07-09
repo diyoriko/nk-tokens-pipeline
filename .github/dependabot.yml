@@ -9,6 +9,14 @@ updates:
     labels: ["dependencies"]
     commit-message:
       prefix: "chore(deps)"
+    # Storybook packages + vite move in lockstep (peer-dep trio) — one grouped
+    # PR instead of three conflicting singles.
+    groups:
+      storybook:
+        patterns:
+          - "storybook"
+          - "@storybook/*"
+          - "vite"
 
   # GitHub Actions — keeps `uses:` current (incl. SHA-pinned third-party actions)
   - package-ecosystem: github-actions

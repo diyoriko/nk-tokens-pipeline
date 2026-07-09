@@ -7,3 +7,6 @@ foundations/_audit/*.html
 foundations/_archive/
 *.woff2
 
+
+# local review reports (kept out of the repo)
+reports/

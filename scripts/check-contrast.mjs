@@ -64,12 +64,17 @@ checks.push(['base.inverse-hover/text-inverse', 'color-text-default-primary-inve
 checks.push(['link.default/white', 'color-text-link-default', W, 4.5]);
 checks.push(['link.visited/white', 'color-text-link-visited', W, 4.5]);
 
-let fails = 0, skipped = 0;
+// Fail closed: a missing token or a non-hex value (rgba()/var()/gradient) is a
+// FAILURE, not a skip — otherwise a renamed semantic or outputReferences flip
+// would silently shrink the contract while the gate stays green.
+const HEX = /^#[0-9a-f]{6}([0-9a-f]{2})?$/i;
+let fails = 0;
 for (const [label, fgv, bgv, min] of checks) {
   const f = fg(fgv), b = fg(bgv);
-  if (!f || !b) { console.warn(`  ? ${label}: token missing (${fgv} / ${bgv}) — skipped`); skipped++; continue; }
+  if (!f || !b) { console.error(`  ✗ MISSING ${label}: token absent (${fgv} / ${bgv}) — contract shrank, treat as regression`); fails++; continue; }
+  if (!HEX.test(f) || !HEX.test(b)) { console.error(`  ✗ NON-HEX ${label}: "${f}" on "${b}" — contrast can't be verified`); fails++; continue; }
   const r = C(f, b);
   if (r < min) { console.error(`  ✗ FAIL ${label}: ${f} on ${b} = ${r.toFixed(2)} (< ${min})`); fails++; }
 }
 if (fails) { console.error(`\nContrast contract: ${fails} FAILURE(S).`); process.exit(1); }
-console.log(`✓ Contrast contract: all ${checks.length - skipped} on-*/text/border pairs pass their AA/UI threshold${skipped ? ` (${skipped} skipped — token absent)` : ''}.`);
+console.log(`✓ Contrast contract: all ${checks.length} on-*/text/border pairs pass their AA/UI threshold.`);

@@ -1,6 +1,6 @@
 {
   "name": "@diyoriko/nk-tokens",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "type": "module",
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "repository": {
@@ -51,7 +51,7 @@
   },
   "scripts": {
     "build": "npm run build:tokens && npm run build:grid && npm run build:assets",
-    "build:tokens": "node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-capsule-gates.mjs",
+    "build:tokens": "node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-outputs.mjs && node scripts/check-capsule-gates.mjs",
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs",
     "export:icons": "node scripts/export-figma-assets.mjs",
@@ -67,11 +67,10 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^8.6.0",
-    "@storybook/html-vite": "^8.6.0",
-    "storybook": "^8.6.0",
-    "style-dictionary": "^4.3.3",
-    "vite": "^5.4.0"
+    "@storybook/html-vite": "^10.4.6",
+    "storybook": "^10.4.6",
+    "style-dictionary": "^5.5.0",
+    "vite": "^8.1.4"
   },
   "peerDependencies": {
     "react": ">=17.0.0"

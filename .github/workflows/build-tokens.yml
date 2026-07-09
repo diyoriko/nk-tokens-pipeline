@@ -1,23 +1,32 @@
 name: build-tokens
 
 # CI: rebuild the generated outputs whenever the token sources change (push),
-# and GATE pull requests with the same lint + contrast checks that run locally,
-# so a token regression can't merge.
+# and GATE pull requests with the same lint + contrast + scope + output-shape
+# checks that run locally, so a token regression can't merge. The same job also
+# builds Storybook, so a showcase-breaking change is red on the PR — not first
+# discovered by the post-merge Pages/preview deploys.
 #
 # Production CI for parent-mf (Bitbucket) is a SEPARATE concern — not here.
 
 on:
   push:
+    branches: [develop, main]
     paths:
       - 'tokens/**'
       - 'assets/**'
       - 'scripts/**'
+      - 'capsules/**'
+      - 'stories/**'
+      - '.storybook/**'
       - 'style-dictionary.config.mjs'
       - 'build-tokens.mjs'
       - 'package.json'
   pull_request:
     branches: [develop, main]
   workflow_dispatch: {}
+
+permissions:
+  contents: read
 
 concurrency:
   group: build-tokens-${{ github.ref }}
@@ -27,47 +36,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install
         run: npm ci
 
-      - name: Build (tokens + grid + assets)
+      - name: Build (tokens + grid + assets — all gates)
         run: npm run build
 
+      - name: Build Storybook (gate the showcase too)
+        run: npx storybook build
+
       - name: Upload generated outputs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nk-tokens-build
           path: build/
           if-no-files-found: error
-
-  # --- Optional: commit build/ back to the repo instead of (or as well as)
-  # --- uploading an artifact. Disabled by default — flip `if` to enable, and
-  # --- remove `build/` from .gitignore so the outputs are tracked.
-  commit-back:
-    if: false
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run build:tokens
-      - name: Commit generated outputs
-        run: |
-          git config user.name  "tokens-bot"
-          git config user.email "tokens-bot@users.noreply.github.com"
-          git add -f build/
-          git diff --cached --quiet || git commit -m "chore(tokens): rebuild generated outputs"
-          git push
