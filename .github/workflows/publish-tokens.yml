@@ -1,9 +1,15 @@
 name: publish-tokens
 
 # Publishes the @diyoriko/nk-tokens package to GitHub Packages when a version
-# tag is pushed (e.g. `git tag v2.4.0 && git push --tags`). The tag must match
-# package.json "version" — a release commit bumps it first; the job fails on a
-# mismatch. Consumers then `npm i @diyoriko/nk-tokens`.
+# tag is pushed (e.g. `git tag v2.5.1 && git push origin v2.5.1`), then creates
+# the matching GitHub Release with generated notes.
+#
+# Guards (all must hold, in order):
+#   1. the ref is a real v* TAG — a workflow_dispatch from a branch is a no-op
+#   2. the tagged commit is an ancestor of main — a tag on a side branch can't
+#      publish an unreviewed tree
+#   3. the tag matches package.json "version" — a release commit bumps it first
+# The full gated build runs before publish (and again inside prepack).
 
 on:
   push:
@@ -20,13 +26,25 @@ concurrency:
 
 jobs:
   publish:
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full history — needed for the ancestor-of-main assert
+
+      - name: Assert tag is on main
+        run: |
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::${GITHUB_REF_NAME} points at a commit that is not on main — tag the promote merge commit on main."
+            exit 1
+          fi
+          echo "OK: ${GITHUB_REF_NAME} is an ancestor of main"
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           registry-url: https://npm.pkg.github.com
           scope: '@diyoriko'
           cache: npm
@@ -34,11 +52,10 @@ jobs:
       - run: npm ci
 
       # Full build (tokens + grid + assets) so every `exports` target is emitted
-      # and the lint/contrast/scopes gates run before publish — not just build:tokens.
+      # and the lint/contrast/scopes/output gates run before publish — not just build:tokens.
       - run: npm run build
 
       - name: Assert tag matches package.json version
-        if: startsWith(github.ref, 'refs/tags/v')
         run: |
           PKG=$(node -p "require('./package.json').version")
           TAG="${GITHUB_REF_NAME#v}"
@@ -51,3 +68,15 @@ jobs:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the GitHub Release (this job only)
+    steps:
+      - uses: actions/checkout@v7
+      - name: Create GitHub Release with generated notes
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes --verify-tag
+        env:
+          GH_TOKEN: ${{ github.token }}
