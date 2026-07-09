@@ -79,13 +79,14 @@ const decomposeComposites = (node, resolveRef, inInner) => {
           const r = resolveRef(x);
           return String(r).endsWith('px') ? String(r) : `${parseFloat(r)}px`;
         };
+        // inset comes from the layer's own Tokens Studio type; the group-name test is a fallback
         const str = layers
-          .map((l) => `${inInner ? 'inset ' : ''}${num(l.x)} ${num(l.y)} ${num(l.blur)} ${num(l.spread)} ${resolveRef(l.color)}`)
+          .map((l) => `${l.type === 'innerShadow' || inInner ? 'inset ' : ''}${num(l.x)} ${num(l.y)} ${num(l.blur)} ${num(l.spread)} ${resolveRef(l.color)}`)
           .join(', ');
         node[key] = { $type: 'shadow', $value: str };
       }
     } else {
-      decomposeComposites(child, resolveRef, inInner || /inner/.test(key));
+      decomposeComposites(child, resolveRef, inInner || /inner/i.test(key));
     }
   }
 };
@@ -181,8 +182,10 @@ const toDartHex = (value) => {
 StyleDictionary.registerFormat({
   name: 'nk/dart-colors',
   format: ({ dictionary }) => {
+    // Only plain hex values can become a Dart Color const — gradients (and any
+    // other CSS-string colors) are web-only and would emit uncompilable Dart.
     const colors = dictionary.allTokens.filter(
-      (t) => typeOf(t) === 'color' && t.path[0] === 'color',
+      (t) => typeOf(t) === 'color' && t.path[0] === 'color' && /^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(String(resolved(t))),
     );
     const fields = colors
       .map((t) => `  static const Color ${t.name} = Color(0x${toDartHex(resolved(t))});`)
