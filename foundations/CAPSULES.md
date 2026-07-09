@@ -55,12 +55,13 @@ may shift as the brand block moves sets — values may not).
 1. **Designer (Figma/TS):** create a Token Set for the team (e.g. `Team B`),
    each token an **alias** of a primitive. Push to `develop`.
 2. **Registry:** add `{ slug: 'team-b', name: 'Team B', set: 'Team B' }` to
-   [`capsules/capsules.config.mjs`](../capsules/capsules.config.mjs).
-3. **Lint:** add `'Team B'` to `CAPSULE_SETS` in
-   [`scripts/lint-tokens.mjs`](../scripts/lint-tokens.mjs) (it joins
-   `KNOWN_SETS` + `SET_DOMAIN` automatically).
-4. **Exports:** add the `./capsules/team-b` block to `package.json` `exports`.
-5. **(Optional) TS theme:** add a `team`-group theme to `tokens.json` `$themes`
+   [`capsules/capsules.config.mjs`](../capsules/capsules.config.mjs) — the
+   **single team registry**: lint (`KNOWN_SETS`, `SET_DOMAIN`, the 100%-description
+   law) and the build all derive from it, and the Storybook Capsules story
+   auto-discovers the new package.
+3. **Exports:** add the `./capsules/team-b` block to `package.json` `exports`
+   (npm requires exports to be static).
+4. **(Optional) TS theme:** add a `team`-group theme to `tokens.json` `$themes`
    so it shows in the Tokens Studio theme switcher (string-aware edit only —
    never `JSON.stringify` the whole file; it reorders integer-keyed ramps).
 
@@ -79,7 +80,9 @@ import tokens from '@diyoriko/nk-tokens/capsules/team-b';        // primitives +
 Two tiers, both in `build:tokens`:
 
 - **Tier 1 (unchanged):** `lint-tokens` (tokens.json structure, refs, `$themes`),
-  `check-contrast` (the core palette), `check-scopes` (Figma laws).
+  `check-contrast` (the core palette), `check-scopes` (Figma laws),
+  `check-outputs` (output shapes: valid Dart consts, inset inner shadows, no
+  NaN/undefined — covers every capsule tree too).
 - **Tier 2 (per capsule):** `check-capsule-gates` runs the contrast contract
   against each `build/capsules/<slug>/css/variables.css`, so a capsule override
   that breaks an on-*/text/border pair fails the build. Runs last, so a capsule

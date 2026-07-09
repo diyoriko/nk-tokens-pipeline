@@ -70,7 +70,7 @@ const decomposeComposites = (node, resolveRef, inInner) => {
           'font-weight': { $type: 'fontWeight', $value: v.fontWeight },
           'font-size': { $type: 'dimension', $value: v.fontSize },
           'line-height': { $type: 'number', $value: v.lineHeight }, // e.g. "140%" — emitted verbatim
-          'letter-spacing': px(bare(v.letterSpacing ?? '0')),
+          'letter-spacing': px(bare(resolveRef(v.letterSpacing ?? '0'))), // resolve first — parseFloat on '{ref}' would emit NaNpx
         };
       } else if (typeOf(child) === 'boxShadow' && v && typeof v === 'object') {
         // compose a ready-to-use CSS box-shadow string (single object or 2-layer array)

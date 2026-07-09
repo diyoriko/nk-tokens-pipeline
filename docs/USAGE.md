@@ -4,6 +4,11 @@ Package: `@diyoriko/nk-tokens`. One source of truth (Figma → Tokens Studio →
 repo), four consumable layers. Everything below is generated into `build/` and
 shipped in the npm package.
 
+> **Install first:** the package lives on GitHub Packages, which needs auth even for
+> reads — add the two-line `.npmrc` (registry + PAT with `read:packages`) from
+> [README § Consuming the outputs](../README.md#consuming-the-outputs-devs), or
+> `npm install` will fail with `E401`.
+
 ## Layout model — grid for the page, flex for components (read first)
 
 Two layers, not either/or:
@@ -35,6 +40,10 @@ CSS variables — the default for web:
 
 Also available: `@diyoriko/nk-tokens` (TS tree), `/dart/nk_colors.dart` (Flutter).
 
+**Working in a team capsule?** Import your team's package instead — same variable
+names, your brand slot: `@diyoriko/nk-tokens/capsules/<team>/css/variables.css`
+(see [CAPSULES.md](../foundations/CAPSULES.md) and the Storybook *Capsules* story).
+
 ## 2. Grids (responsive / Brand-book layout)
 
 The Brand-book grid, as CSS. Breakpoints, container, and a 12/8/2 column grid that
@@ -61,7 +70,8 @@ Raw breakpoints for your own media queries:
 
 ## 3. Icons
 
-160 interface icons, one vector per concept, 24-grid, colour bound to `currentColor`
+Interface icons (160 today — `manifest.json` is the authoritative list), one vector
+per concept, 24-grid, colour bound to `currentColor`
 (the code analogue of the Figma `Icon/Default/Primary` binding — recolours from CSS
 `color:`). The 6 Figma sizes (16–48) are a designer convenience; in code you size one
 vector with a prop. Outline is the base name; the bold/filled twin is `<name>-fill`.

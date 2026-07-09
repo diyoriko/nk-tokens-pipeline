@@ -13,7 +13,12 @@
 // dimension strings. We keep dimensions verbatim and only resolve colors.
 
 export default {
-  source: ['tokens/**/*.json'],
+  // Enumerated explicitly — a glob would sweep scopes.snapshot.json (or any stray
+  // JSON dropped into tokens/, e.g. a saved live-scopes dump) into the published build.
+  // ORDER MATTERS: keep code-only + responsive BEFORE tokens.json (the alphabetical
+  // order the old glob produced) — with tokens.json first, the flatten preprocessor
+  // drops the code-only domains. Byte-parity vs the glob proven on this change.
+  source: ['tokens/code-only.json', 'tokens/responsive.json', 'tokens/tokens.json'],
   preprocessors: ['nk/flatten-sets'],
   platforms: {
     // ---- Web: CSS custom properties -------------------------------------
