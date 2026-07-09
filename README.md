@@ -19,8 +19,10 @@ tokens.json  (Git) ────┤
 
 `tokens.json` is the source of truth in Git. Tokens Studio **pulls** it to materialise
 Figma Variables + Styles, and **pushes** designer edits back as a PR to `develop`. CI runs
-Style Dictionary to produce the generated outputs; production (npm + Pages) builds from
-`main`. See [`CLAUDE.md`](./CLAUDE.md) for the full branch flow.
+Style Dictionary to produce the generated outputs (the default package + a capsule package
+per team); production (npm + Pages) builds from `main`. See [`CLAUDE.md`](./CLAUDE.md) for
+the full branch flow, and [`figma/RUNBOOK.md`](./figma/RUNBOOK.md) for every Figma-side
+sync procedure (scopes, brand modes, responsive collection, icons).
 
 **The one naming rule** (the Figma name *is* the contract): `/` → `-`, lowercase, prefix
 `--nk-`. Applied per platform — nobody writes platform-specific names.
@@ -33,8 +35,10 @@ Style Dictionary to produce the generated outputs; production (npm + Pages) buil
 
 ## Structure
 
-Six **Tokens Studio sets** in `tokens.json`, each becoming one Figma Variable collection,
-plus two **code-only** sets (not synced to Figma — Figma can't bind them):
+Eight **Tokens Studio sets** in `tokens.json` — six core sets (each becoming one Figma
+Variable collection) plus two **team capsule overlays** (the modes on the Figma `Color`
+collection — see [`foundations/CAPSULES.md`](./foundations/CAPSULES.md)) — plus two
+**code-only** sets (not synced to Figma — Figma can't bind them):
 
 | Set / collection | Tier | Contents |
 |---|---|---|
@@ -44,6 +48,8 @@ plus two **code-only** sets (not synced to Figma — Figma can't bind them):
 | `Typography Primitives` | primitive | `family` (Mikado) · `weight` (regular/bold) · `size` (10–72) · `line-height` · `letter-spacing` |
 | `Typography` | semantic | role Text Styles — `Display · Heading · Body · Label · Caption · Overline` (composites in source → Figma Text Styles) |
 | `Effect` | — | `drop-shadow` (100–600) · `inner-shadow` (100–200) → Figma Effect Styles; `backdrop` blur radii + `opacity` scale (roles + 0–100) |
+| `Parent Area` | capsule | the **base brand overlay** (violet) — layered into the default build and under every team capsule. In Figma: the default mode of `Color`. |
+| `Demo Team` | capsule | worked-example team overlay (magenta rebrand of the shared brand slot) → `@diyoriko/nk-tokens/capsules/demo-team`. In Figma: the `Demo Team` mode. |
 | `responsive` *(code-only)* | — | breakpoint grid — `Mobile / Tablet / Desktop / Wide` (from the Brand-book Grids). Drives `build/css/grid.css` + the Figma grid styles. |
 | `motion` + `z-index` *(code-only)* | — | duration / easing scales + a stacking scale |
 
@@ -81,6 +87,7 @@ a fraction on build.
 ## Quickstart
 
 ```bash
+# Node 22 (see .nvmrc — Style Dictionary 5 requires >=22)
 npm install
 npm run build            # tokens + grid + assets → build/
 npm run storybook        # build + open the catalogue at localhost:6006
@@ -97,18 +104,23 @@ grep background-brand-violet-primary build/css/variables.css
 
 | Path | What it is |
 |---|---|
-| **`tokens/tokens.json`** | **Input.** The DTCG token sets. What Tokens Studio syncs with Figma. |
+| **`tokens/tokens.json`** | **Input.** The DTCG token sets (incl. capsule overlays). What Tokens Studio syncs with Figma. |
 | `tokens/responsive.json`, `tokens/code-only.json` | Code-only sets (grid breakpoints; motion + z-index). |
-| **`build-tokens.mjs`** | Build runner — custom preprocessor/transforms/formats, then Style Dictionary. |
+| `tokens/scopes.snapshot.json` | Versioned Figma variable scopes (Figma-only data) — enforced by `check-scopes`. |
+| **`capsules/capsules.config.mjs`** | **The team registry.** One entry per capsule; lint + build + Storybook derive from it. |
+| **`build-tokens.mjs`** | Build runner — custom preprocessor/transforms/formats, then Style Dictionary (default + per-capsule). |
 | **`style-dictionary.config.mjs`** | SD platform config — css / dart / ts outputs, `--nk-` prefix. |
 | `scripts/lint-tokens.mjs` | Pre-build gate: structure, references, formats, 100% semantic descriptions. |
-| `scripts/check-contrast.mjs` | Contrast contract gate (100 AA/UI pairs). |
+| `scripts/check-contrast.mjs` | Contrast contract gate (100 AA/UI pairs; fails closed on missing/non-hex values). |
+| `scripts/check-scopes.mjs` | Scope laws + drift vs a live Figma dump (`--live`, `--update`). |
+| `scripts/check-outputs.mjs` | Output-shape gate: valid Dart consts, inset inner shadows, no NaN/undefined. |
+| `scripts/check-capsule-gates.mjs` | Re-runs the contrast contract per capsule package. |
 | `scripts/build-grid-css.mjs` | Emits `build/css/grid.css` (`.nk-container` / `.nk-grid` / `.nk-col-*`) from `responsive.json`. |
 | `scripts/build-assets.mjs` | `assets/{icons,logo,patterns}/*.svg` → sprite + React components + manifest (icons rebound to `currentColor`). |
-| `scripts/export-figma-assets.mjs` | Bulk-pull icons from Figma via REST (needs `FIGMA_TOKEN`). |
-| `build/` | **Output** (generated, git-ignored): `css/{variables,grid}.css`, `dart/nk_colors.dart`, `ts/{tokens.ts,.mjs,.cjs,.d.ts}`, `icons/`, `logo/`, `patterns/`. |
-| `.storybook/`, `stories/*.stories.js` | Token catalogue — Colors, Spacing, Typography, Shadow, Effects, Gradients, Grid, Motion, Z-Index, Usage. |
-| `.github/workflows/` | `build-tokens` (rebuild + **gate PRs**), `deploy-storybook` (Pages, from `main`), `publish-tokens` (npm, on `v*` tag). |
+| `scripts/export-figma-assets.mjs` | Bulk-pull icons from Figma via REST (needs `FIGMA_TOKEN`; fails on partial export). |
+| `build/` | **Output** (generated, git-ignored): `css/{variables,grid}.css`, `dart/nk_colors.dart`, `ts/{tokens.ts,.mjs,.cjs,.d.ts}`, `capsules/<slug>/`, `icons/`, `logo/`, `patterns/`. |
+| `.storybook/`, `stories/*.stories.js` | Token catalogue — Colors, Capsules, Spacing, Typography, Shadow, Effects, Gradients, Grid, Motion, Z-Index, Usage. |
+| `.github/workflows/` | `build-tokens` (**gate PRs**: all token gates + Storybook build), `preview-storybook` (Cloudflare, from `develop`), `deploy-storybook` (Pages, from `main`), `publish-tokens` (npm + GitHub Release, on `v*` tag). |
 
 ---
 
@@ -117,7 +129,7 @@ grep background-brand-violet-primary build/css/variables.css
 | Command | Does |
 |---|---|
 | `npm run build` | `build:tokens` + `build:grid` + `build:assets`. |
-| `npm run build:tokens` | **lint** → Style Dictionary build → **contrast contract** → **scopes laws**. All gates `exit 1` on failure. |
+| `npm run build:tokens` | **lint** → Style Dictionary build (default + capsules) → **contrast contract** → **scopes laws** → **output shapes** → **capsule gates**. All gates `exit 1` on failure. |
 | `npm run build:grid` | Regenerates `build/css/grid.css` from `responsive.json`. |
 | `npm run build:assets` | Rebuilds the icon/logo/pattern bundle. |
 | `npm run export:icons` | `FIGMA_TOKEN=… npm run export:icons` — pulls icon SVGs from the Figma library. |
@@ -162,8 +174,34 @@ import { Home, HeartFill } from '@diyoriko/nk-tokens/icons/react';
 <Button sx={{ bgcolor: 'var(--nk-color-background-brand-violet-primary)' }} />
 ```
 
+**Team capsules** — per-team brand packages on the same foundation
+([`foundations/CAPSULES.md`](./foundations/CAPSULES.md)):
+
+```ts
+import '@diyoriko/nk-tokens/capsules/demo-team/css/variables.css'; // magenta rebrand of the brand slot
+import demoTokens from '@diyoriko/nk-tokens/capsules/demo-team';    // typed tree, same shape
+```
+
 > **Production:** re-scope to `@novakid` under the org repo (GitHub Packages requires the
 > package scope to match the repo owner).
+
+---
+
+## Develop preview (Cloudflare Pages)
+
+Every push to `develop` builds Storybook and deploys it to
+**https://nk-tokens-preview.pages.dev** — designers see their token change minutes after
+the Tokens Studio PR merges, without waiting for a release.
+
+**Status: needs one-time activation.** The workflow (`preview-storybook.yml`) skips the
+deploy — with a loud warning in the run summary — until both secrets exist:
+
+1. Cloudflare dashboard → *Workers & Pages* → create Pages project **`nk-tokens-preview`**
+   (production branch: `develop`, no build — the workflow uploads `storybook-static/`).
+2. Cloudflare dashboard → *My Profile → API Tokens* → create token from the **"Cloudflare
+   Pages — Edit"** template.
+3. GitHub repo → *Settings → Secrets and variables → Actions*: add `CLOUDFLARE_API_TOKEN`
+   (the token) — `CLOUDFLARE_ACCOUNT_ID` is already set.
 
 ---
 
