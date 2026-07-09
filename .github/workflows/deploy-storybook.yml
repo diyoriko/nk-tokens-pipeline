@@ -8,10 +8,9 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
+# Least privilege: only the deploy job needs the Pages/OIDC grants.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # Allow one concurrent deployment; don't cancel an in-progress run.
 concurrency:
@@ -25,7 +24,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: npm run build-storybook # runs build:tokens first, then storybook build
@@ -37,6 +36,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
