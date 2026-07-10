@@ -31,20 +31,38 @@ const api = (p) => fetch('https://api.figma.com/v1' + p, { headers: { 'X-Figma-T
 const outDir = new URL('../assets/icons/', import.meta.url).pathname;
 fs.mkdirSync(outDir, { recursive: true });
 
-// 1. find the Icons page, then the "24" section, then its component children
-const file = await api(`/files/${FILE_KEY}?depth=3`);
+// 1. find the Icons page, then the "24" section, then its component children.
+// depth=4 because outline+fill pairs live as COMPONENT_SET nodes whose variant
+// COMPONENTs are one level deeper than the container's direct children.
+const file = await api(`/files/${FILE_KEY}?depth=4`);
 const page = file.document.children.find((p) => p.name === PAGE);
 if (!page) throw new Error(`page "${PAGE}" not found`);
 const section = page.children.find((n) => n.name === SECTION && (n.type === 'SECTION' || n.type === 'FRAME'));
 if (!section) throw new Error(`container "${SECTION}" (SECTION or FRAME) not found on page ${PAGE}`);
-const comps = (section.children || []).filter((n) => n.type === 'COMPONENT');
-if (!comps.length) throw new Error(`no COMPONENT children in container "${SECTION}"`);
 
 // 2. batch-export as SVG (chunk to keep URLs short)
 const byId = {};
 // Icons are named icon/<category>/<glyph> in Figma (category groups the Assets panel);
 // the code library is flat, so the filename is just the last segment (the glyph name).
-for (const c of comps) byId[c.id] = c.name.split('/').pop().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+// Glyphs with an outline+fill pair are a COMPONENT_SET with a Style property: the
+// Style=Outline variant keeps the base filename, Style=Fill gets the -fill suffix —
+// so filenames stay identical to the pre-variant flat-component era.
+const slug = (s) => s.replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+for (const n of section.children || []) {
+  if (n.type === 'COMPONENT') {
+    byId[n.id] = slug(n.name.split('/').pop());
+  } else if (n.type === 'COMPONENT_SET') {
+    const base = slug(n.name.split('/').pop());
+    for (const v of n.children || []) {
+      if (v.type !== 'COMPONENT') continue;
+      const props = Object.fromEntries(v.name.split(',').map((s) => s.trim().split('=')));
+      if (props.Style === 'Outline') byId[v.id] = base;
+      else if (props.Style === 'Fill') byId[v.id] = base + '-fill';
+      else throw new Error(`unexpected variant "${v.name}" in set "${n.name}"`);
+    }
+  }
+}
+if (!Object.keys(byId).length) throw new Error(`no COMPONENT/COMPONENT_SET children in container "${SECTION}"`);
 const ids = Object.keys(byId);
 const chunks = [];
 for (let i = 0; i < ids.length; i += 60) chunks.push(ids.slice(i, i + 60));
