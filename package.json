@@ -51,7 +51,7 @@
   },
   "scripts": {
     "build": "npm run build:tokens && npm run build:grid && npm run build:assets",
-    "build:tokens": "node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-capsule-gates.mjs",
+    "build:tokens": "node scripts/lint-tokens.mjs && node scripts/check-capsule-consistency.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-capsule-gates.mjs",
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs",
     "export:icons": "node scripts/export-figma-assets.mjs",
@@ -60,6 +60,7 @@
     "prepack": "npm run build",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:capsules": "node scripts/check-capsule-gates.mjs",
+    "check:capsule-consistency": "node scripts/check-capsule-consistency.mjs",
     "check:scopes": "node scripts/check-scopes.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs"
   },

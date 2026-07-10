@@ -10,17 +10,17 @@
 // hand-maintained in the repo and reviewed by PR. Run by `npm run lint:tokens`
 // (and at the head of build:tokens, so every CI build and prepack is gated).
 import fs from 'node:fs';
+import { CAPSULE_SETS } from '../capsules/capsules.config.mjs';
 
 const SRC = new URL('../tokens/tokens.json', import.meta.url);
 const tokens = JSON.parse(fs.readFileSync(SRC, 'utf8'));
 
 // Core sets + capsule overlay sets. Capsule sets are per-team semantic layers
-// (see capsules/capsules.config.mjs) that live in tokens.json so designers own
-// them in Tokens Studio; they map to the `color` domain and are linted here.
-// `Parent Area` is the BASE brand overlay (in the default build); other team
-// sets are ignored by the default preprocessor. Register a new team set in both
-// KNOWN_SETS and SET_DOMAIN when you add it.
-const CAPSULE_SETS = ['Parent Area', 'Demo Team'];
+// that live in tokens.json so designers own them in Tokens Studio; they map to
+// the `color` domain and are linted here. `Parent Area` is the BASE brand
+// overlay (in the default build); other team sets are ignored by the default
+// preprocessor. New team sets register ONCE in capsules/capsules.config.mjs —
+// CAPSULE_SETS is imported from there.
 const KNOWN_SETS = ['Color Primitives', 'Color', 'Size', 'Typography Primitives', 'Typography', 'Effect', ...CAPSULE_SETS];
 const SET_DOMAIN = {
   'Color Primitives': 'color', Color: 'color', Size: 'size',
@@ -29,7 +29,7 @@ const SET_DOMAIN = {
 };
 // Primitives document themselves through their scale; descriptions are required
 // where designers actually pick tokens (and where we promise 100% coverage).
-const REQUIRED_DESC_SETS = ['Color', 'Size', 'Typography', 'Effect', 'Parent Area', 'Demo Team'];
+const REQUIRED_DESC_SETS = ['Color', 'Size', 'Typography', 'Effect', ...CAPSULE_SETS];
 const KNOWN_TYPES = ['color', 'dimension', 'number', 'fontFamily', 'fontWeight', 'typography', 'boxShadow'];
 
 const errors = [];
