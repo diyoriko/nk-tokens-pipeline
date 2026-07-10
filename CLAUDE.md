@@ -19,11 +19,15 @@ feature branch ──PR──▶ develop ──promote PR (merge commit)──�
   pre-commit hook blocks it; branch first.
 - `gh pr create --fill` uses the CURRENT branch — pass `--head` explicitly in any chain
   that `git checkout`s mid-way.
+- The `protect-main-develop` ruleset requires **0 approvals**, but an open CodeRabbit
+  **CHANGES_REQUESTED** review still blocks merge. Fix the findings and let it re-review
+  (or dismiss the review with a reason) — don't try to force-merge around it.
 
 ## Build & gates
 
-- `npm run build:tokens` = `lint-tokens.mjs` → `build-tokens.mjs` (default + capsules) →
-  `check-contrast.mjs` → `check-scopes.mjs` → `check-outputs.mjs` → `check-capsule-gates.mjs`.
+- `npm run build:tokens` = `lint-tokens.mjs` → `check-capsule-consistency.mjs` →
+  `build-tokens.mjs` (default + capsules) → `check-contrast.mjs` → `check-scopes.mjs` →
+  `check-outputs.mjs` → `check-capsule-gates.mjs`.
   All gates `exit 1` on failure and gate PRs (fail closed: missing/non-hex contrast values,
   invalid Dart consts, non-inset inner shadows, NaN/undefined in outputs are failures).
 - `npm run build` also runs `build:grid` + `build:assets`. The PR gate also builds Storybook.
@@ -54,6 +58,10 @@ enforced by `scripts/check-scopes.mjs`:
   git makes a new variable + an orphan.
 - `lineHeight` in composites must be a percent **string** (`"140%"`) — a bare number
   becomes pixels in Figma. Opacity is stored as percent (`40`) and the build divides by 100.
+- **Brand modes** on the Figma `Color` collection (`Parent Area` / `Demo Team`) are managed
+  via the Plugin API (`figma/add-brand-mode.figma.js`, see `figma/RUNBOOK.md`) or Tokens
+  Studio PRO Themes ONLY. The free TS "export sets to variables" flow can't write modes and
+  would **duplicate** the brand vars into new collections — cancel it if offered.
 
 ## Release
 
@@ -71,3 +79,5 @@ enforced by `scripts/check-scopes.mjs`:
 - Gradients live as **paint styles** and shadows as **effect styles** (variables can't hold
   them) — names match the code tokens. The grid system lives as **grid styles**
   (Grid/Mobile · Tablet · Desktop · Wide · Baseline).
+- `npm run export:icons` talks to the Figma REST API and needs a personal access token
+  (`FIGMA_TOKEN` / `FIGMA_ACCESS_TOKEN`); the MCP OAuth session does not cover it.
