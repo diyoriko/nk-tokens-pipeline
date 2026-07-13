@@ -2,7 +2,7 @@
 
 Novakid design tokens. `tokens/tokens.json` is the source of truth; Style Dictionary
 generates `--nk-*` CSS + a `NkColors` Dart class + a typed TS tree, plus a grid CSS layer
-and an SVG/React asset bundle. Published as **`@diyoriko/nk-tokens`** (GitHub Packages) and
+and an SVG/React asset bundle. Published as **`@novakid/nk-tokens`** (Novakid Nexus npm registry) and
 as a token-catalogue **Storybook** on GitHub Pages.
 
 > Working rules (branch flow, gates, Tokens Studio) live in **[`CLAUDE.md`](./CLAUDE.md)**.
@@ -49,7 +49,7 @@ collection — see [`foundations/CAPSULES.md`](./foundations/CAPSULES.md)) — p
 | `Typography` | semantic | role Text Styles — `Display · Heading · Body · Label · Caption · Overline` (composites in source → Figma Text Styles) |
 | `Effect` | — | `drop-shadow` (100–600) · `inner-shadow` (100–200) → Figma Effect Styles; `backdrop` blur radii + `opacity` scale (roles + 0–100) |
 | `Parent Area` | capsule | the **base brand overlay** (violet) — layered into the default build and under every team capsule. In Figma: the default mode of `Color`. |
-| `Demo Team` | capsule | worked-example team overlay (magenta rebrand of the shared brand slot) → `@diyoriko/nk-tokens/capsules/demo-team`. In Figma: the `Demo Team` mode. |
+| `Demo Team` | capsule | worked-example team overlay (magenta rebrand of the shared brand slot) → `@novakid/nk-tokens/capsules/demo-team`. In Figma: the `Demo Team` mode. |
 | `responsive` *(code-only)* | — | breakpoint grid — `Mobile / Tablet / Desktop / Wide` (from the Brand-book Grids). Drives `build/css/grid.css` + the Figma grid styles. |
 | `motion` + `z-index` *(code-only)* | — | duration / easing scales + a stacking scale |
 
@@ -157,18 +157,23 @@ Add or change a token in **`tokens/tokens.json`** (the only source of truth), th
 
 ## Consuming the outputs (devs)
 
-Published as **`@diyoriko/nk-tokens`** to **GitHub Packages** on every `v*` tag.
+Published as **`@novakid/nk-tokens`** to the **Novakid Nexus npm registry**
+(`nexus.novakidschool.com`) on every `v*` tag.
 
 ```ini
 # .npmrc in the consumer (e.g. parent-mf)
-@diyoriko:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}   # PAT with read:packages
+@novakid:registry=https://nexus.novakidschool.com/repository/npm-hosted/
+# only if the repository requires auth for reads:
+//nexus.novakidschool.com/repository/npm-hosted/:_authToken=${NEXUS_NPM_TOKEN}
 ```
+
+> The exact Nexus repository path (`npm-hosted` above) is devops' call — confirm it
+> before the first publish; it lives in one place, `package.json → publishConfig.registry`.
 ```ts
-import '@diyoriko/nk-tokens/css/variables.css';      // injects :root { --nk-* }
-import '@diyoriko/nk-tokens/css/grid.css';           // .nk-container / .nk-grid / .nk-col-*
-import { tokens } from '@diyoriko/nk-tokens';         // typed token tree
-import { Home, HeartFill } from '@diyoriko/nk-tokens/icons/react';
+import '@novakid/nk-tokens/css/variables.css';      // injects :root { --nk-* }
+import '@novakid/nk-tokens/css/grid.css';           // .nk-container / .nk-grid / .nk-col-*
+import { tokens } from '@novakid/nk-tokens';         // typed token tree
+import { Home, HeartFill } from '@novakid/nk-tokens/icons/react';
 ```
 ```tsx
 <Button sx={{ bgcolor: 'var(--nk-color-background-brand-violet-primary)' }} />
@@ -178,12 +183,9 @@ import { Home, HeartFill } from '@diyoriko/nk-tokens/icons/react';
 ([`foundations/CAPSULES.md`](./foundations/CAPSULES.md)):
 
 ```ts
-import '@diyoriko/nk-tokens/capsules/demo-team/css/variables.css'; // magenta rebrand of the brand slot
-import demoTokens from '@diyoriko/nk-tokens/capsules/demo-team';    // typed tree, same shape
+import '@novakid/nk-tokens/capsules/demo-team/css/variables.css'; // magenta rebrand of the brand slot
+import demoTokens from '@novakid/nk-tokens/capsules/demo-team';    // typed tree, same shape
 ```
-
-> **Production:** re-scope to `@novakid` under the org repo (GitHub Packages requires the
-> package scope to match the repo owner).
 
 ---
 

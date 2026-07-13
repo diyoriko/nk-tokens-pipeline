@@ -37,7 +37,7 @@ theme to "become" that capsule.
 
 ## Why the default package is safe
 
-The default build (`@diyoriko/nk-tokens` `.` entry → `build/css|dart|ts`) is
+The default build (`@novakid/nk-tokens` `.` entry → `build/css|dart|ts`) is
 core + the **Parent Area** base brand, and is **value-identical** to the pre-B2
 output — Parent Area reproduces the exact violet brand that used to live inside
 `Color`. Its preprocessor (`nk/flatten-sets`) ingests core + Parent Area
@@ -70,9 +70,9 @@ may shift as the brand block moves sets — values may not).
 ## Consume a capsule (engineer)
 
 ```js
-import tokens from '@diyoriko/nk-tokens/capsules/team-b';        // primitives + Team B semantics
+import tokens from '@novakid/nk-tokens/capsules/team-b';        // primitives + Team B semantics
 // or CSS:
-// @import '@diyoriko/nk-tokens/capsules/team-b/css/variables.css';
+// @import '@novakid/nk-tokens/capsules/team-b/css/variables.css';
 ```
 
 ## Gates
