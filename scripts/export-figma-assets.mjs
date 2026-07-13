@@ -7,6 +7,7 @@
 //
 // Env:
 //   FIGMA_TOKEN  (required) a Figma personal access token with file read scope
+//                (FIGMA_ACCESS_TOKEN also accepted — the name ~/.zshenv uses)
 //   FILE_KEY     (default aVwI61IYqufB2gWE6VbwOM — Novakid DS Foundations)
 //   ICON_PAGE    (default "Icons")
 //   ICON_SECTION (default "24" — the master 24px container; one SVG per concept)
@@ -17,11 +18,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const TOKEN = process.env.FIGMA_TOKEN;
+const TOKEN = process.env.FIGMA_TOKEN || process.env.FIGMA_ACCESS_TOKEN;
 const FILE_KEY = process.env.FILE_KEY || 'aVwI61IYqufB2gWE6VbwOM';
 const PAGE = process.env.ICON_PAGE || 'Icons';
 const SECTION = process.env.ICON_SECTION || '24';
-if (!TOKEN) { console.error('Set FIGMA_TOKEN (a fresh token — never the leaked one).'); process.exit(1); }
+if (!TOKEN) { console.error('Set FIGMA_TOKEN or FIGMA_ACCESS_TOKEN (a fresh token — never the leaked one).'); process.exit(1); }
 
 const api = (p) => fetch('https://api.figma.com/v1' + p, { headers: { 'X-Figma-Token': TOKEN } }).then((r) => {
   if (!r.ok) throw new Error(`Figma API ${r.status} on ${p}`);

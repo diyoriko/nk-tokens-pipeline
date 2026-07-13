@@ -5,9 +5,13 @@ outputs + SVG assets). It ships no runtime server code and handles no user data.
 
 ## Reporting a vulnerability
 
-Email the maintainer (Diyor) privately — do **not** open a public issue or PR for a
-suspected vulnerability or a leaked credential. Include the affected version/tag and a
-minimal reproduction. Expect an acknowledgement within a few business days.
+Email the maintainer privately at **diyorbek.khakimov@novakidschool.com** — do **not**
+open a public issue or PR for a suspected vulnerability or a leaked credential. Include
+the affected version/tag and a minimal reproduction. Expect an acknowledgement within a
+few business days.
+
+The repo currently lives under a personal account; a transfer to the Novakid GitHub
+organisation is planned. Until then the address above is the only disclosure channel.
 
 ## Secrets
 

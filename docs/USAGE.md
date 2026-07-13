@@ -38,17 +38,48 @@ CSS variables — the default for web:
 .btn { background: var(--nk-color-background-brand-violet-primary); color: var(--nk-color-text-brand-violet-on-primary); }
 ```
 
-Also available: `@novakid/nk-tokens` (TS tree), `/dart/nk_colors.dart` (Flutter).
+Also available: `@novakid/nk-tokens` (TS tree), `/dart/nk_colors.dart` (Flutter — below).
 
 **Working in a team capsule?** Import your team's package instead — same variable
 names, your brand slot: `@novakid/nk-tokens/capsules/<team>/css/variables.css`
 (see [CAPSULES.md](../foundations/CAPSULES.md) and the Storybook *Capsules* story).
 
+### Flutter (Dart)
+
+The Dart output is a single generated file, `build/dart/nk_colors.dart` — one
+`NkColors` class of `static const Color` values (colour primitives + semantic
+colours, hex only), zero dependencies beyond `dart:ui`. There is no pub.dev
+package and no `pubspec.yaml` in this repo (and `build/` is git-ignored), so
+pub cannot consume it as a git dependency — **copy the file into your project**
+(vendoring is the supported path):
+
+```sh
+# From the published package (needs the @novakid scope -> Nexus in your .npmrc):
+npm pack @novakid/nk-tokens
+tar -xf novakid-nk-tokens-*.tgz package/build/dart/nk_colors.dart
+cp package/build/dart/nk_colors.dart <your-app>/lib/tokens/
+
+# Or from source: clone the repo, then (Node 22)
+npm ci && npm run build && cp build/dart/nk_colors.dart <your-app>/lib/tokens/
+```
+
+```dart
+import 'tokens/nk_colors.dart';
+
+Container(color: NkColors.colorBackgroundBrandVioletPrimary);
+Text('hi', style: TextStyle(color: NkColors.colorTextDefaultPrimary));
+```
+
+The file header marks it generated — never edit it by hand; re-copy on every
+token release (pin the version you vendored in a comment). Team capsules ship
+their own variant at `capsules/<team>/dart/nk_colors.dart` — same class name,
+that team's brand slot.
+
 ## 2. Grids (responsive / Brand-book layout)
 
 The Brand-book grid, as CSS. Breakpoints, container, and a 12/8/2 column grid that
-switches at `768` / `1280` — the same numbers as the Figma grid styles
-`Grid/Mobile · Grid/Tablet · Grid/Desktop`.
+switches at `768` / `1280` / `1920` — the same numbers as the Figma grid styles
+`Grid/Mobile · Grid/Tablet · Grid/Desktop · Grid/Wide`.
 
 ```css
 @import "@novakid/nk-tokens/css/variables.css"; /* the --nk-responsive-* values */
@@ -66,7 +97,18 @@ switches at `768` / `1280` — the same numbers as the Figma grid styles
 
 Raw breakpoints for your own media queries:
 `--nk-responsive-tablet-breakpoint-min` (768), `--nk-responsive-desktop-breakpoint-min` (1280),
-`--nk-responsive-desktop-device-width` (1440), `--nk-responsive-*-columns/-gutter/-margin`.
+`--nk-responsive-wide-breakpoint-min` (1920), `--nk-responsive-desktop-device-width` (1440),
+`--nk-responsive-*-columns/-gutter/-margin`.
+
+**Wide tier is code-only.** The fourth tier (`Wide`: min-width 1920, 12 columns,
+32px gutter, 160px margin — Brand-book 12-columns XXL) exists in
+`tokens/responsive.json` and in everything generated from it (variables,
+`grid.css`), but by design has **no mode on the Figma Responsive variable
+collection** — Figma carries only Mobile / Tablet / Desktop modes. In Figma the
+tier is represented solely by the grid style `Grid/Wide`. So a designer binding
+Responsive variables never sees Wide values; in code, use the
+`--nk-responsive-wide-*` variables (or `.nk-grid`, which switches automatically
+at 1920).
 
 ## 3. Icons
 

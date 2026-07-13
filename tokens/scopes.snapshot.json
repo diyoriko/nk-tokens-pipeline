@@ -386,7 +386,6 @@
     "Line-Height/100": [], "Line-Height/110": [], "Line-Height/120": [], "Line-Height/130": [], "Line-Height/140": [], "Line-Height/150": [],
     "Letter-Spacing/None": [], "Letter-Spacing/Wide": [], "Letter-Spacing/Wider": []
   },
-  "Typography": {},
   "Effect": {
     "Backdrop/Overlay": ["EFFECT_FLOAT"],
     "Backdrop/Scrim": ["EFFECT_FLOAT"],

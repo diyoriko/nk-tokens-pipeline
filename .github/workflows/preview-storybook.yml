@@ -21,6 +21,8 @@ on:
       - 'style-dictionary.config.mjs'
       - 'build-tokens.mjs'
       - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/preview-storybook.yml'
   workflow_dispatch: {}
 
 permissions:
@@ -33,9 +35,9 @@ concurrency:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    env:
-      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    # No job-level secret env: the Cloudflare token must not be readable by
+    # npm ci / build (dependency lifecycle scripts). Only the wrangler step
+    # receives it, via `with:`; presence checks use the secrets context in ifs.
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -53,7 +55,7 @@ jobs:
         run: npm run build-storybook
 
       - name: Deploy to Cloudflare Pages (preview)
-        if: ${{ env.CF_API_TOKEN != '' && env.CF_ACCOUNT_ID != '' }}
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0 (SHA-pinned: 3rd-party action with deploy creds)
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -63,7 +65,7 @@ jobs:
           command: pages deploy storybook-static --project-name=nk-tokens-preview --branch=develop --commit-dirty=true
 
       - name: Warn when secrets are missing (deploy skipped)
-        if: ${{ env.CF_API_TOKEN == '' || env.CF_ACCOUNT_ID == '' }}
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN == '' || secrets.CLOUDFLARE_ACCOUNT_ID == '' }}
         run: |
           echo "::warning::Preview NOT deployed — Cloudflare secrets missing. Add CLOUDFLARE_API_TOKEN (+ CLOUDFLARE_ACCOUNT_ID) in repo Settings → Secrets; see README § Develop preview."
           {
