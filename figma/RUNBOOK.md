@@ -104,6 +104,28 @@ unavailable.
 
 Gradients live as **paint styles**, shadows as **effect styles**, the grid as **grid
 styles** — Figma can't hold them as variables. Source of truth = `tokens/tokens.json`
-composites; TS recreates the styles on push (§2.3). There is **no automated drift
-check** for styles — if you suspect drift, compare style values against the tokens by
-hand (or ask for a check-styles script — candidate for the next hardening pass).
+composites; TS recreates the styles on push (§2.3). Value drift is enforced by
+`scripts/check-styles.mjs` against `tokens/styles.snapshot.json` — see §9 for the
+dump/refresh ritual.
+
+## 9. Style drift check / snapshot refresh (text · effect · paint)
+
+The check-styles script §8 asked for. Style *values* (font size/weight/line-height,
+shadow x/y/blur/spread/color, gradient stops/angle) live only in Figma — TS recreates
+styles on push but nothing re-checks them after a manual edit — so they're versioned
+in `tokens/styles.snapshot.json` and enforced by `scripts/check-styles.mjs` (laws:
+unique names, 1:1 mapping to the tokens.json composites). The DRIFT check against
+live Figma is manual, same rhythm as scopes (§3):
+
+```sh
+# 1. run figma/dump-styles.figma.js (read-only) in the Figma console / MCP
+#    → save the returned JSON to a file OUTSIDE tokens/ (e.g. /tmp/figma-styles.json)
+# 2.
+node scripts/check-styles.mjs --live /tmp/figma-styles.json            # diff
+node scripts/check-styles.mjs --update /tmp/figma-styles.json          # refresh snapshot
+# 3. commit the snapshot diff via a normal PR — the diff IS the review
+```
+
+Run after: **any style edit in Figma**, any TS push that touches Typography / Effect /
+gradient tokens, and **before a release**. If the snapshot is missing the gate fails
+with these exact steps — `--update` also bootstraps the very first snapshot.

@@ -27,11 +27,12 @@ feature branch ──PR──▶ develop ──promote PR (merge commit)──�
 ## Build & gates
 
 - `npm run build:tokens` = `lint-tokens.mjs` → `check-capsule-consistency.mjs` →
-  `build-tokens.mjs` (default + capsules) → `check-contrast.mjs` → `check-scopes.mjs` →
-  `check-outputs.mjs` → `check-capsule-gates.mjs`.
+  `build-tokens.mjs` (default + capsules) → `build-grid-css.mjs` → `check-contrast.mjs` →
+  `check-scopes.mjs` → `check-styles.mjs` → `check-outputs.mjs` → `check-capsule-gates.mjs`.
+  Grid CSS is generated **before** the gates so `check-outputs` validates it too.
   All gates `exit 1` on failure and gate PRs (fail closed: missing/non-hex contrast values,
   invalid Dart consts, non-inset inner shadows, NaN/undefined in outputs are failures).
-- `npm run build` also runs `build:grid` + `build:assets`. The PR gate also builds Storybook.
+- `npm run build` also runs `build:assets`. The PR gate also builds Storybook.
 - Node 22 (`.nvmrc`; workflows read `node-version-file`) — Style Dictionary 5 needs ≥22.
 - `build/` and `storybook-static/` are **git-ignored** — never commit generated output.
   `prepack` regenerates everything on publish.
@@ -80,5 +81,11 @@ enforced by `scripts/check-scopes.mjs`:
 - Gradients live as **paint styles** and shadows as **effect styles** (variables can't hold
   them) — names match the code tokens. The grid system lives as **grid styles**
   (Grid/Mobile · Tablet · Desktop · Wide · Baseline).
+- The **Wide** responsive tier (min-width 1920) is **code-only by design**: it exists in
+  `tokens/responsive.json` and every output, but the Figma Responsive variable collection
+  has only Mobile / Tablet / Desktop modes — in Figma the tier is represented solely by
+  the grid style Grid/Wide.
+- `scripts/check-styles.mjs` checks value drift of the paint/effect/text styles against
+  the code tokens — the ritual is documented in `figma/RUNBOOK.md`.
 - `npm run export:icons` talks to the Figma REST API and needs a personal access token
   (`FIGMA_TOKEN` / `FIGMA_ACCESS_TOKEN`); the MCP OAuth session does not cover it.

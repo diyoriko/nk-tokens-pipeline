@@ -1,6 +1,6 @@
 {
   "name": "@novakid/nk-tokens",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "type": "module",
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "repository": {
@@ -50,8 +50,8 @@
     "./icons/manifest.json": "./build/icons/manifest.json"
   },
   "scripts": {
-    "build": "npm run build:tokens && npm run build:grid && npm run build:assets",
-    "build:tokens": "node scripts/lint-tokens.mjs && node scripts/check-capsule-consistency.mjs && node build-tokens.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-outputs.mjs && node scripts/check-capsule-gates.mjs",
+    "build": "npm run build:tokens && npm run build:assets",
+    "build:tokens": "node scripts/lint-tokens.mjs && node scripts/check-capsule-consistency.mjs && node build-tokens.mjs && node scripts/build-grid-css.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-styles.mjs && node scripts/check-outputs.mjs && node scripts/check-capsule-gates.mjs",
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs",
     "export:icons": "node scripts/export-figma-assets.mjs",
@@ -62,10 +62,11 @@
     "check:capsules": "node scripts/check-capsule-gates.mjs",
     "check:capsule-consistency": "node scripts/check-capsule-consistency.mjs",
     "check:scopes": "node scripts/check-scopes.mjs",
+    "check:styles": "node scripts/check-styles.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "devDependencies": {
     "@storybook/html-vite": "^10.4.6",

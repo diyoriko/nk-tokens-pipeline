@@ -25,7 +25,12 @@ addTree(root);
 const capsulesDir = path.join(root, 'capsules');
 if (fs.existsSync(capsulesDir))
   for (const slug of fs.readdirSync(capsulesDir)) addTree(path.join(capsulesDir, slug));
-if (fs.existsSync(path.join(root, 'css/grid.css'))) targets.css.push(path.join(root, 'css/grid.css'));
+// grid.css is REQUIRED: build:tokens runs build-grid-css.mjs before this gate,
+// so a missing file means the pipeline order broke (a fresh checkout would
+// otherwise publish without the grid ever being validated).
+const gridCss = path.join(root, 'css/grid.css');
+if (fs.existsSync(gridCss)) targets.css.push(gridCss);
+else violations.push('build/css/grid.css: missing — build-grid-css.mjs must run before this gate');
 
 const rel = (f) => path.relative(process.cwd(), f);
 

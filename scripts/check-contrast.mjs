@@ -13,8 +13,12 @@ const css = fs.readFileSync(cssTarget, 'utf8');
 const g = (n) => { const m = css.match(new RegExp('--nk-' + n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ':\\s*([^;]+);')); return m ? m[1].trim() : null; };
 const lin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
 const hex = (h) => { h = h.replace('#', ''); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); };
-const L = (h) => { const [r, gr, b] = hex(h); return 0.2126 * lin(r) + 0.7152 * lin(gr) + 0.0722 * lin(b); };
-const C = (a, b) => { const l1 = L(a), l2 = L(b), hi = Math.max(l1, l2), lo = Math.min(l1, l2); return (hi + 0.05) / (lo + 0.05); };
+const alpha = (h) => { h = h.replace('#', ''); return h.length === 8 ? parseInt(h.slice(6, 8), 16) / 255 : 1; };
+// A translucent #rrggbbaa foreground is judged AFTER compositing over its
+// background — scoring the raw channels alpha-blind would inflate the ratio.
+const over = (f, bgRgb) => { const a = alpha(f); return hex(f).map((c, i) => Math.round(c * a + bgRgb[i] * (1 - a))); };
+const L = ([r, gr, b]) => 0.2126 * lin(r) + 0.7152 * lin(gr) + 0.0722 * lin(b);
+const C = (f, bg) => { const bgRgb = hex(bg), l1 = L(over(f, bgRgb)), l2 = L(bgRgb), hi = Math.max(l1, l2), lo = Math.min(l1, l2); return (hi + 0.05) / (lo + 0.05); };
 
 const W = '#ffffff';
 const checks = []; // [label, fgVar|hex, bgVar|hex, minRatio]

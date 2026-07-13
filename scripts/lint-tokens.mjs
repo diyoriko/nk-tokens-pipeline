@@ -6,8 +6,10 @@
 // each of those into a red CI check minutes after the TS push, before
 // anything is promoted to main.
 //
-// Scope: tokens/tokens.json only (the file TS pushes). code-only.json is
-// hand-maintained in the repo and reviewed by PR. Run by `npm run lint:tokens`
+// Scope: tokens/tokens.json (the file TS pushes) with the full law set, plus
+// value-shape checks on the hand-maintained tokens/code-only.json and
+// tokens/responsive.json — a malformed number there would otherwise surface
+// only as NaN inside generated CSS. Run by `npm run lint:tokens`
 // (and at the head of build:tokens, so every CI build and prepack is gated).
 import fs from 'node:fs';
 import { CAPSULES } from '../capsules/capsules.config.mjs';
@@ -67,7 +69,6 @@ const resolve = (val, depth = 0) => {
 
 // ---- value-format checks --------------------------------------------------
 const HEX_RE = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
-const RGBA_RE = /^rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(,\s*(0|1|0?\.\d+)\s*)?\)$/i;
 const PCT_RE = /^\d+(\.\d+)?%$/;
 const GRADIENT_RE = /^linear-gradient\(\s*\d+(\.\d+)?deg\s*(,\s*(\{[^}]+\}|#[0-9a-f]{6,8})\s+\d+(\.\d+)?%\s*)+\)$/i;
 
@@ -86,7 +87,10 @@ const checkColor = (path, raw) => {
   const r = resolve(raw);
   if (!r.ok) return err(path, r.why);
   const v = String(r.value);
-  if (!HEX_RE.test(v) && !RGBA_RE.test(v)) err(path, `not a colour: "${v}"`);
+  // hex only: the Dart emitter silently DROPS non-hex colours (by design, for
+  // gradients) — an rgba()-authored solid would vanish cross-platform. Author
+  // alpha as #rrggbbaa instead.
+  if (!HEX_RE.test(v)) err(path, `not a hex colour: "${v}" (rgba()/CSS colours are dropped from Dart — use #rrggbbaa)`);
 };
 
 const checkNumeric = (path, raw, label = 'value') => {
@@ -123,7 +127,9 @@ const checkTypography = (path, v) => {
   if (v.letterSpacing !== undefined) {
     const r = resolve(v.letterSpacing);
     if (!r.ok) err(path, r.why);
-    else if (!isNum(r.value) && !/^-?\d+(\.\d+)?(px|%)$/.test(String(r.value))) err(path, `letterSpacing must be a number, px or percent, got "${r.value}"`);
+    // percent is REJECTED: the build decomposes letterSpacing via parseFloat+px,
+    // so "10%" would silently ship as 10px.
+    else if (!isNum(r.value) && !/^-?\d+(\.\d+)?px$/.test(String(r.value))) err(path, `letterSpacing must be a number or px, got "${r.value}" (percent would build as bare px)`);
   }
 };
 
@@ -178,6 +184,37 @@ for (const set of Object.keys(tokens)) {
   walk(tokens[set], set, set);
 }
 
+// ---- code-only.json / responsive.json value shapes -------------------------
+// Hand-maintained files that bypass Tokens Studio but feed the same build
+// (SET_DOMAIN in build-tokens.mjs, build-grid-css.mjs). Numeric leaves must
+// parse to finite numbers — a "1,6" gutter otherwise builds as NaNpx CSS.
+const EXTRA_NUM_RE = { dimension: /^-?\d+(\.\d+)?(px)?$/, number: /^-?\d+(\.\d+)?$/, duration: /^\d+(\.\d+)?ms$/ };
+const EXTRA_TYPES = [...Object.keys(EXTRA_NUM_RE), 'cubicBezier', 'string'];
+const BEZIER_RE = /^cubic-bezier\(\s*-?\d+(\.\d+)?(\s*,\s*-?\d+(\.\d+)?){3}\s*\)$/;
+const walkExtra = (node, path) => {
+  for (const key of Object.keys(node)) {
+    if (key.startsWith('$')) continue;
+    const child = node[key];
+    const p = `${path}/${key}`;
+    if (!child || typeof child !== 'object') { err(p, 'group must be an object'); continue; }
+    if (child.$value === undefined) { walkExtra(child, p); continue; }
+    leaves++;
+    const type = child.$type;
+    const v = child.$value;
+    if (!EXTRA_TYPES.includes(type)) { err(p, `unknown $type "${type}" — code-only/responsive allow: ${EXTRA_TYPES.join(', ')}`); continue; }
+    if (EXTRA_NUM_RE[type]) {
+      const ok = typeof v === 'number' ? Number.isFinite(v) : typeof v === 'string' && EXTRA_NUM_RE[type].test(v);
+      if (!ok) err(p, `${type} must parse to a finite number, got ${JSON.stringify(v)}`);
+    } else if (type === 'cubicBezier') {
+      if (typeof v !== 'string' || !BEZIER_RE.test(v)) err(p, `cubicBezier does not parse: ${JSON.stringify(v)}`);
+    } else if (typeof v !== 'string' || !v.trim()) err(p, `string must be a non-empty string, got ${JSON.stringify(v)}`);
+  }
+};
+for (const file of ['code-only.json', 'responsive.json']) {
+  const extra = JSON.parse(fs.readFileSync(new URL(`../tokens/${file}`, import.meta.url), 'utf8'));
+  for (const set of Object.keys(extra)) if (!set.startsWith('$')) walkExtra(extra[set], `${file}/${set}`);
+}
+
 // ---- $themes / $metadata sanity (TS corrupts these on bad exports) --------
 if (tokens.$metadata?.tokenSetOrder)
   for (const s of tokens.$metadata.tokenSetOrder)
@@ -190,9 +227,9 @@ if (Array.isArray(tokens.$themes))
     }
 
 if (errors.length) {
-  console.error(`✗ Token lint: ${errors.length} problem${errors.length > 1 ? 's' : ''} in tokens/tokens.json\n`);
+  console.error(`✗ Token lint: ${errors.length} problem${errors.length > 1 ? 's' : ''} in tokens/{tokens,code-only,responsive}.json\n`);
   for (const e of errors) console.error('  ' + e);
-  console.error('\nFix in Tokens Studio (or tokens.json) and push again — nothing was built.');
+  console.error('\nFix in Tokens Studio (or the tokens/ file) and push again — nothing was built.');
   process.exit(1);
 }
-console.log(`✓ Token lint: ${leaves} tokens pass (structure, references, formats, descriptions).`);
+console.log(`✓ Token lint: ${leaves} tokens pass across tokens.json + code-only.json + responsive.json (structure, references, formats, descriptions).`);

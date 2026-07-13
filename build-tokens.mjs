@@ -95,11 +95,13 @@ const decomposeComposites = (node, resolveRef, inInner) => {
 const rewriteRefs = (node, rootDomain) => {
   if (!node || typeof node !== 'object') return;
   const fix = (str) =>
-    String(str).replace(/\{([^}]+)\}/g, (m, ref) => {
+    str.replace(/\{([^}]+)\}/g, (m, ref) => {
       const dom = rootDomain[ref.split('.')[0]];
       return dom ? `{${dom}.${ref}}` : m;
     });
-  if (node.$value !== undefined && typeof node.$value !== 'object') node.$value = fix(node.$value);
+  // Only strings can hold a `{ref}` — leave numbers untouched so number-typed
+  // tokens (z-index, columns) reach the published TS/JS trees as JS numbers.
+  if (typeof node.$value === 'string') node.$value = fix(node.$value);
   for (const k of Object.keys(node)) if (!k.startsWith('$')) rewriteRefs(node[k], rootDomain);
 };
 
@@ -112,7 +114,10 @@ let CAPSULE_EXTRA = {};
 // capsule preprocessor passes SET_DOMAIN plus the active capsule's overlay set.
 const makeFlatten = (getSetDomain) => (d) => {
   const SET = getSetDomain();
-  const domainSets = Object.keys(d).filter((k) => !k.startsWith('$') && SET[k]);
+  // Merge in REGISTRY order (core sets → Parent Area base → capsule overlay), not the
+  // document's physical key order — reordering sets inside tokens.json must never
+  // change which set wins a deep-merge collision.
+  const domainSets = Object.keys(SET).filter((k) => !k.startsWith('$') && d[k]);
   if (domainSets.length) {
     const rootDomain = {};
     for (const s of domainSets)
@@ -275,4 +280,16 @@ if (process.env.NK_CAPSULES !== '0') {
     console.log(`✓ Capsule ${cap.slug}${cap.set ? ` (+${cap.set})` : ''} → ${outRoot}{css,dart,ts}`);
   }
   CAPSULE_EXTRA = {};
+
+  // Sweep: anything under build/capsules/ that is not a registered slug is a
+  // stale artifact (a de-registered capsule, a macOS "dir 2" duplicate) — the
+  // loop above only rewrites registered slugs, and `files:["build"]` would ship
+  // the leftovers in any local `npm pack`.
+  const slugs = new Set(CAPSULES.map((c) => c.slug));
+  for (const entry of await fs.readdir('build/capsules', { withFileTypes: true }).catch(() => [])) {
+    if (entry.isDirectory() && !slugs.has(entry.name)) {
+      await fs.rm(`build/capsules/${entry.name}`, { recursive: true, force: true });
+      console.log(`✓ Removed unregistered capsule dir build/capsules/${entry.name}`);
+    }
+  }
 }
