@@ -2,7 +2,7 @@
 
 Novakid design tokens. `tokens/tokens.json` is the source of truth; Style Dictionary
 generates `--nk-*` CSS + a `NkColors` Dart class + a typed TS tree, plus a grid CSS layer
-and an SVG/React asset bundle. Published as **`@novakid/nk-tokens`** (GitHub Packages) and
+and an SVG/React asset bundle. Published as **`@novakid/nk-tokens`** (Novakid Nexus npm registry) and
 as a token-catalogue **Storybook** on GitHub Pages.
 
 > Working rules (branch flow, gates, Tokens Studio) live in **[`CLAUDE.md`](./CLAUDE.md)**.
