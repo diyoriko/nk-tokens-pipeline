@@ -1,8 +1,9 @@
 # nk-tokens-pipeline — working rules
 
 Novakid design tokens. `tokens/tokens.json` is the source of truth; Style Dictionary
-generates CSS / Dart / TS + grid + assets; published as `@diyoriko/nk-tokens` to GitHub
-Packages and as a Storybook on GitHub Pages.
+generates CSS / Dart / TS + grid + assets; published as `@novakid/nk-tokens` to the
+Novakid Nexus npm registry (nexus.novakidschool.com, needs the `NEXUS_NPM_TOKEN` repo
+secret) and as a Storybook on GitHub Pages.
 
 ## Branch flow (do not bypass)
 
@@ -65,7 +66,7 @@ enforced by `scripts/check-scopes.mjs`:
 
 ## Release
 
-- Tag `v*` on `main` → `publish-tokens.yml` publishes to npm **and creates the GitHub
+- Tag `v*` on `main` → `publish-tokens.yml` publishes to Nexus **and creates the GitHub
   Release** (generated notes); push to `main` → `deploy-storybook.yml` redeploys Pages.
   Respect ≤3 releases/week.
 - Guards (rulesets + workflow): `v*` tags are admin-only (`protect-release-tags`); publish

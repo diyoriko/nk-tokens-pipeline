@@ -35,7 +35,7 @@ Research lives separately in `~/Documents/Novakid/design-code-research/`.
 ```text
 edit tokens.json (in nk-tokens-pipeline) → PR to develop → release-merge to main
    ├─ deploy-storybook Action → GitHub Pages           (auto on push to main)
-   ├─ git tag v2.x → publish-tokens Action → npm @diyoriko/nk-tokens   (needs the TAG)
+   ├─ git tag v2.x → publish-tokens Action → npm @novakid/nk-tokens   (needs the TAG)
    ├─ Tokens Studio (Figma plugin): Pull develop → Create Variables / Apply → Figma Variables + Text/Effect Styles
    └─ confluence-push/push.py → Confluence Token Tree 7253… (REST + Atlassian token)
    → Slack announce
