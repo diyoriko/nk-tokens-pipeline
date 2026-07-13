@@ -11,6 +11,14 @@ First release under the `@novakid` scope on the Novakid Nexus registry.
 Consumers of `@diyoriko/nk-tokens` (GitHub Packages) must switch package name
 and registry — token names, exports, and outputs are otherwise unchanged.
 
+Why this rename ships as a minor and not a major (documented policy
+exception): `@diyoriko/nk-tokens` has no external consumers to break — product
+teams explicitly declined to install from the personal registry, and adoption
+starts with this Nexus release. The old package stays frozen and installable
+at 2.5.1; the version line continues at 2.6.0 in the new namespace so the
+release history reads as one sequence. This is a one-time bootstrap exception;
+any future rename or registry move follows the Major rule below.
+
 ### Changed
 - **Package renamed** `@diyoriko/nk-tokens` → `@novakid/nk-tokens`; publish
   target moves from GitHub Packages to the Novakid Nexus npm registry
@@ -171,3 +179,8 @@ The 2.2.x–2.5.x history did not consistently follow this (renames shipped in
 patches, a breaking restructure in a minor). The policy is binding from 2.6.0:
 every release gets a changelog entry, and renames ship in a major or not at
 all — prefer additive deprecation.
+
+One documented exception: the 2.6.0 `@diyoriko` → `@novakid` namespace and
+registry move ships as a minor because the old package had zero external
+consumers (adoption begins with 2.6.0) — see the 2.6.0 entry. With consumers
+on Nexus, the same change would be a major.

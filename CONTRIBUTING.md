@@ -16,7 +16,7 @@ process — [`CLAUDE.md`](CLAUDE.md) holds the full working rules, and
 
 ## Branch flow
 
-```
+```text
 feature branch ──PR──▶ develop ──promote PR (merge commit)──▶ main (prod)
 ```
 
@@ -32,7 +32,7 @@ feature branch ──PR──▶ develop ──promote PR (merge commit)──�
 
 `npm run build:tokens` runs the full gate chain, in order:
 
-```
+```text
 lint → capsule-consistency → build (tokens + capsules) → grid → contrast → scopes → styles → outputs → capsule-gates
 ```
 
