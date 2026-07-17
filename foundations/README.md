@@ -62,4 +62,4 @@ These originated here and remain true in the live system:
   pinned at their L* step, gaps OKLCH-smooth generated.
 
 _Note: this folder was `design-code/foundations/` before the 2026-06-08 move
-into this repo; broader research lives in `~/Documents/Novakid/design-code-research/`._
+into this repo; broader research lives in `~/Novakid/design-code-research/`._

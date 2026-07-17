@@ -1,5 +1,7 @@
 # Review brief — Foundations v1 deep audit (ultra-code)
 
+> **Historical brief (June 2026, `-demo` repo era).** Paths below are as written at the time; the workspace moved `~/Documents/Novakid/` → `~/Novakid/` on 2026-07-13, and `design-code/` is defunct — its foundations docs were folded into this repo's `foundations/`.
+
 > **Goal:** a detailed, adversarial review of the **token architecture AND the token values**, group by group, cross-checked against **real usage across the Novakid Figma space**. Output: per-group verdict (keep / fix / add) + a prioritized findings list. This is a *correctness + completeness* review, not a pipeline review.
 
 ## Context the new session must load first

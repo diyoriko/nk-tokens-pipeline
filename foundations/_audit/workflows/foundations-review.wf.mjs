@@ -8,8 +8,9 @@ export const meta = {
   ],
 }
 
-const F = '/Users/diyoriko/Documents/Novakid/design-code/foundations';
-const REPO = '/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline';
+// NOTE: design-code/ defunct after 2026-07-13 move
+const F = '/Users/diyoriko/Novakid/design-code/foundations';
+const REPO = '/Users/diyoriko/Novakid/nk-tokens-pipeline';
 
 const COMMON = `
 You are reviewing **Novakid Foundations v1** design tokens (post-PR#11). This is a CORRECTNESS + COMPLETENESS review of token VALUES and ARCHITECTURE — not a pipeline review. Be adversarial and specific.

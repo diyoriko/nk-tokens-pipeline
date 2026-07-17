@@ -289,11 +289,11 @@ These four are the *only* sanctioned generated chromatic darks. **danger** is ba
 ---
 
 **Files referenced (absolute):**
-- `/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline/foundations/primitive-palette.md`
-- `/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline/foundations/final-token-tree.md`
-- `/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline/foundations/extract-colors.md`
-- `/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline/foundations/_audit/AUDIT-NUMBERS.md`
-- `/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline/tokens/tokens.json`
+- `foundations/primitive-palette.md`
+- `foundations/_archive/final-token-tree.md` (local archive, untracked)
+- `foundations/extract-colors.md`
+- `foundations/_audit/AUDIT-NUMBERS.md`
+- `tokens/tokens.json`
 
 This doc drives the ramp build (task #6). The four headline build deltas (§3.A pins + grey de-dup + doc re-version + accent/lemon-text naming) are the concrete work items.
 

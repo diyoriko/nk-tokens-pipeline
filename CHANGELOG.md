@@ -52,6 +52,12 @@ any future rename or registry move follows the Major rule below.
   from the DS file via the new exporter (#119).
 
 ### Fixed
+- Docs: stale `~/Documents/Novakid/…` absolute paths updated after the
+  2026-07-13 workspace move (audit workflow scripts + foundations docs; dated
+  handoffs keep their historical paths with a move note). README build chain
+  and repository map now match the #122 gate order (`check-capsule-consistency`,
+  grid-before-gates, `check-styles`); the Cloudflare preview section reflects
+  that the preview is active, not pending activation.
 - Loader glyph re-centered (#121); tintable loader, capsule-registration gate,
   SHA-pinned actions with `persist-credentials` off (#116).
 - Empty `Typography` variable collection removed from the Figma file (0
@@ -63,6 +69,9 @@ any future rename or registry move follows the Major rule below.
 ### Security
 - CI secret scoping tightened: the Cloudflare token is no longer exposed as
   job-level env to `npm ci` / build steps in the preview workflow.
+- GitHub Private Vulnerability Reporting enabled and documented in SECURITY.md
+  as the preferred disclosure channel (second channel next to the maintainer
+  email).
 
 ## [2.5.1] — 2026-07-09
 

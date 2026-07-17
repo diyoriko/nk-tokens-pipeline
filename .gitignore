@@ -6,6 +6,9 @@ storybook-static/
 foundations/_audit/*.html
 foundations/_archive/
 *.woff2
+.wrangler/
+.claude/
+*.tgz
 
 
 # local review reports (kept out of the repo)

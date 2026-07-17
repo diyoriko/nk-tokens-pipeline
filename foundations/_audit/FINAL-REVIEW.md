@@ -86,7 +86,7 @@ This is a genuinely strong, evidence-driven *color foundation* that beats almost
 4. **Bake the contrast contract into the build.** A Style Dictionary action that asserts every `on-*` token clears its threshold and fails CI — converts `AUDIT-NUMBERS.md` from a drift-prone snapshot into Radix-grade enforcement and closes the entire doc-vs-build divergence class.
 5. **Make "FINAL" actually final:** commit `tokens.json` + `foundations/`, cut `v1.0.0`, fix the README inner-shadow drift, add an empty `$themes`/mode scaffold for dark mode, and scope this release explicitly as **parent-area tokens** until classroom/games CSS is sampled — so the brand doesn't treat an untested palette as system-wide.
 
-**Files referenced (all verified):** `/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline/build/css/variables.css`, `/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline/tokens/tokens.json`, `/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline/foundations/_audit/AUDIT-NUMBERS.md`, `/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline/foundations/COLOR-FOUNDATIONS-DECISION.md`.
+**Files referenced (all verified):** `build/css/variables.css`, `tokens/tokens.json`, `foundations/_audit/AUDIT-NUMBERS.md`, `foundations/COLOR-FOUNDATIONS-DECISION.md` (repo-relative).
 
 ---
 
