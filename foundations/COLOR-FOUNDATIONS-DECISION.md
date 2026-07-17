@@ -288,7 +288,7 @@ These four are the *only* sanctioned generated chromatic darks. **danger** is ba
 
 ---
 
-**Files referenced (absolute):**
+**Files referenced (repo-relative):**
 - `foundations/primitive-palette.md`
 - `foundations/_archive/final-token-tree.md` (local archive, untracked)
 - `foundations/extract-colors.md`
