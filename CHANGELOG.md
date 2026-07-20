@@ -5,6 +5,21 @@ documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows the
 policy at the bottom of this file.
 
+## [4.0.0] — 2026-07-20
+
+### Removed
+- **Depth scale trimmed to the used range.** Removed 8 unused `size/depth`
+  tokens — `Depth/800` (32px), `Depth/1200` (48px), and all six negatives
+  (`Negative-025/100/200/400/800/1200`). The shipped shadows only ever consumed
+  `0 / 1 / 4 / 8 / 12 / 16`px (verified: 0 references to the removed tokens, incl.
+  inner shadows), and 48px was too deep for the brand's shadow language. The
+  scale is now `Depth/0 · 025 · 100 · 200 · 300 · 400`. The Storybook Depth story
+  is token-driven and updates automatically; the Figma "Blur · Depth" spec sheet
+  was updated to `Depth 4 / 8 / 16` and the negative row removed.
+  > **Tokens Studio follow-up:** these tokens must also be removed in Tokens
+  > Studio (source of truth) so the Figma variables drop and the next TS push
+  > doesn't re-add them — this changelog covers the code side only.
+
 ## [3.0.0] — 2026-07-20
 
 ### Removed
