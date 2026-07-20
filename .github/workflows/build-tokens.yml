@@ -17,6 +17,7 @@ on:
       - 'scripts/**'
       - 'capsules/**'
       - 'stories/**'
+      - 'tests/**'
       - '.storybook/**'
       - 'style-dictionary.config.mjs'
       - 'build-tokens.mjs'
@@ -52,6 +53,15 @@ jobs:
 
       - name: Build (tokens + grid + assets — all gates)
         run: npm run build
+
+      - name: Gate regression tests (prove the gates fail closed)
+        run: npm test
+
+      - name: Assert the gate tests left the tree pristine
+        run: git diff --exit-code || (echo "::error::a gate test did not restore a mutated file" && exit 1)
+
+      - name: Pack + install smoke (consumer's-eye export contract)
+        run: npm run test:pack
 
       - name: Build Storybook (gate the showcase too)
         run: npx storybook build

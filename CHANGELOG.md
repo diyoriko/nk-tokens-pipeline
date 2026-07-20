@@ -40,6 +40,16 @@ any future rename or registry move follows the Major rule below.
   value-identical before/after).
 
 ### Added
+- **Gate regression tests** (`tests/gates.test.mjs`, `node --test`) — encode the
+  fail-open corruption experiments from the 2026-07-17 review (missing output,
+  drifted style value, 3-digit hex, capsule primitive override, missing export
+  target, non-currentColor icon) so a future edit that reopens a hole is caught
+  in CI. Each restores the tree in `finally`; CI asserts it stayed pristine.
+- **Pack + install smoke test** (`tests/pack-smoke.mjs`) — `npm pack`, install the
+  tarball into a throwaway project, and resolve EVERY export subpath through
+  Node's resolver (ESM import, CJS require, raw-asset paths); proves the core
+  surfaces load with react ABSENT (optional peer) and `/icons/react` works with
+  it present. Both suites run in `build-tokens.yml`.
 - **`license` field** (`UNLICENSED`) and **`sideEffects`** (the CSS entrypoints)
   in package.json — kills the npm "No license field" publish/install warning and
   lets bundlers tree-shake the JS/TS token tree.

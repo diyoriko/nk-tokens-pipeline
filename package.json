@@ -74,7 +74,9 @@
     "check:capsule-consistency": "node scripts/check-capsule-consistency.mjs",
     "check:scopes": "node scripts/check-scopes.mjs",
     "check:styles": "node scripts/check-styles.mjs",
-    "lint:tokens": "node scripts/lint-tokens.mjs"
+    "lint:tokens": "node scripts/lint-tokens.mjs",
+    "test": "node --test tests/gates.test.mjs",
+    "test:pack": "node tests/pack-smoke.mjs"
   },
   "engines": {
     "node": ">=22"
