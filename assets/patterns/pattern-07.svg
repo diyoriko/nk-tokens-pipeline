@@ -1,0 +1,28 @@
+<svg width="480" height="286" viewBox="0 0 480 286" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Pattern=07" clip-path="url(#clip0_158_2)">
+<g id="Clip path group">
+<mask id="mask0_158_2" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="286">
+<g id="clip0_949_164">
+<path id="Vector" d="M480 0H0V286H480V0Z" fill="white"/>
+</g>
+</mask>
+<g mask="url(#mask0_158_2)">
+<g id="Group">
+<path id="Vector_2" d="M480 0H0V286H480V0Z" fill="#E1F3FE"/>
+<path id="Vector_3" d="M-188.106 336.658C-185.046 297.684 -128.851 119.213 -48.9396 122.728C32.2384 126.299 46.2502 292.136 131.896 269.322C243.749 239.528 155.538 -5.19734 249.12 -14.2151C304.623 -19.5634 308.932 83.0001 410.435 88.0449C523.966 93.6876 448.826 -109.701 512.615 -118.314" stroke="url(#paint0_linear_158_2)" stroke-width="66.4041"/>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_158_2" x1="-210.398" y1="387.366" x2="788.196" y2="116.363" gradientUnits="userSpaceOnUse">
+<stop offset="0.058042" stop-color="#9694FF"/>
+<stop offset="0.438642" stop-color="#79FD7F"/>
+<stop offset="0.829515" stop-color="#FFE60A"/>
+<stop offset="1" stop-color="#FFE60A"/>
+</linearGradient>
+<clipPath id="clip0_158_2">
+<rect width="480" height="286" fill="white"/>
+</clipPath>
+</defs>
+</svg>

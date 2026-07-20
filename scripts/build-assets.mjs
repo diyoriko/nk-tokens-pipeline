@@ -184,6 +184,7 @@ function copyAssets(kind) {
 }
 const logos = copyAssets('logo');
 const patterns = copyAssets('patterns');
+const badges = copyAssets('badges'); // award badges (raster illustrations from the Brand Assets page)
 
 // Strip stray macOS .DS_Store from build/ so they never reach the npm tarball.
 function rmDsStore(dir) {
@@ -196,5 +197,5 @@ function rmDsStore(dir) {
 }
 rmDsStore(B(''));
 
-console.log(`✓ Assets built: ${icons.length} icons (svg+sprite+react+manifest), ${logos.length} logo, ${patterns.length} pattern files.`);
+console.log(`✓ Assets built: ${icons.length} icons (svg+sprite+react+manifest), ${logos.length} logo, ${patterns.length} pattern, ${badges.length} badge files.`);
 if (!icons.length) console.warn('  (assets/icons is empty — run `npm run export:icons` to pull them from Figma.)');
