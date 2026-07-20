@@ -1,6 +1,6 @@
 {
   "name": "@diyoriko/nk-tokens",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "type": "module",
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "license": "UNLICENSED",
