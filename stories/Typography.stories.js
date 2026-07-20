@@ -4,6 +4,11 @@ import { FONT, MUTED, BORDER } from './_helpers.js';
 export default { title: 'Tokens/Typography' };
 
 const PRIMS = new Set(['family', 'weight', 'size', 'line-height', 'letter-spacing']);
+// Mikado is a commercial font, git-ignored (*.woff2), so the published Storybook
+// cannot ship it. Specimens below fall back to system-ui when Mikado isn't
+// installed locally — the SHAPES (size/weight/line-height/spacing) are exact,
+// the letterforms are the fallback's. Load Mikado locally to see true glyphs.
+const MIKADO_NOTE = `<p style="margin:6px 0 0;padding:8px 12px;background:#fff8df;border:1px solid #f0e2a8;border-radius:6px;font-size:11.5px;color:#6b5d1a">⚠︎ <b>Mikado is not bundled</b> (commercial licence). If it isn't installed on this machine, specimens render in the <code>system-ui</code> fallback — metrics are exact, letterforms are not.</p>`;
 const wrap = (inner) => {
   const d = document.createElement('div');
   d.style.cssText = `padding:24px 28px;font-family:${FONT}`;
@@ -18,7 +23,7 @@ const trow = (name, val, sample) =>
 export const Primitives = () => {
   const t = tokens.typography;
   let html = '<h1 style="font-size:20px;margin:0 0 4px">Typography primitives</h1>' +
-    `<p style="color:${MUTED};margin:0;font-size:12px">Atoms — composed into the semantic text styles.</p>`;
+    `<p style="color:${MUTED};margin:0;font-size:12px">Atoms — composed into the semantic text styles.</p>` + MIKADO_NOTE;
   html += h2('family') + '<table>' + Object.keys(t.family).map((k) => trow('family/' + k, t.family[k], `<span style="font-family:var(--nk-typography-family-${k});font-size:18px">Mikado — Aa Бб 123</span>`)).join('') + '</table>';
   html += h2('weight') + '<table>' + Object.keys(t.weight).map((k) => trow('weight/' + k, t.weight[k], `<span style="font-weight:var(--nk-typography-weight-${k});font-size:18px">Novakid</span>`)).join('') + '</table>';
   html += h2('size') + '<table>' + Object.keys(t.size).sort((a, b) => +a - +b).map((k) => trow('size/' + k, t.size[k], `<span style="font-size:var(--nk-typography-size-${k})">Aa</span>`)).join('') + '</table>';
@@ -33,7 +38,7 @@ export const Semantic = () => {
   const t = tokens.typography;
   const roles = Object.keys(t).filter((k) => !PRIMS.has(k));
   let html = '<h1 style="font-size:20px;margin:0 0 4px">Semantic text styles</h1>' +
-    `<p style="color:${MUTED};margin:0;font-size:12px">display › heading › body › label › caption › overline. Each composes the primitives.</p>`;
+    `<p style="color:${MUTED};margin:0;font-size:12px">display › heading › body › label › caption › overline. Each composes the primitives.</p>` + MIKADO_NOTE;
   for (const role of roles) {
     html += h2(role);
     const variants = Object.keys(t[role]).sort((a, b) => parseFloat(t[role][b]['font-size']) - parseFloat(t[role][a]['font-size']));
@@ -43,7 +48,7 @@ export const Semantic = () => {
       const upper = role === 'overline' ? 'text-transform:uppercase;' : '';
       html += `<div style="padding:10px 0;border-bottom:1px solid ${BORDER}">
         <div style="font-size:10.5px;color:${MUTED};margin-bottom:3px;font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace">${role}/${v} · ${s['font-size']} · ${s['font-weight']} · LH ${String(s['line-height']).includes('%') ? s['line-height'] : Math.round(parseFloat(s['line-height']) * 100) + '%'}${parseFloat(s['letter-spacing']) ? ' · ls ' + s['letter-spacing'] : ''}</div>
-        <div style="${upper}font-size:var(${base}-font-size);line-height:var(${base}-line-height);font-weight:var(${base}-font-weight);letter-spacing:var(${base}-letter-spacing);font-family:var(--nk-typography-family-sans)">${SAMPLE}</div>
+        <div style="${upper}font-size:var(${base}-font-size);line-height:var(${base}-line-height);font-weight:var(${base}-font-weight);letter-spacing:var(${base}-letter-spacing);font-family:${FONT}">${SAMPLE}</div>
       </div>`;
     }
   }
