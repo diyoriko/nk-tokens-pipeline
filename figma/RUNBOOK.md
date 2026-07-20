@@ -141,7 +141,10 @@ strips Figma frame chrome + namespaces internal ids). To add/refresh one:
    → `Pattern=NN`, or `brand/logo` → `Mark=Wordmark, Colour=Violet`).
 2. Export as **SVG** → drop the file into the matching `assets/<group>/` dir
    with the target filename (`pattern-NN.svg`, `logo-*.svg`, `badge-*.svg`).
-3. `npm run build` — `cleanSvgAsset` removes the export chrome automatically;
+3. **Optimise** vector exports with SVGO (keeps `viewBox`), especially the
+   halftone patterns (~57% smaller, no visible change):
+   `npx svgo@3 --config figma/svgo.config.mjs -f assets/patterns` (or per file).
+4. `npm run build` — `cleanSvgAsset` removes the export chrome automatically;
    verify in Storybook (`Assets/Brand`).
 
 ### Known gap: `Pattern=04` is EMPTY in Figma (node `159:19`)
