@@ -1,9 +1,28 @@
 # Changelog
 
-All notable changes to the published package (`@diyoriko/nk-tokens`, formerly
-`@diyoriko/nk-tokens`) are documented here. The format follows
+All notable changes to the published package (`@diyoriko/nk-tokens`) are
+documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows the
 policy at the bottom of this file.
+
+## [2.6.1] — 2026-07-20
+
+### Fixed
+- **Logo restored to the real Novakid mark.** The shipped `logo-symbol.svg` had
+  lost the inner **"N"** subpath (the letterform knocked out of the rocket body),
+  rendering as a solid violet blob. Re-exported the Mark=Symbol/Violet variant
+  from the DS file (node 171:11) and cleaned of Figma chrome — the mark now shows
+  the N knockout, matching Figma.
+- **Logo & pattern SVGs are now cleaned at build time** (`cleanSvgAsset`): Figma
+  export chrome (the `#F5F5F5` section rect + an oversized page-background rect)
+  is stripped, and every internal `id` is namespaced per file. Figma reuses ids
+  like `clip0_0_1` / `paint0_linear_0_1` across exports, so inlining two patterns
+  on one page previously made the second reference the first's gradient/clip —
+  now collision-proof.
+- **`build:assets` is idempotent.** `build/icons/svg`, `build/logo`, and
+  `build/patterns` are purged before each write, so a renamed/removed asset can
+  no longer linger append-only and ship a stale file through the `*` export
+  subpaths.
 
 ## [2.6.0] — 2026-07-20
 

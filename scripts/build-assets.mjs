@@ -72,6 +72,11 @@ const checkPaints = (name, body) => {
 
 const iconDir = A('icons');
 const icons = fs.existsSync(iconDir) ? fs.readdirSync(iconDir).filter((f) => f.endsWith('.svg')).sort() : [];
+// Idempotent: purge the per-icon svg dir so a renamed/removed icon (or a stray
+// file) can't linger append-only and drift from the manifest / ship via the
+// ./icons/svg/* export. The other icon outputs (sprite/manifest/index/react)
+// are single files that get overwritten each build.
+fs.rmSync(B('icons/svg'), { recursive: true, force: true });
 ensure(B('icons/svg'));
 const manifest = [];
 const rawMap = {};
@@ -134,13 +139,46 @@ fs.writeFileSync(B('icons/react.d.ts'),
   `export type NkIcon = React.ForwardRefExoticComponent<NkIconProps & React.RefAttributes<SVGSVGElement>>;\n` +
   `${manifest.map((m) => `export declare const ${pascal(m.name)}: NkIcon;`).join('\n')}\n`);
 
+// Static SVG-asset cleaner (logo + patterns). Unlike icons these keep their
+// colours (they're brand marks / decorative backgrounds, not tintable glyphs),
+// but Figma exports still carry two hazards this strips:
+//   1. ID COLLISIONS — Figma reuses ids like `clip0_0_1` / `paint0_linear_0_1`
+//      across every export, so inlining two patterns on one page makes the
+//      second reference the first's gradient/clip (wrong render). Namespace
+//      every id + reference with the file name.
+//   2. EXPORT CHROME — a section-background `#F5F5F5` rect and an oversized
+//      translated page-background rect that aren't part of the asset.
+function cleanSvgAsset(raw, name) {
+  const ns = name.replace(/[^a-zA-Z0-9]+/g, '-');
+  let s = raw;
+  const ids = [...new Set([...s.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]))];
+  for (const id of ids) {
+    const nid = `${ns}--${id}`.replace(/[^a-zA-Z0-9_-]+/g, '-');
+    const esc = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    s = s.replace(new RegExp(`\\bid="${esc}"`, 'g'), `id="${nid}"`)
+      .replace(new RegExp(`url\\(#${esc}\\)`, 'g'), `url(#${nid})`)
+      .replace(new RegExp(`(href=")#${esc}(")`, 'g'), `$1#${nid}$2`);
+  }
+  s = s
+    .replace(/<rect\b[^>]*\bfill="#[Ff]5[Ff]5[Ff]5"[^>]*\/>/g, '')
+    .replace(/<rect\b[^>]*\btransform="translate\([^)]*\)"[^>]*\bfill="white"[^>]*\/>/g, '');
+  return s.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+}
+
 // ---------------- LOGO + PATTERNS (static assets) ----------------
 function copyAssets(kind) {
   const dir = A(kind);
   if (!fs.existsSync(dir)) return [];
   const files = fs.readdirSync(dir).filter((f) => /\.(svg|png)$/.test(f)).sort();
+  fs.rmSync(B(kind), { recursive: true, force: true }); // idempotent: drop stale assets
   ensure(B(kind));
-  for (const f of files) fs.copyFileSync(path.join(dir, f), B(`${kind}/${f}`));
+  for (const f of files) {
+    if (f.endsWith('.svg')) {
+      fs.writeFileSync(B(`${kind}/${f}`), cleanSvgAsset(fs.readFileSync(path.join(dir, f), 'utf8'), f.replace(/\.svg$/, '')));
+    } else {
+      fs.copyFileSync(path.join(dir, f), B(`${kind}/${f}`));
+    }
+  }
   fs.writeFileSync(B(`${kind}/manifest.json`), JSON.stringify(files, null, 2) + '\n');
   return files;
 }
