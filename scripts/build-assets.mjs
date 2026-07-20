@@ -53,6 +53,23 @@ function cleanIconSvg(raw) {
 }
 
 // ---------------- ICONS ----------------
+// Paint gate: after cleaning, a mono icon may paint ONLY with currentColor (or
+// none) — the hex rewrite above cannot catch named colours ("white") or rgb(),
+// and a literal paint is exactly the tintability bug class #116 fixed for the
+// loader (tint the icon white → the knockout disappears; any other surface →
+// literal white artefact). Known offenders are allowlisted pending the Figma
+// redraw decision (evenodd knockouts, like check-circle-fill does it) — see the
+// 2026-07-17 review; do NOT add to this list, fix the master in Figma instead.
+const PAINT_ALLOWLIST = new Set(['question-circle-fill', 'referral', 'referral-fill']);
+const paintViolations = [];
+const checkPaints = (name, body) => {
+  const bad = [...body.matchAll(/(?:fill|stroke)="([^"]+)"/g)]
+    .map((m) => m[1])
+    .filter((v) => v !== 'currentColor' && v !== 'none');
+  if (bad.length && !PAINT_ALLOWLIST.has(name))
+    paintViolations.push(`${name}.svg: literal paint(s) ${[...new Set(bad)].join(', ')} — icons must resolve to currentColor/none (fix the Figma master, e.g. evenodd knockout)`);
+};
+
 const iconDir = A('icons');
 const icons = fs.existsSync(iconDir) ? fs.readdirSync(iconDir).filter((f) => f.endsWith('.svg')).sort() : [];
 ensure(B('icons/svg'));
@@ -62,11 +79,17 @@ const symbols = [];
 for (const file of icons) {
   const name = file.replace(/\.svg$/, '');
   const body = cleanIconSvg(fs.readFileSync(path.join(iconDir, file), 'utf8'));
+  checkPaints(name, body);
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none">${body}</svg>`;
   fs.writeFileSync(B(`icons/svg/${name}.svg`), svg + '\n');
   manifest.push({ name, viewBox: '0 0 24 24' });
   rawMap[name] = body;
   symbols.push(`<symbol id="nk-${name}" viewBox="0 0 24 24" fill="none">${body}</symbol>`);
+}
+if (paintViolations.length) {
+  console.error(`✗ Icon paints: ${paintViolations.length} violation(s):`);
+  paintViolations.forEach((v) => console.error('  ✗ ' + v));
+  process.exit(1);
 }
 // sprite
 fs.writeFileSync(B('icons/sprite.svg'),

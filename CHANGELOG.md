@@ -40,6 +40,21 @@ any future rename or registry move follows the Major rule below.
   value-identical before/after).
 
 ### Added
+- **`license` field** (`UNLICENSED`) and **`sideEffects`** (the CSS entrypoints)
+  in package.json — kills the npm "No license field" publish/install warning and
+  lets bundlers tree-shake the JS/TS token tree.
+- **`scripts/check-exports.mjs`** — a final gate in `npm run build` that expands
+  every `package.json` "exports" subpath (including `*` patterns) and fails if
+  any target is missing or empty, so a config regression can't publish a package
+  whose exports resolve to nothing. Also asserts the icon index/react component
+  count stays in sync with the manifest.
+- New export subpaths: per-icon SVGs (`./icons/svg/*.svg`) and the capsule
+  `tokens.ts` / `dart/nk_colors.dart` outputs (previously built but unreachable).
+- Icon **paint gate** in `build:assets`: a cleaned icon may paint only with
+  `currentColor`/`none`; literal colours (named like `white`, or `rgb()`) that
+  the hex→currentColor rewrite can't catch now fail the build. Three known
+  white-paint icons (`question-circle-fill`, `referral`, `referral-fill`) are
+  allowlisted pending a Figma knockout redraw (see 2026-07-17 review).
 - Icons showcase story in Storybook — the full icon set is now browsable in
   code, not only in Figma.
 - `scripts/check-styles.mjs` — automated value-drift check for Figma paint /
@@ -52,6 +67,27 @@ any future rename or registry move follows the Major rule below.
   from the DS file via the new exporter (#119).
 
 ### Fixed
+- **Style-drift gate now checks VALUES, not just names** (`check-styles.mjs`):
+  the CI laws pass compares each Figma style's snapshot value (font size /
+  line-height / letter-spacing / shadow geometry + colour / gradient stops)
+  against the matching `tokens.json` composite — both live in the repo, no
+  Figma needed. Previously only the name↔token 1:1 mapping was checked, so a
+  composite value change could leave the baseline silently stale with CI green
+  (the PARITY-2 hole). The `--live` Figma drift diff is unchanged.
+- **`check-outputs.mjs` no longer fails open**: it now REQUIRES the full
+  platform file set for the default build and every registered capsule (css /
+  dart / ts×4), instead of silently skipping files that don't exist. A platform
+  dropped from the Style Dictionary config now fails the gate instead of
+  shipping a package with dangling exports.
+- **Lint hex tightened to 6/8 digits** (`lint-tokens.mjs`), matching the Dart
+  emitter's filter — a 3-digit shorthand hex no longer passes lint only to
+  vanish from the Dart output.
+- **Capsule overlay containment**: lint now fails if a capsule set carries any
+  group other than the semantic surfaces (Background/Text/Icon/Border), closing
+  the hole where a capsule could silently override a Tier-1 primitive in its own
+  build (capsule sets deep-merge last over the whole colour domain).
+- **Capsule `$theme` registration is now a hard failure**, not a warning — a
+  capsule with no Tokens Studio team theme can't be previewed by designers.
 - Loader glyph re-centered (#121); tintable loader, capsule-registration gate,
   SHA-pinned actions with `persist-credentials` off (#116).
 - Empty `Typography` variable collection removed from the Figma file (0
@@ -63,6 +99,15 @@ any future rename or registry move follows the Major rule below.
 ### Security
 - CI secret scoping tightened: the Cloudflare token is no longer exposed as
   job-level env to `npm ci` / build steps in the preview workflow.
+- **`npm publish --ignore-scripts`** in publish-tokens.yml: publish no longer
+  re-runs `prepack` (a second full build) with `NODE_AUTH_TOKEN` readable by
+  every dependency lifecycle script — the same lifecycle-exposure the preview
+  workflow already forbids for the Cloudflare token, now closed for the more
+  powerful Nexus credential. `files:["build"]` packs the token-free build that
+  ran the step before. The tag↔version assert also moved ahead of `npm ci` to
+  fail before any dependency code runs.
+- preview-storybook triggers now include `capsules/**`, so a capsule-registry
+  change refreshes the preview instead of shipping a stale one.
 
 ## [2.5.1] — 2026-07-09
 
