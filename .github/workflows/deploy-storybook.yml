@@ -1,11 +1,19 @@
 name: deploy-storybook
 
-# Builds the token-catalogue Storybook and publishes it to GitHub Pages.
+# Builds the token-catalogue Storybook and publishes it to GitHub Pages
+# (https://diyoriko.github.io/nk-tokens-pipeline/) — the single public showcase.
 # Pages source must be set to "GitHub Actions" (done once, via the API).
+#
+# Deploys from `develop` (the integration branch), so the public Storybook
+# always reflects the latest merged token work without a promote-to-main step.
+# `main` moves only for package releases (a v* tag → publish-tokens.yml); it no
+# longer needs to redeploy Pages. (Cloudflare Pages preview was removed
+# 2026-07-20 — redundant for a solo repo; local `npm run storybook` covers
+# in-progress previews.)
 
 on:
   push:
-    branches: [main]
+    branches: [develop]
   workflow_dispatch: {}
 
 # Least privilege: only the deploy job needs the Pages/OIDC grants.

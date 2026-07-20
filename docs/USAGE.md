@@ -1,13 +1,14 @@
 # Using the design system in code
 
-Package: `@novakid/nk-tokens`. One source of truth (Figma → Tokens Studio → this
+Package: `@diyoriko/nk-tokens`. One source of truth (Figma → Tokens Studio → this
 repo), four consumable layers. Everything below is generated into `build/` and
 shipped in the npm package.
 
-> **Install first:** the package lives on the Novakid Nexus registry
-> (`nexus.novakidschool.com`) — point the `@novakid` scope there in your `.npmrc`
-> (see [README § Consuming the outputs](../README.md#consuming-the-outputs-devs)),
-> or `npm install` will fail with `E404`/`E401`.
+> **Install first:** the package lives on **GitHub Packages** — point the
+> `@diyoriko` scope at `https://npm.pkg.github.com` in your `.npmrc` with a
+> `GITHUB_TOKEN` (see [README § Consuming the outputs](../README.md#consuming-the-outputs-devs)),
+> or `npm install` will fail with `E404`/`E401`. (A move to `@novakid` on the
+> Novakid Nexus registry is planned but not yet started.)
 
 ## Layout model — grid for the page, flex for components (read first)
 
@@ -34,14 +35,14 @@ The Figma column overlay does **not** lay anything out — it's a ruler you alig
 CSS variables — the default for web:
 
 ```css
-@import "@novakid/nk-tokens/css/variables.css";
+@import "@diyoriko/nk-tokens/css/variables.css";
 .btn { background: var(--nk-color-background-brand-violet-primary); color: var(--nk-color-text-brand-violet-on-primary); }
 ```
 
-Also available: `@novakid/nk-tokens` (TS tree), `/dart/nk_colors.dart` (Flutter — below).
+Also available: `@diyoriko/nk-tokens` (TS tree), `/dart/nk_colors.dart` (Flutter — below).
 
 **Working in a team capsule?** Import your team's package instead — same variable
-names, your brand slot: `@novakid/nk-tokens/capsules/<team>/css/variables.css`
+names, your brand slot: `@diyoriko/nk-tokens/capsules/<team>/css/variables.css`
 (see [CAPSULES.md](../foundations/CAPSULES.md) and the Storybook *Capsules* story).
 
 ### Flutter (Dart)
@@ -54,9 +55,9 @@ pub cannot consume it as a git dependency — **copy the file into your project*
 (vendoring is the supported path):
 
 ```sh
-# From the published package (needs the @novakid scope -> Nexus in your .npmrc):
-npm pack @novakid/nk-tokens
-tar -xf novakid-nk-tokens-*.tgz package/build/dart/nk_colors.dart
+# From the published package (needs the @diyoriko scope -> GitHub Packages in your .npmrc):
+npm pack @diyoriko/nk-tokens
+tar -xf diyoriko-nk-tokens-*.tgz package/build/dart/nk_colors.dart
 cp package/build/dart/nk_colors.dart <your-app>/lib/tokens/
 
 # Or from source: clone the repo, then (Node 22)
@@ -82,8 +83,8 @@ switches at `768` / `1280` / `1920` — the same numbers as the Figma grid style
 `Grid/Mobile · Grid/Tablet · Grid/Desktop · Grid/Wide`.
 
 ```css
-@import "@novakid/nk-tokens/css/variables.css"; /* the --nk-responsive-* values */
-@import "@novakid/nk-tokens/css/grid.css";       /* .nk-container / .nk-grid / .nk-col-* */
+@import "@diyoriko/nk-tokens/css/variables.css"; /* the --nk-responsive-* values */
+@import "@diyoriko/nk-tokens/css/grid.css";       /* .nk-container / .nk-grid / .nk-col-* */
 ```
 
 ```html
@@ -120,13 +121,13 @@ vector with a prop. Outline is the base name; the bold/filled twin is `<name>-fi
 
 **React** (zero runtime deps):
 ```jsx
-import { Home, HeartFill } from "@novakid/nk-tokens/icons/react";
+import { Home, HeartFill } from "@diyoriko/nk-tokens/icons/react";
 <Home style={{ fontSize: 24, color: "var(--nk-color-icon-default-primary)" }} />
 ```
 
 **Framework-agnostic** (raw strings + names):
 ```js
-import { icons, iconNames } from "@novakid/nk-tokens/icons";
+import { icons, iconNames } from "@diyoriko/nk-tokens/icons";
 el.innerHTML = `<svg viewBox="0 0 24 24" width="24" fill="none">${icons["search"]}</svg>`;
 ```
 
@@ -143,7 +144,7 @@ separately (not recoloured) — see the Figma `Social` group.
 `build/logo/*.svg` and `build/patterns/*.svg` ship as files (+ a `manifest.json` each):
 
 ```jsx
-import symbol from "@novakid/nk-tokens/logo/logo-symbol.svg";
+import symbol from "@diyoriko/nk-tokens/logo/logo-symbol.svg";
 <img src={symbol} alt="Novakid" />
 ```
 Patterns are 480×286 brand backgrounds (CSS `background-image`), all shipped as SVG.

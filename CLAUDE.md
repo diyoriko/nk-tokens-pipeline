@@ -1,9 +1,14 @@
 # nk-tokens-pipeline — working rules
 
 Novakid design tokens. `tokens/tokens.json` is the source of truth; Style Dictionary
-generates CSS / Dart / TS + grid + assets; published as `@novakid/nk-tokens` to the
-Novakid Nexus npm registry (nexus.novakidschool.com, needs the `NEXUS_NPM_TOKEN` repo
-secret) and as a Storybook on GitHub Pages.
+generates CSS / Dart / TS + grid + assets; published as `@diyoriko/nk-tokens` to
+GitHub Packages (auth via the built-in `GITHUB_TOKEN`) and as a Storybook on GitHub
+Pages (from `develop`).
+
+> **Migration deferred:** a move to the `@novakid` scope on the Novakid Nexus
+> registry is pre-wired but NOT started (needs a `NEXUS_NPM_TOKEN` from devops + a
+> repo-governance call — the repo is a personal public repo). Until then everything
+> stays on personal infra: `@diyoriko` on GitHub Packages, Storybook on GitHub Pages.
 
 ## Branch flow (do not bypass)
 
@@ -67,9 +72,10 @@ enforced by `scripts/check-scopes.mjs`:
 
 ## Release
 
-- Tag `v*` on `main` → `publish-tokens.yml` publishes to Nexus **and creates the GitHub
-  Release** (generated notes); push to `main` → `deploy-storybook.yml` redeploys Pages.
-  Respect ≤3 releases/week.
+- Tag `v*` on `main` → `publish-tokens.yml` publishes to **GitHub Packages** (auth via
+  `GITHUB_TOKEN`) **and creates the GitHub Release** (generated notes). The Storybook is
+  redeployed by `deploy-storybook.yml` on every **`develop`** push (not `main`), so a
+  release tag no longer needs to touch Pages. Respect ≤3 releases/week.
 - Guards (rulesets + workflow): `v*` tags are admin-only (`protect-release-tags`); publish
   refuses tags whose commit is not on `main`; promote PRs to `main` can only be **merge
   commits** (`main-merge-commit-only` ruleset enforces the law above).

@@ -2,8 +2,9 @@
 
 Novakid design tokens. `tokens/tokens.json` is the source of truth; Style Dictionary
 generates `--nk-*` CSS + a `NkColors` Dart class + a typed TS tree, plus a grid CSS layer
-and an SVG/React asset bundle. Published as **`@novakid/nk-tokens`** (Novakid Nexus npm registry) and
-as a token-catalogue **Storybook** on GitHub Pages.
+and an SVG/React asset bundle. Published as **`@diyoriko/nk-tokens`** (GitHub Packages) and
+as a token-catalogue **Storybook** on GitHub Pages
+([diyoriko.github.io/nk-tokens-pipeline](https://diyoriko.github.io/nk-tokens-pipeline/)).
 
 > Working rules (branch flow, gates, Tokens Studio) live in **[`CLAUDE.md`](./CLAUDE.md)**.
 
@@ -49,7 +50,7 @@ collection — see [`foundations/CAPSULES.md`](./foundations/CAPSULES.md)) — p
 | `Typography` | semantic | role Text Styles — `Display · Heading · Body · Label · Caption · Overline` (composites in source → Figma Text Styles) |
 | `Effect` | — | `drop-shadow` (100–600) · `inner-shadow` (100–200) → Figma Effect Styles; `backdrop` blur radii + `opacity` scale (roles + 0–100) |
 | `Parent Area` | capsule | the **base brand overlay** (violet) — layered into the default build and under every team capsule. In Figma: the default mode of `Color`. |
-| `Demo Team` | capsule | worked-example team overlay (magenta rebrand of the shared brand slot) → `@novakid/nk-tokens/capsules/demo-team`. In Figma: the `Demo Team` mode. |
+| `Demo Team` | capsule | worked-example team overlay (magenta rebrand of the shared brand slot) → `@diyoriko/nk-tokens/capsules/demo-team`. In Figma: the `Demo Team` mode. |
 | `responsive` *(code-only)* | — | breakpoint grid — `Mobile / Tablet / Desktop / Wide` (from the Brand-book Grids). Drives `build/css/grid.css` + the Figma grid styles. |
 | `motion` + `z-index` *(code-only)* | — | duration / easing scales + a stacking scale |
 
@@ -123,7 +124,7 @@ grep background-brand-violet-primary build/css/variables.css
 | `scripts/export-figma-assets.mjs` | Bulk-pull icons from Figma via REST (needs `FIGMA_TOKEN`; fails on partial export). |
 | `build/` | **Output** (generated, git-ignored): `css/{variables,grid}.css`, `dart/nk_colors.dart`, `ts/{tokens.ts,.mjs,.cjs,.d.ts}`, `capsules/<slug>/`, `icons/`, `logo/`, `patterns/`. |
 | `.storybook/`, `stories/*.stories.js` | Token catalogue — Colors, Capsules, Spacing, Typography, Shadow, Effects, Gradients, Grid, Motion, Z-Index, Usage. |
-| `.github/workflows/` | `build-tokens` (**gate PRs**: all token gates + Storybook build), `preview-storybook` (Cloudflare, from `develop`), `deploy-storybook` (Pages, from `main`), `publish-tokens` (npm + GitHub Release, on `v*` tag). |
+| `.github/workflows/` | `build-tokens` (**gate PRs**: all token gates + regression tests + Storybook build), `deploy-storybook` (GitHub Pages, from `develop`), `publish-tokens` (GitHub Packages + Release, on `v*` tag). |
 
 ---
 
@@ -160,23 +161,24 @@ Add or change a token in **`tokens/tokens.json`** (the only source of truth), th
 
 ## Consuming the outputs (devs)
 
-Published as **`@novakid/nk-tokens`** to the **Novakid Nexus npm registry**
-(`nexus.novakidschool.com`) on every `v*` tag.
+Published as **`@diyoriko/nk-tokens`** to **GitHub Packages** on every `v*` tag.
 
 ```ini
-# .npmrc in the consumer (e.g. parent-mf)
-@novakid:registry=https://nexus.novakidschool.com/repository/npm-hosted/
-# only if the repository requires auth for reads:
-//nexus.novakidschool.com/repository/npm-hosted/:_authToken=${NEXUS_NPM_TOKEN}
+# .npmrc in the consumer
+@diyoriko:registry=https://npm.pkg.github.com
+# GitHub Packages requires auth even for reads:
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
-> The exact Nexus repository path (`npm-hosted` above) is devops' call — confirm it
-> before the first publish; it lives in one place, `package.json → publishConfig.registry`.
+> **Migration planned:** the package will move to the `@novakid` scope on the
+> Novakid Nexus registry (`nexus.novakidschool.com`) once devops provisions the
+> credentials — see [`CLAUDE.md`](./CLAUDE.md) § Release. Until then it stays
+> `@diyoriko` on GitHub Packages (zero production consumers today).
 ```ts
-import '@novakid/nk-tokens/css/variables.css';      // injects :root { --nk-* }
-import '@novakid/nk-tokens/css/grid.css';           // .nk-container / .nk-grid / .nk-col-*
-import { tokens } from '@novakid/nk-tokens';         // typed token tree
-import { Home, HeartFill } from '@novakid/nk-tokens/icons/react';
+import '@diyoriko/nk-tokens/css/variables.css';      // injects :root { --nk-* }
+import '@diyoriko/nk-tokens/css/grid.css';           // .nk-container / .nk-grid / .nk-col-*
+import { tokens } from '@diyoriko/nk-tokens';         // typed token tree
+import { Home, HeartFill } from '@diyoriko/nk-tokens/icons/react';
 ```
 ```tsx
 <Button sx={{ bgcolor: 'var(--nk-color-background-brand-violet-primary)' }} />
@@ -186,23 +188,19 @@ import { Home, HeartFill } from '@novakid/nk-tokens/icons/react';
 ([`foundations/CAPSULES.md`](./foundations/CAPSULES.md)):
 
 ```ts
-import '@novakid/nk-tokens/capsules/demo-team/css/variables.css'; // magenta rebrand of the brand slot
-import demoTokens from '@novakid/nk-tokens/capsules/demo-team';    // typed tree, same shape
+import '@diyoriko/nk-tokens/capsules/demo-team/css/variables.css'; // magenta rebrand of the brand slot
+import demoTokens from '@diyoriko/nk-tokens/capsules/demo-team';    // typed tree, same shape
 ```
 
 ---
 
-## Develop preview (Cloudflare Pages)
+## Storybook showcase
 
-Every push to `develop` builds Storybook and deploys it to
-**https://nk-tokens-preview.pages.dev** — designers see their token change minutes after
-the Tokens Studio PR merges, without waiting for a release.
-
-**Status: active.** Both Cloudflare secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
-are set and the deploy step runs on every `develop` push. If the secrets are ever removed,
-the workflow (`preview-storybook.yml`) skips the deploy with a loud warning in the run
-summary instead of failing; re-create the token from the **"Cloudflare Pages — Edit"**
-template and re-add it under *Settings → Secrets and variables → Actions*.
+The token catalogue is published to **GitHub Pages** from `develop`:
+**https://diyoriko.github.io/nk-tokens-pipeline/**. Every merge to `develop`
+redeploys it, so the public showcase always reflects the latest merged work —
+no promote-to-`main` needed just to update the catalogue. For in-progress
+previews before merging, run it locally with `npm run storybook`.
 
 ---
 
