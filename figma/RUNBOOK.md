@@ -141,18 +141,22 @@ strips Figma frame chrome + namespaces internal ids). To add/refresh one:
    → `Pattern=NN`, or `brand/logo` → `Mark=Wordmark, Colour=Violet`).
 2. Export as **SVG** → drop the file into the matching `assets/<group>/` dir
    with the target filename (`pattern-NN.svg`, `logo-*.svg`, `badge-*.svg`).
-3. `npm run build` — `cleanSvgAsset` removes the export chrome automatically;
+3. **Optimise** vector exports with SVGO (keeps `viewBox`), especially the
+   halftone patterns (~57% smaller, no visible change):
+   `npx svgo@3 --config figma/svgo.config.mjs -f assets/patterns` (or per file).
+4. `npm run build` — `cleanSvgAsset` removes the export chrome automatically;
    verify in Storybook (`Assets/Brand`).
 
-### Known gap: `Pattern=04` is EMPTY in Figma (node `159:19`)
+### Pattern set (refreshed 2026-07-20)
 
-The package ships **11 of the 12** `brand/pattern` variants. `Pattern=04`
-(`159:19`) is an **empty symbol** in the DS file — confirmed 2026-07-20: SVG
-export returns null, PNG export is a 149-byte blank, and a node screenshot
-renders 1×1 px, while its column-neighbours `Pattern=08` / `Pattern=12` export
-fine. So this is not a tooling limit — **there is no artwork on the `04` slot.**
+The `brand/pattern` component set was rebuilt from the new 15-pattern collection
+(Figma frame `New Patterns`, node `547:2118`) — the previous 12-variant set
+(which had an empty `Pattern=04` slot) was removed. The set now has variants
+`Pattern=01`..`Pattern=15` (all 1024×613 vector), matching
+`assets/patterns/pattern-01..15.svg` one-to-one in reading order. The old
+`New Patterns` staging frame is kept as reference and can be deleted once the
+component set is confirmed.
 
-To complete the set: open the DS file, check the `Pattern=04` variant of the
-`brand/pattern` component set. If it should have artwork, draw/paste it in Figma,
-then export per the steps above → `assets/patterns/pattern-04.svg` → rebuild.
-If `04` is a deliberately-empty/retired slot, leave it — 11 patterns is correct.
+To add or refresh a pattern later: edit the variant in the `brand/pattern`
+component set, then export → SVGO (above) → `assets/patterns/pattern-NN.svg` →
+rebuild. Keep the code filenames and the Figma variant numbers in sync.

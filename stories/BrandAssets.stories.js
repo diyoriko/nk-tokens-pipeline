@@ -73,7 +73,7 @@ export const Patterns = () => {
   }).join('');
   return shell(
     '<h1 style="font-size:20px;margin:0 0 4px">Patterns</h1>' +
-    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:80ch">${patternManifest.length} brand background patterns (480×286). Some are vector, some embed a raster texture. Import: <code>@diyoriko/nk-tokens/patterns/&lt;file&gt;</code>.</p>` +
+    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:80ch">${patternManifest.length} brand background patterns (1024×613, all vector). Import: <code>@diyoriko/nk-tokens/patterns/&lt;file&gt;</code>.</p>` +
     `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">${cards}</div>`
   );
 };

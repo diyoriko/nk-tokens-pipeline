@@ -5,6 +5,18 @@ documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows the
 policy at the bottom of this file.
 
+## [2.8.0] — 2026-07-20
+
+### Changed
+- **Brand patterns refreshed and replaced.** The pattern set is now the new
+  15-pattern collection from Figma (node `547:2118`), replacing the previous
+  11 — all shipped as `pattern-01.svg`..`pattern-15.svg`, **all vector**
+  (1024×613), no more embedded-raster patterns. Content of `pattern-01..12`
+  changes; `pattern-13..15` are new. Each is exported, chrome-stripped, and
+  **SVGO-optimised** (`--precision=2`, viewBox preserved) — the halftone
+  patterns shrink ~57% with no visible change. `figma/RUNBOOK.md` documents the
+  export + optimise step.
+
 ## [2.7.0] — 2026-07-20
 
 Full **brand-asset sync with Figma** (Brand Assets page of the DS file), plus
