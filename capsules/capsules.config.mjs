@@ -13,8 +13,10 @@
 //          layered into the default build and under every other team's capsule.
 //
 // Add a team:  the designer creates a Token Set in TS (e.g. "Team B"), pushes;
-// add { slug:'team-b', name:'Team B', set:'Team B' } here + 'Team B' to
-// lint-tokens.mjs KNOWN_SETS/SET_DOMAIN. The build then emits its own package.
+// add { slug:'team-b', name:'Team B', set:'Team B' } here + the two npm
+// subpaths to package.json "exports". lint-tokens derives its set lists from
+// this registry, and check-capsule-consistency fails the build on any
+// half-registered team (missing set, tokenSetOrder entry, or exports subpath).
 //
 // IMPORTANT: the default package (`.` / build/css|dart|ts) = core + Parent Area
 // (the base brand). It is VALUE-identical to the pre-B2 output because Parent

@@ -3,7 +3,8 @@
 Novakid design tokens. `tokens/tokens.json` is the source of truth; Style Dictionary
 generates `--nk-*` CSS + a `NkColors` Dart class + a typed TS tree, plus a grid CSS layer
 and an SVG/React asset bundle. Published as **`@diyoriko/nk-tokens`** (GitHub Packages) and
-as a token-catalogue **Storybook** on GitHub Pages.
+as a token-catalogue **Storybook** on GitHub Pages
+([diyoriko.github.io/nk-tokens-pipeline](https://diyoriko.github.io/nk-tokens-pipeline/)).
 
 > Working rules (branch flow, gates, Tokens Studio) live in **[`CLAUDE.md`](./CLAUDE.md)**.
 
@@ -107,12 +108,15 @@ grep background-brand-violet-primary build/css/variables.css
 | **`tokens/tokens.json`** | **Input.** The DTCG token sets (incl. capsule overlays). What Tokens Studio syncs with Figma. |
 | `tokens/responsive.json`, `tokens/code-only.json` | Code-only sets (grid breakpoints; motion + z-index). |
 | `tokens/scopes.snapshot.json` | Versioned Figma variable scopes (Figma-only data) — enforced by `check-scopes`. |
+| `tokens/styles.snapshot.json` | Versioned Figma paint/effect/text styles — enforced by `check-styles`. |
 | **`capsules/capsules.config.mjs`** | **The team registry.** One entry per capsule; lint + build + Storybook derive from it. |
 | **`build-tokens.mjs`** | Build runner — custom preprocessor/transforms/formats, then Style Dictionary (default + per-capsule). |
 | **`style-dictionary.config.mjs`** | SD platform config — css / dart / ts outputs, `--nk-` prefix. |
 | `scripts/lint-tokens.mjs` | Pre-build gate: structure, references, formats, 100% semantic descriptions. |
+| `scripts/check-capsule-consistency.mjs` | Pre-build gate: capsule registry ↔ token sets ↔ exports coherence. |
 | `scripts/check-contrast.mjs` | Contrast contract gate (100 AA/UI pairs; fails closed on missing/non-hex values). |
 | `scripts/check-scopes.mjs` | Scope laws + drift vs a live Figma dump (`--live`, `--update`). |
+| `scripts/check-styles.mjs` | Figma style laws (name ↔ token mapping) + drift vs a live style dump (`--live`, `--update`). |
 | `scripts/check-outputs.mjs` | Output-shape gate: valid Dart consts, inset inner shadows, no NaN/undefined. |
 | `scripts/check-capsule-gates.mjs` | Re-runs the contrast contract per capsule package. |
 | `scripts/build-grid-css.mjs` | Emits `build/css/grid.css` (`.nk-container` / `.nk-grid` / `.nk-col-*`) from `responsive.json`. |
@@ -120,7 +124,7 @@ grep background-brand-violet-primary build/css/variables.css
 | `scripts/export-figma-assets.mjs` | Bulk-pull icons from Figma via REST (needs `FIGMA_TOKEN`; fails on partial export). |
 | `build/` | **Output** (generated, git-ignored): `css/{variables,grid}.css`, `dart/nk_colors.dart`, `ts/{tokens.ts,.mjs,.cjs,.d.ts}`, `capsules/<slug>/`, `icons/`, `logo/`, `patterns/`. |
 | `.storybook/`, `stories/*.stories.js` | Token catalogue — Colors, Capsules, Spacing, Typography, Shadow, Effects, Gradients, Grid, Motion, Z-Index, Usage. |
-| `.github/workflows/` | `build-tokens` (**gate PRs**: all token gates + Storybook build), `preview-storybook` (Cloudflare, from `develop`), `deploy-storybook` (Pages, from `main`), `publish-tokens` (npm + GitHub Release, on `v*` tag). |
+| `.github/workflows/` | `build-tokens` (**gate PRs**: all token gates + regression tests + Storybook build), `deploy-storybook` (GitHub Pages, from `develop`), `publish-tokens` (GitHub Packages + Release, on `v*` tag). |
 
 ---
 
@@ -128,8 +132,8 @@ grep background-brand-violet-primary build/css/variables.css
 
 | Command | Does |
 |---|---|
-| `npm run build` | `build:tokens` + `build:grid` + `build:assets`. |
-| `npm run build:tokens` | **lint** → Style Dictionary build (default + capsules) → **contrast contract** → **scopes laws** → **output shapes** → **capsule gates**. All gates `exit 1` on failure. |
+| `npm run build` | `build:tokens` + `build:assets`. |
+| `npm run build:tokens` | **lint** → **capsule consistency** → Style Dictionary build (default + capsules) → grid CSS → **contrast contract** → **scopes laws** → **style laws** → **output shapes** → **capsule gates**. All gates `exit 1` on failure. |
 | `npm run build:grid` | Regenerates `build/css/grid.css` from `responsive.json`. |
 | `npm run build:assets` | Rebuilds the icon/logo/pattern bundle. |
 | `npm run export:icons` | `FIGMA_TOKEN=… npm run export:icons` — pulls icon SVGs from the Figma library. |
@@ -160,10 +164,16 @@ Add or change a token in **`tokens/tokens.json`** (the only source of truth), th
 Published as **`@diyoriko/nk-tokens`** to **GitHub Packages** on every `v*` tag.
 
 ```ini
-# .npmrc in the consumer (e.g. parent-mf)
+# .npmrc in the consumer
 @diyoriko:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}   # PAT with read:packages
+# GitHub Packages requires auth even for reads:
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
+
+> **Migration planned:** the package will move to the `@novakid` scope on the
+> Novakid Nexus registry (`nexus.novakidschool.com`) once devops provisions the
+> credentials — see [`CLAUDE.md`](./CLAUDE.md) § Release. Until then it stays
+> `@diyoriko` on GitHub Packages (zero production consumers today).
 ```ts
 import '@diyoriko/nk-tokens/css/variables.css';      // injects :root { --nk-* }
 import '@diyoriko/nk-tokens/css/grid.css';           // .nk-container / .nk-grid / .nk-col-*
@@ -182,26 +192,15 @@ import '@diyoriko/nk-tokens/capsules/demo-team/css/variables.css'; // magenta re
 import demoTokens from '@diyoriko/nk-tokens/capsules/demo-team';    // typed tree, same shape
 ```
 
-> **Production:** re-scope to `@novakid` under the org repo (GitHub Packages requires the
-> package scope to match the repo owner).
-
 ---
 
-## Develop preview (Cloudflare Pages)
+## Storybook showcase
 
-Every push to `develop` builds Storybook and deploys it to
-**https://nk-tokens-preview.pages.dev** — designers see their token change minutes after
-the Tokens Studio PR merges, without waiting for a release.
-
-**Status: needs one-time activation.** The workflow (`preview-storybook.yml`) skips the
-deploy — with a loud warning in the run summary — until both secrets exist:
-
-1. Cloudflare dashboard → *Workers & Pages* → create Pages project **`nk-tokens-preview`**
-   (production branch: `develop`, no build — the workflow uploads `storybook-static/`).
-2. Cloudflare dashboard → *My Profile → API Tokens* → create token from the **"Cloudflare
-   Pages — Edit"** template.
-3. GitHub repo → *Settings → Secrets and variables → Actions*: add `CLOUDFLARE_API_TOKEN`
-   (the token) — `CLOUDFLARE_ACCOUNT_ID` is already set.
+The token catalogue is published to **GitHub Pages** from `develop`:
+**https://diyoriko.github.io/nk-tokens-pipeline/**. Every merge to `develop`
+redeploys it, so the public showcase always reflects the latest merged work —
+no promote-to-`main` needed just to update the catalogue. For in-progress
+previews before merging, run it locally with `npm run storybook`.
 
 ---
 

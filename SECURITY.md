@@ -5,14 +5,25 @@ outputs + SVG assets). It ships no runtime server code and handles no user data.
 
 ## Reporting a vulnerability
 
-Email the maintainer (Diyor) privately — do **not** open a public issue or PR for a
-suspected vulnerability or a leaked credential. Include the affected version/tag and a
-minimal reproduction. Expect an acknowledgement within a few business days.
+Do **not** open a public issue or PR for a suspected vulnerability or a leaked
+credential. Use either private channel:
+
+1. **GitHub Private Vulnerability Reporting** (preferred): *Security → Report a
+   vulnerability* on this repo — creates a private advisory only the maintainer sees.
+2. **Email** the maintainer privately at **diyorbek.khakimov@novakidschool.com**.
+
+Include the affected version/tag and a minimal reproduction. Expect an acknowledgement
+within a few business days.
+
+The repo currently lives under a personal account; a transfer to the Novakid GitHub
+organisation is planned.
 
 ## Secrets
 
-- CI uses the default `GITHUB_TOKEN` (publish job: `packages: write`) and, for the
-  optional Storybook preview, the `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` repo
-  secrets. Third-party actions with credential access are SHA-pinned.
+- CI uses only the default `GITHUB_TOKEN` — the publish job authenticates to GitHub
+  Packages with it (`packages: write`), so no external registry secret is stored.
+  Third-party actions with credential access are SHA-pinned. (A future migration to
+  the Novakid Nexus registry will add a `NEXUS_NPM_TOKEN` repo secret; not configured
+  yet.)
 - Never commit a Figma PAT or any token. `npm run export:icons` reads `FIGMA_TOKEN` from
   the environment at runtime only — it is never stored in the repo.

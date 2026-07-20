@@ -11,14 +11,24 @@ const px = (t) => Number(String(t.$value).replace('px', ''));
 // or added tier can never silently vanish from the emitted CSS.
 const bp = Object.keys(tok)
   .filter((k) => !k.startsWith('$'))
-  .map((k) => ({
-    name: k.toLowerCase(),
-    min: px(tok[k]['Breakpoint-Min']),
-    width: px(tok[k]['Device-Width']),
-    cols: tok[k].Columns.$value,
-    gutter: px(tok[k].Gutter),
-    margin: px(tok[k].Margin),
-  }))
+  .map((k) => {
+    const tier = {
+      name: k.toLowerCase(),
+      min: px(tok[k]['Breakpoint-Min']),
+      width: px(tok[k]['Device-Width']),
+      cols: Number(tok[k].Columns.$value),
+      gutter: px(tok[k].Gutter),
+      margin: px(tok[k].Margin),
+    };
+    // Fail closed: a malformed token value (e.g. "1,6") must kill the build here,
+    // not ship as NaNpx / repeat(NaN,…) in grid.css with every gate green.
+    for (const [field, val] of Object.entries({ 'Breakpoint-Min': tier.min, 'Device-Width': tier.width, Columns: tier.cols, Gutter: tier.gutter, Margin: tier.margin }))
+      if (!Number.isFinite(val)) {
+        console.error(`✗ Grid CSS: responsive/${k}/${field} is not a finite number — got "${tok[k][field]?.$value}"`);
+        process.exit(1);
+      }
+    return tier;
+  })
   .sort((a, b) => a.min - b.min);
 const base = bp.find((b) => b.min === 0);
 if (!base) { console.error('✗ Grid CSS: no base tier (Breakpoint-Min = 0) in responsive.json'); process.exit(1); }

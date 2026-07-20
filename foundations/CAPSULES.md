@@ -19,7 +19,7 @@ Demo Team (magenta)  Team B…   ← per-team overlays, layered over core + Pare
 
 - **Parent Area** is the **base brand overlay** — it holds the default (violet)
   brand that used to live inside `Color`, and is layered into the default build
-  (`@nk/tokens` `.` = core + Parent Area) *and* under every other team's capsule.
+  (`@diyoriko/nk-tokens` `.` = core + Parent Area) *and* under every other team's capsule.
 - **Demo Team** is a worked example: a full **magenta rebrand** of the brand slot
   (25 tokens), proving a real, coherent per-team brand end-to-end.
 

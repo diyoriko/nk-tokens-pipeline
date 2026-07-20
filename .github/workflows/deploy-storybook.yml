@@ -1,11 +1,19 @@
 name: deploy-storybook
 
-# Builds the token-catalogue Storybook and publishes it to GitHub Pages.
+# Builds the token-catalogue Storybook and publishes it to GitHub Pages
+# (https://diyoriko.github.io/nk-tokens-pipeline/) — the single public showcase.
 # Pages source must be set to "GitHub Actions" (done once, via the API).
+#
+# Deploys from `develop` (the integration branch), so the public Storybook
+# always reflects the latest merged token work without a promote-to-main step.
+# `main` moves only for package releases (a v* tag → publish-tokens.yml); it no
+# longer needs to redeploy Pages. (Cloudflare Pages preview was removed
+# 2026-07-20 — redundant for a solo repo; local `npm run storybook` covers
+# in-progress previews.)
 
 on:
   push:
-    branches: [main]
+    branches: [develop]
   workflow_dispatch: {}
 
 # Least privilege: only the deploy job needs the Pages/OIDC grants.
@@ -21,15 +29,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: npm run build-storybook # runs build:tokens first, then storybook build
-      - uses: actions/configure-pages@v6
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: storybook-static
 
@@ -44,4 +54,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0

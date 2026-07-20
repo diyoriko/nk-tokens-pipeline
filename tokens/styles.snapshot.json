@@ -1,0 +1,817 @@
+{
+  "_doc": "Source-of-truth snapshot of Figma local styles (text / effect / paint) with their values. Style values live only in Figma — Tokens Studio recreates styles on push but nothing re-checks them after a manual edit — so this file versions them and lets check-styles.mjs (a) lint the laws in CI and (b) diff against a live Figma dump from figma/dump-styles.figma.js. See figma/RUNBOOK.md §9.",
+  "text": [
+    {
+      "name": "Body/Lg",
+      "fontFamily": "Mikado",
+      "fontStyle": "Regular",
+      "fontSize": 18,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 140
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Body/Lg-Strong",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 18,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 140
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Body/Md",
+      "fontFamily": "Mikado",
+      "fontStyle": "Regular",
+      "fontSize": 16,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 140
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Body/Md-Strong",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 16,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 140
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Body/Sm",
+      "fontFamily": "Mikado",
+      "fontStyle": "Regular",
+      "fontSize": 14,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 140
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Body/Sm-Strong",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 14,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 140
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Caption/Default",
+      "fontFamily": "Mikado",
+      "fontStyle": "Regular",
+      "fontSize": 12,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 140
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Caption/Strong",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 12,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 140
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Display/Lg",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 60,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 100
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Display/Md",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 48,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 100
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Display/Sm",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 40,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 100
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Display/Xs",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 36,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 100
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Heading/Lg",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 32,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 130
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Heading/Lg-Regular",
+      "fontFamily": "Mikado",
+      "fontStyle": "Regular",
+      "fontSize": 32,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 130
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Heading/Md",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 24,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 130
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Heading/Md-Regular",
+      "fontFamily": "Mikado",
+      "fontStyle": "Regular",
+      "fontSize": 24,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 130
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Heading/Sm",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 20,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 130
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Heading/Sm-Regular",
+      "fontFamily": "Mikado",
+      "fontStyle": "Regular",
+      "fontSize": 20,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 130
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Heading/Xs",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 16,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 130
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Heading/Xs-Regular",
+      "fontFamily": "Mikado",
+      "fontStyle": "Regular",
+      "fontSize": 16,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 130
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0
+      }
+    },
+    {
+      "name": "Label/Lg",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 16,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 100
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0.5
+      }
+    },
+    {
+      "name": "Label/Sm",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 14,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 100
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 0.5
+      }
+    },
+    {
+      "name": "Overline/Default",
+      "fontFamily": "Mikado",
+      "fontStyle": "Bold",
+      "fontSize": 10,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 150
+      },
+      "letterSpacing": {
+        "unit": "PIXELS",
+        "value": 1
+      }
+    }
+  ],
+  "effect": [
+    {
+      "name": "Drop-Shadow/100",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "radius": 4,
+          "visible": true,
+          "color": "#0C0C0D14",
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "spread": 0
+        }
+      ]
+    },
+    {
+      "name": "Drop-Shadow/200",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "radius": 8,
+          "visible": true,
+          "color": "#0C0C0D1F",
+          "offset": {
+            "x": 0,
+            "y": 4
+          },
+          "spread": 0
+        },
+        {
+          "type": "DROP_SHADOW",
+          "radius": 4,
+          "visible": true,
+          "color": "#0C0C0D0D",
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "spread": 0
+        }
+      ]
+    },
+    {
+      "name": "Drop-Shadow/300",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "radius": 16,
+          "visible": true,
+          "color": "#0C0C0D24",
+          "offset": {
+            "x": 0,
+            "y": 4
+          },
+          "spread": 0
+        },
+        {
+          "type": "DROP_SHADOW",
+          "radius": 4,
+          "visible": true,
+          "color": "#0C0C0D0D",
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "spread": 0
+        }
+      ]
+    },
+    {
+      "name": "Drop-Shadow/400",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "radius": 24,
+          "visible": true,
+          "color": "#0C0C0D29",
+          "offset": {
+            "x": 0,
+            "y": 8
+          },
+          "spread": 0
+        },
+        {
+          "type": "DROP_SHADOW",
+          "radius": 4,
+          "visible": true,
+          "color": "#0C0C0D0D",
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "spread": 0
+        }
+      ]
+    },
+    {
+      "name": "Drop-Shadow/500",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "radius": 32,
+          "visible": true,
+          "color": "#0C0C0D29",
+          "offset": {
+            "x": 0,
+            "y": 12
+          },
+          "spread": 0
+        },
+        {
+          "type": "DROP_SHADOW",
+          "radius": 4,
+          "visible": true,
+          "color": "#0C0C0D0D",
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "spread": 0
+        }
+      ]
+    },
+    {
+      "name": "Drop-Shadow/600",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "radius": 36,
+          "visible": true,
+          "color": "#0C0C0D33",
+          "offset": {
+            "x": 0,
+            "y": 16
+          },
+          "spread": 0
+        }
+      ]
+    },
+    {
+      "name": "Inner-Shadow/100",
+      "effects": [
+        {
+          "type": "INNER_SHADOW",
+          "radius": 4,
+          "visible": true,
+          "color": "#0C0C0D14",
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "spread": 0
+        }
+      ]
+    },
+    {
+      "name": "Inner-Shadow/200",
+      "effects": [
+        {
+          "type": "INNER_SHADOW",
+          "radius": 8,
+          "visible": true,
+          "color": "#0C0C0D29",
+          "offset": {
+            "x": 0,
+            "y": 4
+          },
+          "spread": 0
+        }
+      ]
+    }
+  ],
+  "paint": [
+    {
+      "name": "Gradient/Aurora",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#6D46FCFF"
+            },
+            {
+              "position": 0.55,
+              "color": "#D78FFBFF"
+            },
+            {
+              "position": 1,
+              "color": "#FDB2AAFF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.5,
+              0.866,
+              -0.183
+            ],
+            [
+              -0.866,
+              0.5,
+              0.683
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gradient/Berry",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#A14EC7FF"
+            },
+            {
+              "position": 1,
+              "color": "#FF5A56FF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.7071,
+              0.7071,
+              -0.2071
+            ],
+            [
+              -0.7071,
+              0.7071,
+              0.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gradient/Brand-Spark",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#6D46FCFF"
+            },
+            {
+              "position": 1,
+              "color": "#C76EF2FF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.7071,
+              0.7071,
+              -0.2071
+            ],
+            [
+              -0.7071,
+              0.7071,
+              0.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gradient/Canvas-Wash",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#F7F5FFFF"
+            },
+            {
+              "position": 1,
+              "color": "#F3F7FFFF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              -1,
+              0,
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gradient/Deep-Space",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#2E1781FF"
+            },
+            {
+              "position": 1,
+              "color": "#0645BDFF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.342,
+              0.9397,
+              -0.1409
+            ],
+            [
+              -0.9397,
+              0.342,
+              0.7988
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gradient/Lagoon",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#0A58EAFF"
+            },
+            {
+              "position": 1,
+              "color": "#9AFD9EFF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.7071,
+              0.7071,
+              -0.2071
+            ],
+            [
+              -0.7071,
+              0.7071,
+              0.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gradient/Mango",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#FFA000FF"
+            },
+            {
+              "position": 1,
+              "color": "#FFEB60FF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.7071,
+              0.7071,
+              -0.2071
+            ],
+            [
+              -0.7071,
+              0.7071,
+              0.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gradient/Mint-Air",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#D1FCD6FF"
+            },
+            {
+              "position": 1,
+              "color": "#BAD2FDFF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.7071,
+              0.7071,
+              -0.2071
+            ],
+            [
+              -0.7071,
+              0.7071,
+              0.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gradient/Night-Glow",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#170751FF"
+            },
+            {
+              "position": 1,
+              "color": "#7C309DFF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.5736,
+              0.8192,
+              -0.1964
+            ],
+            [
+              -0.8192,
+              0.5736,
+              0.6228
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Gradient/Sunrise",
+      "paints": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "opacity": 1,
+          "gradientStops": [
+            {
+              "position": 0,
+              "color": "#FC8C84FF"
+            },
+            {
+              "position": 1,
+              "color": "#FFEB60FF"
+            }
+          ],
+          "gradientTransform": [
+            [
+              0.866,
+              0.5,
+              -0.183
+            ],
+            [
+              -0.5,
+              0.866,
+              0.317
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

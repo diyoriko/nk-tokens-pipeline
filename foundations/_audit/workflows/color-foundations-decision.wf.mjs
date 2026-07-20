@@ -8,8 +8,10 @@ export const meta = {
   ],
 }
 
-const F = '/Users/diyoriko/Documents/Novakid/design-code/foundations';
-const REPO = '/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline';
+// NOTE: design-code/ defunct after the 2026-07-13 move — its foundations docs
+// were folded into this repo's foundations/ (some inputs now in foundations/_archive/).
+const REPO = '/Users/diyoriko/Novakid/nk-tokens-pipeline';
+const F = `${REPO}/foundations`;
 
 const COMMON = `
 Building the **Novakid colour-foundations decision** — the upstream spec that drives how primitive colour ramps are built. Topology = Figma SDS (collections: color-primitives, color[semantic], size, typography, effect); VALUES = Novakid (Landing DS + Brand Book + product code). This is a CORRECTNESS + COMPLETENESS decision, be concrete and adversarial.

@@ -8,24 +8,37 @@
 // Run by `npm run build:tokens` after the build; exits 1 on any violation.
 import fs from 'node:fs';
 import path from 'node:path';
+import { CAPSULES } from '../capsules/capsules.config.mjs';
 
 const root = new URL('../build/', import.meta.url).pathname;
 const violations = [];
 
-// Collect the default build + every capsule build.
+// Collect the default build + every REGISTERED capsule build. Every file is
+// REQUIRED — a platform silently dropped from style-dictionary.config.mjs (or a
+// capsule loop that never ran) must fail here, not ship a package with dangling
+// exports while all gates stay green. The registry, not readdir, defines the
+// set: a directory that happens to exist proves nothing about what must.
 const targets = { css: [], dart: [], ts: [] };
-const addTree = (base) => {
-  const p = (rel) => path.join(base, rel);
-  if (fs.existsSync(p('css/variables.css'))) targets.css.push(p('css/variables.css'));
-  if (fs.existsSync(p('dart/nk_colors.dart'))) targets.dart.push(p('dart/nk_colors.dart'));
-  for (const f of ['ts/tokens.ts', 'ts/tokens.mjs', 'ts/tokens.cjs', 'ts/tokens.d.ts'])
-    if (fs.existsSync(p(f))) targets.ts.push(p(f));
+const REQUIRED = [
+  ['css', 'css/variables.css'],
+  ['dart', 'dart/nk_colors.dart'],
+  ['ts', 'ts/tokens.ts'], ['ts', 'ts/tokens.mjs'], ['ts', 'ts/tokens.cjs'], ['ts', 'ts/tokens.d.ts'],
+];
+const addTree = (base, label) => {
+  for (const [kind, rel] of REQUIRED) {
+    const fp = path.join(base, rel);
+    if (fs.existsSync(fp)) targets[kind].push(fp);
+    else violations.push(`${label}${rel}: missing — the build did not emit a required platform output`);
+  }
 };
-addTree(root);
-const capsulesDir = path.join(root, 'capsules');
-if (fs.existsSync(capsulesDir))
-  for (const slug of fs.readdirSync(capsulesDir)) addTree(path.join(capsulesDir, slug));
-if (fs.existsSync(path.join(root, 'css/grid.css'))) targets.css.push(path.join(root, 'css/grid.css'));
+addTree(root, 'build/');
+for (const cap of CAPSULES) addTree(path.join(root, 'capsules', cap.slug), `build/capsules/${cap.slug}/`);
+// grid.css is REQUIRED too: build:tokens runs build-grid-css.mjs before this
+// gate, so a missing file means the pipeline order broke (a fresh checkout
+// would otherwise publish without the grid ever being validated).
+const gridCss = path.join(root, 'css/grid.css');
+if (fs.existsSync(gridCss)) targets.css.push(gridCss);
+else violations.push('build/css/grid.css: missing — build-grid-css.mjs must run before this gate');
 
 const rel = (f) => path.relative(process.cwd(), f);
 

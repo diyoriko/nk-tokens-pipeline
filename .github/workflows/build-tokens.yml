@@ -17,10 +17,13 @@ on:
       - 'scripts/**'
       - 'capsules/**'
       - 'stories/**'
+      - 'tests/**'
       - '.storybook/**'
       - 'style-dictionary.config.mjs'
       - 'build-tokens.mjs'
       - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/**'
   pull_request:
     branches: [develop, main]
   workflow_dispatch: {}
@@ -36,9 +39,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -49,11 +54,20 @@ jobs:
       - name: Build (tokens + grid + assets — all gates)
         run: npm run build
 
+      - name: Gate regression tests (prove the gates fail closed)
+        run: npm test
+
+      - name: Assert the gate tests left the tree pristine
+        run: git diff --exit-code || (echo "::error::a gate test did not restore a mutated file" && exit 1)
+
+      - name: Pack + install smoke (consumer's-eye export contract)
+        run: npm run test:pack
+
       - name: Build Storybook (gate the showcase too)
         run: npx storybook build
 
       - name: Upload generated outputs
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: nk-tokens-build
           path: build/

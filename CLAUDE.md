@@ -1,8 +1,14 @@
 # nk-tokens-pipeline — working rules
 
 Novakid design tokens. `tokens/tokens.json` is the source of truth; Style Dictionary
-generates CSS / Dart / TS + grid + assets; published as `@diyoriko/nk-tokens` to GitHub
-Packages and as a Storybook on GitHub Pages.
+generates CSS / Dart / TS + grid + assets; published as `@diyoriko/nk-tokens` to
+GitHub Packages (auth via the built-in `GITHUB_TOKEN`) and as a Storybook on GitHub
+Pages (from `develop`).
+
+> **Migration deferred:** a move to the `@novakid` scope on the Novakid Nexus
+> registry is pre-wired but NOT started (needs a `NEXUS_NPM_TOKEN` from devops + a
+> repo-governance call — the repo is a personal public repo). Until then everything
+> stays on personal infra: `@diyoriko` on GitHub Packages, Storybook on GitHub Pages.
 
 ## Branch flow (do not bypass)
 
@@ -19,14 +25,19 @@ feature branch ──PR──▶ develop ──promote PR (merge commit)──�
   pre-commit hook blocks it; branch first.
 - `gh pr create --fill` uses the CURRENT branch — pass `--head` explicitly in any chain
   that `git checkout`s mid-way.
+- The `protect-main-develop` ruleset requires **0 approvals**, but an open CodeRabbit
+  **CHANGES_REQUESTED** review still blocks merge. Fix the findings and let it re-review
+  (or dismiss the review with a reason) — don't try to force-merge around it.
 
 ## Build & gates
 
-- `npm run build:tokens` = `lint-tokens.mjs` → `build-tokens.mjs` (default + capsules) →
-  `check-contrast.mjs` → `check-scopes.mjs` → `check-outputs.mjs` → `check-capsule-gates.mjs`.
+- `npm run build:tokens` = `lint-tokens.mjs` → `check-capsule-consistency.mjs` →
+  `build-tokens.mjs` (default + capsules) → `build-grid-css.mjs` → `check-contrast.mjs` →
+  `check-scopes.mjs` → `check-styles.mjs` → `check-outputs.mjs` → `check-capsule-gates.mjs`.
+  Grid CSS is generated **before** the gates so `check-outputs` validates it too.
   All gates `exit 1` on failure and gate PRs (fail closed: missing/non-hex contrast values,
   invalid Dart consts, non-inset inner shadows, NaN/undefined in outputs are failures).
-- `npm run build` also runs `build:grid` + `build:assets`. The PR gate also builds Storybook.
+- `npm run build` also runs `build:assets`. The PR gate also builds Storybook.
 - Node 22 (`.nvmrc`; workflows read `node-version-file`) — Style Dictionary 5 needs ≥22.
 - `build/` and `storybook-static/` are **git-ignored** — never commit generated output.
   `prepack` regenerates everything on publish.
@@ -54,12 +65,17 @@ enforced by `scripts/check-scopes.mjs`:
   git makes a new variable + an orphan.
 - `lineHeight` in composites must be a percent **string** (`"140%"`) — a bare number
   becomes pixels in Figma. Opacity is stored as percent (`40`) and the build divides by 100.
+- **Brand modes** on the Figma `Color` collection (`Parent Area` / `Demo Team`) are managed
+  via the Plugin API (`figma/add-brand-mode.figma.js`, see `figma/RUNBOOK.md`) or Tokens
+  Studio PRO Themes ONLY. The free TS "export sets to variables" flow can't write modes and
+  would **duplicate** the brand vars into new collections — cancel it if offered.
 
 ## Release
 
-- Tag `v*` on `main` → `publish-tokens.yml` publishes to npm **and creates the GitHub
-  Release** (generated notes); push to `main` → `deploy-storybook.yml` redeploys Pages.
-  Respect ≤3 releases/week.
+- Tag `v*` on `main` → `publish-tokens.yml` publishes to **GitHub Packages** (auth via
+  `GITHUB_TOKEN`) **and creates the GitHub Release** (generated notes). The Storybook is
+  redeployed by `deploy-storybook.yml` on every **`develop`** push (not `main`), so a
+  release tag no longer needs to touch Pages. Respect ≤3 releases/week.
 - Guards (rulesets + workflow): `v*` tags are admin-only (`protect-release-tags`); publish
   refuses tags whose commit is not on `main`; promote PRs to `main` can only be **merge
   commits** (`main-merge-commit-only` ruleset enforces the law above).
@@ -71,3 +87,11 @@ enforced by `scripts/check-scopes.mjs`:
 - Gradients live as **paint styles** and shadows as **effect styles** (variables can't hold
   them) — names match the code tokens. The grid system lives as **grid styles**
   (Grid/Mobile · Tablet · Desktop · Wide · Baseline).
+- The **Wide** responsive tier (min-width 1920) is **code-only by design**: it exists in
+  `tokens/responsive.json` and every output, but the Figma Responsive variable collection
+  has only Mobile / Tablet / Desktop modes — in Figma the tier is represented solely by
+  the grid style Grid/Wide.
+- `scripts/check-styles.mjs` checks value drift of the paint/effect/text styles against
+  the code tokens — the ritual is documented in `figma/RUNBOOK.md`.
+- `npm run export:icons` talks to the Figma REST API and needs a personal access token
+  (`FIGMA_TOKEN` / `FIGMA_ACCESS_TOKEN`); the MCP OAuth session does not cover it.
