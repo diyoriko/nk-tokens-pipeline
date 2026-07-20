@@ -55,6 +55,13 @@ any future rename or registry move follows the Major rule below.
   the hex→currentColor rewrite can't catch now fail the build. Three known
   white-paint icons (`question-circle-fill`, `referral`, `referral-fill`) are
   allowlisted pending a Figma knockout redraw (see 2026-07-17 review).
+- **Generated React icon components are now robust**: each is a
+  `React.forwardRef` (ref works on React <19 too), decorative by default
+  (`aria-hidden` + `focusable=false`) but exposed as `role="img"` with an in-SVG
+  `<title>` when a `title`/`aria-label` is passed, and `children` are stripped
+  before the spread so passing them no longer throws the React
+  children-vs-`dangerouslySetInnerHTML` error. Types updated to
+  `ForwardRefExoticComponent` with a documented `title` prop.
 - Icons showcase story in Storybook — the full icon set is now browsable in
   code, not only in Figma.
 - `scripts/check-styles.mjs` — automated value-drift check for Figma paint /
