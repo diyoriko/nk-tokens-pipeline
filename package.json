@@ -1,6 +1,6 @@
 {
   "name": "@diyoriko/nk-tokens",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "type": "module",
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "license": "UNLICENSED",
@@ -48,6 +48,7 @@
     "./capsules/demo-team/dart/nk_colors.dart": "./build/capsules/demo-team/dart/nk_colors.dart",
     "./logo/*": "./build/logo/*",
     "./patterns/*": "./build/patterns/*",
+    "./badges/*": "./build/badges/*",
     "./icons": {
       "types": "./build/icons/index.d.ts",
       "default": "./build/icons/index.js"
