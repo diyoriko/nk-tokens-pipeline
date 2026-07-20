@@ -1,29 +1,28 @@
 # Changelog
 
-All notable changes to the published package (`@novakid/nk-tokens`, formerly
+All notable changes to the published package (`@diyoriko/nk-tokens`, formerly
 `@diyoriko/nk-tokens`) are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows the
 policy at the bottom of this file.
 
-## [Unreleased] — 2.6.0
+## [2.6.0] — 2026-07-20
 
-First release under the `@novakid` scope on the Novakid Nexus registry.
-Consumers of `@diyoriko/nk-tokens` (GitHub Packages) must switch package name
-and registry — token names, exports, and outputs are otherwise unchanged.
+Stays `@diyoriko/nk-tokens` on **GitHub Packages** (same registry as 2.5.1) —
+token names, exports, and outputs are unchanged from a consumer's view; this
+release is a large **pipeline-hardening + Storybook** pass (see below).
 
-Why this rename ships as a minor and not a major (documented policy
-exception): `@diyoriko/nk-tokens` has no external consumers to break — product
-teams explicitly declined to install from the personal registry, and adoption
-starts with this Nexus release. The old package stays frozen and installable
-at 2.5.1; the version line continues at 2.6.0 in the new namespace so the
-release history reads as one sequence. This is a one-time bootstrap exception;
-any future rename or registry move follows the Major rule below.
+> **Migration deferred.** The repo is pre-wired for a future move to the
+> `@novakid` scope on the Novakid Nexus registry (#120), but that move is **not
+> started** — it needs a devops-provisioned `NEXUS_NPM_TOKEN` and a
+> repo-governance decision (the repo is a personal public repo). Until then
+> everything stays on personal infra. When the migration lands it will be its
+> own release with the scope/registry change called out.
 
 ### Changed
-- **Package renamed** `@diyoriko/nk-tokens` → `@novakid/nk-tokens`; publish
-  target moves from GitHub Packages to the Novakid Nexus npm registry
-  (`nexus.novakidschool.com`) (#120). Note: tag v2.5.1 was published under the
-  old name — version 2.5.1 exists on both identities with the same content.
+- **Storybook now deploys from `develop`** (GitHub Pages), so the public
+  showcase always reflects the latest merged work without a promote-to-`main`.
+  The redundant Cloudflare Pages preview workflow was removed (solo repo; local
+  `npm run storybook` covers in-progress previews).
 - **Number tokens are now real numbers in the TS/JS outputs** (`z-index`,
   responsive `columns`, font weights, unitless line-heights). They were emitted
   as strings (`'1000'`, `'2'`), which broke downstream arithmetic and locked

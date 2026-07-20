@@ -1,5 +1,5 @@
 {
-  "name": "@novakid/nk-tokens",
+  "name": "@diyoriko/nk-tokens",
   "version": "2.6.0",
   "type": "module",
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/diyoriko/nk-tokens-pipeline.git"
   },
   "publishConfig": {
-    "registry": "https://nexus.novakidschool.com/repository/npm-hosted/"
+    "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "build"

@@ -31,12 +31,12 @@ export const Logo = () => {
     return `<div style="border:1px solid ${BORDER};border-radius:12px;overflow:hidden">
         <div style="height:120px;display:flex;align-items:center;justify-content:center;padding:20px;background:#fff">${svg}</div>
         <div style="height:120px;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--nk-color-background-neutral-primary,#f4f4f4)">${svg}</div>
-        <code style="display:block;padding:8px 12px;border-top:1px solid ${BORDER};font-size:10.5px;color:${MUTED}">@novakid/nk-tokens/logo/${file}</code>
+        <code style="display:block;padding:8px 12px;border-top:1px solid ${BORDER};font-size:10.5px;color:${MUTED}">@diyoriko/nk-tokens/logo/${file}</code>
       </div>`;
   }).join('');
   return shell(
     '<h1 style="font-size:20px;margin:0 0 4px">Logo</h1>' +
-    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:78ch">${logoManifest.length} logo asset(s) — a fixed brand-violet mark (<code>#6D46FC</code>), shown on light and neutral surfaces. Import: <code>@novakid/nk-tokens/logo/&lt;file&gt;</code>.</p>` +
+    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:78ch">${logoManifest.length} logo asset(s) — a fixed brand-violet mark (<code>#6D46FC</code>), shown on light and neutral surfaces. Import: <code>@diyoriko/nk-tokens/logo/&lt;file&gt;</code>.</p>` +
     `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">${cards}</div>`
   );
 };
@@ -46,12 +46,12 @@ export const Patterns = () => {
     const svg = patternRaw[`../build/patterns/${file}`] ?? '';
     return `<div style="border:1px solid ${BORDER};border-radius:12px;overflow:hidden">
         <div style="height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#faf9ff">${svg}</div>
-        <code style="display:block;padding:8px 12px;border-top:1px solid ${BORDER};font-size:10.5px;color:${MUTED}">@novakid/nk-tokens/patterns/${file}</code>
+        <code style="display:block;padding:8px 12px;border-top:1px solid ${BORDER};font-size:10.5px;color:${MUTED}">@diyoriko/nk-tokens/patterns/${file}</code>
       </div>`;
   }).join('');
   return shell(
     '<h1 style="font-size:20px;margin:0 0 4px">Patterns</h1>' +
-    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:78ch">${patternManifest.length} brand pattern(s) from the Brand-book. Import: <code>@novakid/nk-tokens/patterns/&lt;file&gt;</code>.</p>` +
+    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:78ch">${patternManifest.length} brand pattern(s) from the Brand-book. Import: <code>@diyoriko/nk-tokens/patterns/&lt;file&gt;</code>.</p>` +
     `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">${cards}</div>`
   );
 };

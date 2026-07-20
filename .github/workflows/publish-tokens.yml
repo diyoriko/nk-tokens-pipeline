@@ -1,17 +1,21 @@
 name: publish-tokens
 
-# Publishes the @novakid/nk-tokens package to the Novakid Nexus npm registry
-# (nexus.novakidschool.com) when a version tag is pushed (e.g. `git tag v2.5.1 &&
-# git push origin v2.5.1`), then creates the matching GitHub Release with
-# generated notes. The registry URL lives in package.json `publishConfig` (single
-# source of truth); auth needs the `NEXUS_NPM_TOKEN` repo secret from devops.
+# Publishes the @diyoriko/nk-tokens package to GitHub Packages when a version
+# tag is pushed (e.g. `git tag v2.6.0 && git push origin v2.6.0`), then creates
+# the matching GitHub Release with generated notes. Auth is the built-in
+# GITHUB_TOKEN — no external secret needed while the package lives on the
+# personal GitHub Packages registry.
+#
+# NOTE: this repo is pre-wired for a future migration to the Novakid Nexus
+# registry under the @novakid scope (raised by Dmitriy R., 2026-07-13). That
+# move is NOT started — until it is, the package stays @diyoriko on GitHub
+# Packages (this file + package.json `publishConfig`). See CLAUDE.md § Release.
 #
 # Guards (all must hold, in order):
 #   1. the ref is a real v* TAG — a workflow_dispatch from a branch is a no-op
 #   2. the tagged commit is an ancestor of main — a tag on a side branch can't
 #      publish an unreviewed tree
 #   3. the tag matches package.json "version" — a release commit bumps it first
-# The full gated build runs before publish (and again inside prepack).
 
 on:
   push:
@@ -20,6 +24,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -44,19 +49,11 @@ jobs:
           fi
           echo "OK: ${GITHUB_REF_NAME} is an ancestor of main"
 
-      - name: Assert Nexus credentials configured
-        env:
-          NEXUS_NPM_TOKEN: ${{ secrets.NEXUS_NPM_TOKEN }}
-        run: |
-          if [ -z "$NEXUS_NPM_TOKEN" ]; then
-            echo "::error::NEXUS_NPM_TOKEN secret is not set — get publish credentials for nexus.novakidschool.com from devops first."
-            exit 1
-          fi
-          echo "OK: NEXUS_NPM_TOKEN is configured"
-
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
+          registry-url: https://npm.pkg.github.com
+          scope: '@diyoriko'
           cache: npm
 
       # Fail fast, before any dependency code runs: a mismatched tag needs no build.
@@ -73,24 +70,15 @@ jobs:
       - run: npm ci
 
       # Full build (tokens + grid + assets + exports contract) so every `exports`
-      # target is emitted and all gates run before publish — TOKEN-FREE: the
-      # Nexus credential must never be in env while dependency code executes.
+      # target is emitted and all gates run before publish.
       - run: npm run build
-
-      # Auth line is derived from publishConfig.registry so the registry URL
-      # lives in exactly one place (package.json).
-      - name: Configure Nexus npm auth
-        run: |
-          REG=$(node -p "require('./package.json').publishConfig.registry")
-          echo "${REG#https:}:_authToken=\${NODE_AUTH_TOKEN}" >> ~/.npmrc
 
       # --ignore-scripts: publish must NOT re-run prepack (a second full build,
       # this time with NODE_AUTH_TOKEN readable by every dependency lifecycle
-      # script — the exact exposure the preview workflow's comment forbids for
-      # the CF token). files:["build"] packs the gated output built above.
+      # script). files:["build"] packs the gated output built above.
       - run: npm publish --ignore-scripts
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NEXUS_NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
     needs: publish

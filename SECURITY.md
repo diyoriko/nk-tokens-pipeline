@@ -1,6 +1,6 @@
 # Security policy
 
-This repo publishes the `@novakid/nk-tokens` design-token package (CSS / Dart / TS
+This repo publishes the `@diyoriko/nk-tokens` design-token package (CSS / Dart / TS
 outputs + SVG assets). It ships no runtime server code and handles no user data.
 
 ## Reporting a vulnerability
@@ -20,9 +20,10 @@ organisation is planned.
 
 ## Secrets
 
-- CI uses the default `GITHUB_TOKEN`, the `NEXUS_NPM_TOKEN` repo secret (publish job:
-  npm publish to nexus.novakidschool.com) and, for the optional Storybook preview, the
-  `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` repo secrets. Third-party actions
-  with credential access are SHA-pinned.
+- CI uses only the default `GITHUB_TOKEN` — the publish job authenticates to GitHub
+  Packages with it (`packages: write`), so no external registry secret is stored.
+  Third-party actions with credential access are SHA-pinned. (A future migration to
+  the Novakid Nexus registry will add a `NEXUS_NPM_TOKEN` repo secret; not configured
+  yet.)
 - Never commit a Figma PAT or any token. `npm run export:icons` reads `FIGMA_TOKEN` from
   the environment at runtime only — it is never stored in the repo.
