@@ -24,11 +24,18 @@ export const LayoutModel = () => {
   return wrap(html);
 };
 
+const TIER_WORD = { 1: 'One tier', 2: 'Two tiers', 3: 'Three tiers', 4: 'Four tiers', 5: 'Five tiers' };
 export const Responsive = () => {
   const r = responsiveRaw.responsive ?? {};
-  const order = Object.keys(r); // Mobile, Tablet, Desktop (+ Wide when present)
+  const order = Object.keys(r); // Mobile, Tablet, Desktop, Wide (whatever the data holds)
+  // Wide (min-width 1920) is code-only by design — it has no Figma grid style
+  // (the Figma Responsive collection stops at Desktop). Say so honestly, and
+  // derive the count from the data so this line can't drift again.
+  const figmaTiers = order.filter((k) => k.toLowerCase() !== 'wide');
+  const grids = figmaTiers.map((k) => `Grid/${k}`).join(' · ');
+  const codeOnly = order.filter((k) => k.toLowerCase() === 'wide');
   let html = '<h1 style="font-size:20px;margin:0 0 4px">Responsive grid</h1>' +
-    `<p style="color:${MUTED};margin:0 0 18px;font-size:12px">From the Brand-book Grids page. Three tiers; the Figma grid styles Grid/Mobile · Grid/Tablet · Grid/Desktop mirror these. CSS: <code>.nk-container</code> / <code>.nk-grid</code> / <code>.nk-col-*</code>.</p>`;
+    `<p style="color:${MUTED};margin:0 0 18px;font-size:12px">From the Brand-book Grids page. ${TIER_WORD[order.length] ?? order.length + ' tiers'} (${order.join(' · ')}); the Figma grid styles ${grids} mirror ${figmaTiers.length === order.length ? 'these' : 'the first ' + figmaTiers.length}${codeOnly.length ? ` (<b>${codeOnly.join(', ')}</b> is code-only — no Figma grid style by design)` : ''}. CSS: <code>.nk-container</code> / <code>.nk-grid</code> / <code>.nk-col-*</code>.</p>`;
   // spec table
   html += `<table style="border-collapse:collapse;font-size:12px;margin-bottom:24px">
     <thead><tr>${['Tier', 'Width', 'Columns', 'Gutter', 'Margin', 'Breakpoint min'].map((h) => `<th style="text-align:left;padding:6px 16px 6px 0;color:${MUTED};font-weight:700">${h}</th>`).join('')}</tr></thead><tbody>`;

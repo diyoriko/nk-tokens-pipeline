@@ -5,9 +5,15 @@ import rampLabels from './ramp-labels.json';
 
 export default { title: 'Tokens/Colors' };
 
-const HUES = ['violet', 'blue', 'magenta', 'coral', 'green', 'orange', 'yellow', 'grey'];
-const ALPHA = ['white', 'black'];
+// Semantic surfaces (own render below) and reserved groups that have their own
+// story or render path. Everything else under tokens.color is a primitive ramp
+// and is DERIVED — so a hue added in Tokens Studio can't silently vanish from
+// this catalogue the way a hardcoded list would (the drift #112 set out to kill).
 const SURFACES = ['background', 'text', 'icon', 'border'];
+const RESERVED = ['data-viz', 'social', 'gradient', 'alpha']; // data-viz→DataViz story, gradient→Gradients story, alpha→below
+const SOLID_RAMPS = Object.keys(tokens.color).filter((k) => !SURFACES.includes(k) && !RESERVED.includes(k));
+// alpha ramps carry real transparency → show them on a checkerboard.
+const ALPHA_KEYS = ['white', 'black'].filter((k) => tokens.color.alpha?.[k]);
 const CHECKER =
   'background-color:#fff;background-image:linear-gradient(45deg,#dcdce0 25%,transparent 25%),linear-gradient(-45deg,#dcdce0 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#dcdce0 75%),linear-gradient(-45deg,transparent 75%,#dcdce0 75%);background-size:12px 12px;background-position:0 0,0 6px,6px -6px,-6px 0';
 
@@ -40,20 +46,28 @@ const pcell = (label, varName, value, checker, legacy) => `
     <div style="font-size:9px;color:${MUTED};font-variant-numeric:tabular-nums">${value}</div>
     ${legacy ? `<div style="font-size:8.5px;color:#9a8;font-style:italic;white-space:nowrap" title="legacy LDS/Brand name">${legacy}</div>` : ''}
   </div>`;
+// name = display label ("violet" or "alpha/white"); its slash-split segments are
+// also the token path under color/ (so cssVar resolves --nk-color-alpha-white-100).
 const ramp = (name, steps, checker) => {
   const keys = Object.keys(steps);
   if (!keys.length) return '';
+  const seg = name.split('/');
   const labels = rampLabels[name] || {};
   return h2(name) +
     `<div style="display:grid;grid-template-columns:repeat(${keys.length},1fr);gap:8px">` +
-    keys.map((s) => pcell(`${name}/${s}`, cssVar(['color', name, s]), steps[s], checker, labels[s])).join('') +
+    keys.map((s) => pcell(`${name}/${s}`, cssVar(['color', ...seg, s]), steps[s], checker, labels[s])).join('') +
     `</div>`;
 };
 export const Primitives = () => {
   let html = '<h1 style="font-size:20px;margin:0 0 4px">Colour primitives</h1>' +
-    `<p style="color:${MUTED};margin:0;font-size:12px">Raw ramps — never used directly. Semantic tokens alias these.</p>`;
-  for (const hue of HUES) html += ramp(hue, tokens.color[hue] || {}, false);
-  for (const a of ALPHA) html += ramp(a, tokens.color[a] || {}, true);
+    `<p style="color:${MUTED};margin:0;font-size:12px">Raw ramps — never used directly. Semantic tokens alias these. <b>${SOLID_RAMPS.length} ramps</b>, derived from the build.</p>`;
+  for (const hue of SOLID_RAMPS) html += ramp(hue, tokens.color[hue] || {}, /^(white|black)$/.test(hue));
+  // alpha aliases (tokens.color.alpha.{white,black}) — the transparent overlay ramps.
+  if (ALPHA_KEYS.length) {
+    html += '<h1 style="font-size:20px;margin:34px 0 4px">Alpha</h1>' +
+      `<p style="color:${MUTED};margin:0;font-size:12px">Transparent overlay ramps (on a checkerboard). Alias <code>color/white</code> · <code>color/black</code> at each opacity.</p>`;
+    for (const a of ALPHA_KEYS) html += ramp(`alpha/${a}`, tokens.color.alpha[a] || {}, true);
+  }
   return wrap(html);
 };
 
