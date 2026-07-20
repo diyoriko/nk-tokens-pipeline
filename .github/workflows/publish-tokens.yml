@@ -59,12 +59,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
-      - run: npm ci
-
-      # Full build (tokens + grid + assets) so every `exports` target is emitted
-      # and the lint/contrast/scopes/output gates run before publish — not just build:tokens.
-      - run: npm run build
-
+      # Fail fast, before any dependency code runs: a mismatched tag needs no build.
       - name: Assert tag matches package.json version
         run: |
           PKG=$(node -p "require('./package.json').version")
@@ -75,6 +70,13 @@ jobs:
           fi
           echo "OK: tag v$TAG == package.json $PKG"
 
+      - run: npm ci
+
+      # Full build (tokens + grid + assets + exports contract) so every `exports`
+      # target is emitted and all gates run before publish — TOKEN-FREE: the
+      # Nexus credential must never be in env while dependency code executes.
+      - run: npm run build
+
       # Auth line is derived from publishConfig.registry so the registry URL
       # lives in exactly one place (package.json).
       - name: Configure Nexus npm auth
@@ -82,7 +84,11 @@ jobs:
           REG=$(node -p "require('./package.json').publishConfig.registry")
           echo "${REG#https:}:_authToken=\${NODE_AUTH_TOKEN}" >> ~/.npmrc
 
-      - run: npm publish
+      # --ignore-scripts: publish must NOT re-run prepack (a second full build,
+      # this time with NODE_AUTH_TOKEN readable by every dependency lifecycle
+      # script — the exact exposure the preview workflow's comment forbids for
+      # the CF token). files:["build"] packs the gated output built above.
+      - run: npm publish --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NEXUS_NPM_TOKEN }}
 

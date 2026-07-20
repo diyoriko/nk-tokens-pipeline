@@ -3,6 +3,12 @@
   "version": "2.6.0",
   "type": "module",
   "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
+  "license": "UNLICENSED",
+  "sideEffects": [
+    "./build/css/variables.css",
+    "./build/css/grid.css",
+    "./build/capsules/*/css/variables.css"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/diyoriko/nk-tokens-pipeline.git"
@@ -29,13 +35,17 @@
       "import": "./build/capsules/parent-area/ts/tokens.mjs",
       "require": "./build/capsules/parent-area/ts/tokens.cjs"
     },
+    "./capsules/parent-area/tokens.ts": "./build/capsules/parent-area/ts/tokens.ts",
     "./capsules/parent-area/css/variables.css": "./build/capsules/parent-area/css/variables.css",
+    "./capsules/parent-area/dart/nk_colors.dart": "./build/capsules/parent-area/dart/nk_colors.dart",
     "./capsules/demo-team": {
       "types": "./build/capsules/demo-team/ts/tokens.d.ts",
       "import": "./build/capsules/demo-team/ts/tokens.mjs",
       "require": "./build/capsules/demo-team/ts/tokens.cjs"
     },
+    "./capsules/demo-team/tokens.ts": "./build/capsules/demo-team/ts/tokens.ts",
     "./capsules/demo-team/css/variables.css": "./build/capsules/demo-team/css/variables.css",
+    "./capsules/demo-team/dart/nk_colors.dart": "./build/capsules/demo-team/dart/nk_colors.dart",
     "./logo/*": "./build/logo/*",
     "./patterns/*": "./build/patterns/*",
     "./icons": {
@@ -46,11 +56,12 @@
       "types": "./build/icons/react.d.ts",
       "default": "./build/icons/react.js"
     },
+    "./icons/svg/*.svg": "./build/icons/svg/*.svg",
     "./icons/sprite.svg": "./build/icons/sprite.svg",
     "./icons/manifest.json": "./build/icons/manifest.json"
   },
   "scripts": {
-    "build": "npm run build:tokens && npm run build:assets",
+    "build": "npm run build:tokens && npm run build:assets && node scripts/check-exports.mjs",
     "build:tokens": "node scripts/lint-tokens.mjs && node scripts/check-capsule-consistency.mjs && node build-tokens.mjs && node scripts/build-grid-css.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-styles.mjs && node scripts/check-outputs.mjs && node scripts/check-capsule-gates.mjs",
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs",
@@ -63,14 +74,16 @@
     "check:capsule-consistency": "node scripts/check-capsule-consistency.mjs",
     "check:scopes": "node scripts/check-scopes.mjs",
     "check:styles": "node scripts/check-styles.mjs",
-    "lint:tokens": "node scripts/lint-tokens.mjs"
+    "lint:tokens": "node scripts/lint-tokens.mjs",
+    "test": "node --test tests/gates.test.mjs",
+    "test:pack": "node tests/pack-smoke.mjs"
   },
   "engines": {
     "node": ">=22"
   },
   "devDependencies": {
     "@storybook/html-vite": "^10.5.2",
-    "storybook": "^10.4.6",
+    "storybook": "^10.5.2",
     "style-dictionary": "^5.5.0",
     "vite": "^8.1.5"
   },
