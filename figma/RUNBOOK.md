@@ -129,3 +129,30 @@ node scripts/check-styles.mjs --update /tmp/figma-styles.json          # refresh
 Run after: **any style edit in Figma**, any TS push that touches Typography / Effect /
 gradient tokens, and **before a release**. If the snapshot is missing the gate fails
 with these exact steps — `--update` also bootstraps the very first snapshot.
+
+## 6. Brand assets (logo / patterns / badges) — export from Figma
+
+Unlike tokens (which flow through Tokens Studio), the brand assets under
+`assets/{logo,patterns,badges}/` are exported **by hand** from the DS file's
+**Brand Assets** page and cleaned by `scripts/build-assets.mjs` (`cleanSvgAsset`
+strips Figma frame chrome + namespaces internal ids). To add/refresh one:
+
+1. In the Figma desktop app, select the component variant (e.g. `brand/pattern`
+   → `Pattern=NN`, or `brand/logo` → `Mark=Wordmark, Colour=Violet`).
+2. Export as **SVG** → drop the file into the matching `assets/<group>/` dir
+   with the target filename (`pattern-NN.svg`, `logo-*.svg`, `badge-*.svg`).
+3. `npm run build` — `cleanSvgAsset` removes the export chrome automatically;
+   verify in Storybook (`Assets/Brand`).
+
+### Known gap: `Pattern=04` is EMPTY in Figma (node `159:19`)
+
+The package ships **11 of the 12** `brand/pattern` variants. `Pattern=04`
+(`159:19`) is an **empty symbol** in the DS file — confirmed 2026-07-20: SVG
+export returns null, PNG export is a 149-byte blank, and a node screenshot
+renders 1×1 px, while its column-neighbours `Pattern=08` / `Pattern=12` export
+fine. So this is not a tooling limit — **there is no artwork on the `04` slot.**
+
+To complete the set: open the DS file, check the `Pattern=04` variant of the
+`brand/pattern` component set. If it should have artwork, draw/paste it in Figma,
+then export per the steps above → `assets/patterns/pattern-04.svg` → rebuild.
+If `04` is a deliberately-empty/retired slot, leave it — 11 patterns is correct.
