@@ -129,3 +129,34 @@ node scripts/check-styles.mjs --update /tmp/figma-styles.json          # refresh
 Run after: **any style edit in Figma**, any TS push that touches Typography / Effect /
 gradient tokens, and **before a release**. If the snapshot is missing the gate fails
 with these exact steps — `--update` also bootstraps the very first snapshot.
+
+## 6. Brand assets (logo / patterns / badges) — export from Figma
+
+Unlike tokens (which flow through Tokens Studio), the brand assets under
+`assets/{logo,patterns,badges}/` are exported **by hand** from the DS file's
+**Brand Assets** page and cleaned by `scripts/build-assets.mjs` (`cleanSvgAsset`
+strips Figma frame chrome + namespaces internal ids). To add/refresh one:
+
+1. In the Figma desktop app, select the component variant (e.g. `brand/pattern`
+   → `Pattern=NN`, or `brand/logo` → `Mark=Wordmark, Colour=Violet`).
+2. Export as **SVG** → drop the file into the matching `assets/<group>/` dir
+   with the target filename (`pattern-NN.svg`, `logo-*.svg`, `badge-*.svg`).
+3. **Optimise** vector exports with SVGO (keeps `viewBox`), especially the
+   halftone patterns (~57% smaller, no visible change):
+   `npx svgo@3 --config figma/svgo.config.mjs -f assets/patterns` (or per file).
+4. `npm run build` — `cleanSvgAsset` removes the export chrome automatically;
+   verify in Storybook (`Assets/Brand`).
+
+### Pattern set (refreshed 2026-07-20)
+
+The `brand/pattern` component set was rebuilt from the new 15-pattern collection
+(Figma frame `New Patterns`, node `547:2118`) — the previous 12-variant set
+(which had an empty `Pattern=04` slot) was removed. The set now has variants
+`Pattern=01`..`Pattern=15` (all 1024×613 vector), matching
+`assets/patterns/pattern-01..15.svg` one-to-one in reading order. The old
+`New Patterns` staging frame is kept as reference and can be deleted once the
+component set is confirmed.
+
+To add or refresh a pattern later: edit the variant in the `brand/pattern`
+component set, then export → SVGO (above) → `assets/patterns/pattern-NN.svg` →
+rebuild. Keep the code filenames and the Figma variant numbers in sync.
