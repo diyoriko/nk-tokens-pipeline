@@ -8,7 +8,7 @@ export const meta = {
   ],
 }
 
-const R = '/Users/diyoriko/Documents/Novakid/nk-tokens-pipeline';
+const R = '/Users/diyoriko/Novakid/nk-tokens-pipeline';
 const F = R + '/foundations';
 
 const COMMON = `

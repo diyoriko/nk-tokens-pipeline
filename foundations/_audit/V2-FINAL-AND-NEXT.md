@@ -53,7 +53,7 @@ Radius: 4,8,12,16,20,24,32,40,full (28 dropped). stroke + icon as before.
 ---
 
 ## Gotchas
-- **Mikado .woff2 are NOT committed** (commercial; now gitignored via `*.woff2`). Storybook falls back to Nunito Sans/system. Local prototypes in `_audit/*.html` (gitignored) load it via @font-face from `~/Documents/Novakid/resources/Mikado/`.
+- **Mikado .woff2 are NOT committed** (commercial; now gitignored via `*.woff2`). Storybook falls back to Nunito Sans/system. Local prototypes in `_audit/*.html` (gitignored) load it via @font-face from `~/Novakid/resources/Mikado/`.
 - `stories/assets/blur-bg.png` = Brand-book pattern (Figma node 948-19705) — committed, used by the Backdrop-blur story import.
 - npm already has 1.0.0 / 1.0.1 / 1.0.2 tagged. This is **2.0.0** (breaking: hue renames, step renumbering, structure).
 

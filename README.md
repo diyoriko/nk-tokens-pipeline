@@ -107,12 +107,15 @@ grep background-brand-violet-primary build/css/variables.css
 | **`tokens/tokens.json`** | **Input.** The DTCG token sets (incl. capsule overlays). What Tokens Studio syncs with Figma. |
 | `tokens/responsive.json`, `tokens/code-only.json` | Code-only sets (grid breakpoints; motion + z-index). |
 | `tokens/scopes.snapshot.json` | Versioned Figma variable scopes (Figma-only data) — enforced by `check-scopes`. |
+| `tokens/styles.snapshot.json` | Versioned Figma paint/effect/text styles — enforced by `check-styles`. |
 | **`capsules/capsules.config.mjs`** | **The team registry.** One entry per capsule; lint + build + Storybook derive from it. |
 | **`build-tokens.mjs`** | Build runner — custom preprocessor/transforms/formats, then Style Dictionary (default + per-capsule). |
 | **`style-dictionary.config.mjs`** | SD platform config — css / dart / ts outputs, `--nk-` prefix. |
 | `scripts/lint-tokens.mjs` | Pre-build gate: structure, references, formats, 100% semantic descriptions. |
+| `scripts/check-capsule-consistency.mjs` | Pre-build gate: capsule registry ↔ token sets ↔ exports coherence. |
 | `scripts/check-contrast.mjs` | Contrast contract gate (100 AA/UI pairs; fails closed on missing/non-hex values). |
 | `scripts/check-scopes.mjs` | Scope laws + drift vs a live Figma dump (`--live`, `--update`). |
+| `scripts/check-styles.mjs` | Figma style laws (name ↔ token mapping) + drift vs a live style dump (`--live`, `--update`). |
 | `scripts/check-outputs.mjs` | Output-shape gate: valid Dart consts, inset inner shadows, no NaN/undefined. |
 | `scripts/check-capsule-gates.mjs` | Re-runs the contrast contract per capsule package. |
 | `scripts/build-grid-css.mjs` | Emits `build/css/grid.css` (`.nk-container` / `.nk-grid` / `.nk-col-*`) from `responsive.json`. |
@@ -128,8 +131,8 @@ grep background-brand-violet-primary build/css/variables.css
 
 | Command | Does |
 |---|---|
-| `npm run build` | `build:tokens` + `build:grid` + `build:assets`. |
-| `npm run build:tokens` | **lint** → Style Dictionary build (default + capsules) → **contrast contract** → **scopes laws** → **output shapes** → **capsule gates**. All gates `exit 1` on failure. |
+| `npm run build` | `build:tokens` + `build:assets`. |
+| `npm run build:tokens` | **lint** → **capsule consistency** → Style Dictionary build (default + capsules) → grid CSS → **contrast contract** → **scopes laws** → **style laws** → **output shapes** → **capsule gates**. All gates `exit 1` on failure. |
 | `npm run build:grid` | Regenerates `build/css/grid.css` from `responsive.json`. |
 | `npm run build:assets` | Rebuilds the icon/logo/pattern bundle. |
 | `npm run export:icons` | `FIGMA_TOKEN=… npm run export:icons` — pulls icon SVGs from the Figma library. |
@@ -195,15 +198,11 @@ Every push to `develop` builds Storybook and deploys it to
 **https://nk-tokens-preview.pages.dev** — designers see their token change minutes after
 the Tokens Studio PR merges, without waiting for a release.
 
-**Status: needs one-time activation.** The workflow (`preview-storybook.yml`) skips the
-deploy — with a loud warning in the run summary — until both secrets exist:
-
-1. Cloudflare dashboard → *Workers & Pages* → create Pages project **`nk-tokens-preview`**
-   (production branch: `develop`, no build — the workflow uploads `storybook-static/`).
-2. Cloudflare dashboard → *My Profile → API Tokens* → create token from the **"Cloudflare
-   Pages — Edit"** template.
-3. GitHub repo → *Settings → Secrets and variables → Actions*: add `CLOUDFLARE_API_TOKEN`
-   (the token) — `CLOUDFLARE_ACCOUNT_ID` is already set.
+**Status: active.** Both Cloudflare secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
+are set and the deploy step runs on every `develop` push. If the secrets are ever removed,
+the workflow (`preview-storybook.yml`) skips the deploy with a loud warning in the run
+summary instead of failing; re-create the token from the **"Cloudflare Pages — Edit"**
+template and re-add it under *Settings → Secrets and variables → Actions*.
 
 ---
 
