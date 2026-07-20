@@ -1,9 +1,54 @@
 # Changelog
 
-All notable changes to the published package (`@diyoriko/nk-tokens`, formerly
-`@diyoriko/nk-tokens`) are documented here. The format follows
+All notable changes to the published package (`@diyoriko/nk-tokens`) are
+documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows the
 policy at the bottom of this file.
+
+## [2.7.0] — 2026-07-20
+
+Full **brand-asset sync with Figma** (Brand Assets page of the DS file), plus
+the logo/pattern fixes below. New export subpath `./badges/*`.
+
+> **Package size note:** three patterns (02, 03, 05) and all four badges are
+> **raster** illustrations (embedded PNG) in Figma, so they ship as ~52–102 kB
+> each. The published tarball grows to ~670 kB (from ~250 kB). The vector marks
+> and patterns stay small. If a leaner, vector-only package is preferred, the
+> raster assets can be dropped in a follow-up.
+
+### Added
+- **Wordmark mark.** The full `NOVAKID` lockup now ships alongside the rocket
+  symbol: `logo-wordmark.svg` (fixed violet) + `logo-wordmark-mono.svg`
+  (`currentColor`, tintable).
+- **Tintable `-mono` logo variants.** `logo-symbol-mono.svg` /
+  `logo-wordmark-mono.svg` paint with `currentColor`, so a mark recolours to any
+  of the six Figma brand colours (violet · white · black · yellow · green ·
+  blue) via CSS `color` — the code equivalent of Figma's colour variants. The
+  bare `logo-symbol.svg` / `logo-wordmark.svg` stay fixed violet (drop-in,
+  work via `<img>`).
+- **Patterns 01, 02, 03, 05, 06, 07** added — the package now ships 11 of the
+  12 Figma background patterns (pattern 04 is a Figma symbol that would not
+  export via the API; export it manually to complete the set). Previously only
+  08–12 shipped.
+- **Badges** (`./badges/*`): the four award badges — `badge-roundel`,
+  `badge-star`, `badge-rocket`, `badge-mono` — from the Brand Assets page.
+- New Storybook stories: Logo (primary + tinted mono), Badges.
+
+### Fixed
+- **Logo restored to the real Novakid mark.** The shipped `logo-symbol.svg` had
+  lost the inner **"N"** subpath (the letterform knocked out of the rocket body),
+  rendering as a solid violet blob. Re-exported from the DS file (node 171:11)
+  and cleaned of Figma chrome — the mark now shows the N knockout, matching Figma.
+- **Logo & pattern SVGs are cleaned at build time** (`cleanSvgAsset`): Figma
+  export chrome (the `#F5F5F5` section rect, oversized page-background rect, and
+  frame-border paths) is stripped, and every internal `id` is namespaced per
+  file. Figma reuses ids like `clip0_…` / `paint0_linear_…` across exports, so
+  inlining two patterns on one page previously made the second reference the
+  first's gradient/clip — now collision-proof.
+- **`build:assets` is idempotent.** `build/icons/svg`, `build/logo`,
+  `build/patterns`, `build/badges` are purged before each write, so a
+  renamed/removed asset can no longer linger append-only and ship a stale file
+  through the `*` export subpaths.
 
 ## [2.6.0] — 2026-07-20
 
