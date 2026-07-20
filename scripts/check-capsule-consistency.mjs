@@ -32,9 +32,11 @@ for (const cap of CAPSULES) {
   for (const sub of [`./capsules/${cap.slug}`, `./capsules/${cap.slug}/css/variables.css`]) {
     if (!pkg.exports?.[sub]) fail(`capsule ${cap.slug}: package.json exports lacks "${sub}"`);
   }
-  // $themes only feeds the Tokens Studio theme switcher — warn, don't fail.
+  // $themes feeds the Tokens Studio theme switcher — a missing team theme means
+  // designers cannot preview that capsule in TS at all, and nothing else checks
+  // this file. Registration is all-or-nothing: fail, don't warn.
   if (!themes.some((t) => t.group === 'team' && t.name === cap.name)) {
-    console.warn(`  ⚠ capsule ${cap.slug}: no "team" $theme named "${cap.name}" (TS switcher won't show it)`);
+    fail(`capsule ${cap.slug}: no "team" $theme named "${cap.name}" in tokens.json $themes (TS switcher won't show it)`);
   }
 }
 

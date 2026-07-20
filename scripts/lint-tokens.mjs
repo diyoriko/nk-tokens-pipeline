@@ -68,7 +68,11 @@ const resolve = (val, depth = 0) => {
 };
 
 // ---- value-format checks --------------------------------------------------
-const HEX_RE = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+// 6/8-digit ONLY — this regex must stay in lockstep with the nk/dart-colors
+// filter in build-tokens.mjs (and check-contrast), which silently DROPS any
+// colour it doesn't match. A 3-digit shorthand would pass a looser lint, render
+// fine in CSS, and vanish from the Dart output with no gate noticing.
+const HEX_RE = /^#([0-9a-f]{6}|[0-9a-f]{8})$/i;
 const PCT_RE = /^\d+(\.\d+)?%$/;
 const GRADIENT_RE = /^linear-gradient\(\s*\d+(\.\d+)?deg\s*(,\s*(\{[^}]+\}|#[0-9a-f]{6,8})\s+\d+(\.\d+)?%\s*)+\)$/i;
 
@@ -182,6 +186,22 @@ for (const set of Object.keys(tokens)) {
   if (set.startsWith('$')) continue;
   if (!KNOWN_SETS.includes(set)) { err(set, `unknown token set — pipeline only builds: ${KNOWN_SETS.join(', ')}`); continue; }
   walk(tokens[set], set, set);
+}
+
+// ---- capsule overlay containment -------------------------------------------
+// Capsule sets deep-merge LAST over the whole `color` domain (build-tokens.mjs
+// makeFlatten), so a capsule carrying a primitive group (Violet, Grey, Alpha, …)
+// would silently rewrite the shared Tier-1 ramps inside that capsule's build —
+// and check-capsule-consistency only checks registration, never contents.
+// Overlays are semantic-surface-only by contract.
+const CAPSULE_ALLOWED_GROUPS = ['Background', 'Text', 'Icon', 'Border'];
+for (const s of CAPSULE_SETS) {
+  if (!tokens[s]) continue;
+  for (const g of Object.keys(tokens[s])) {
+    if (g.startsWith('$')) continue;
+    if (!CAPSULE_ALLOWED_GROUPS.includes(g))
+      err(`${s}/${g}`, `capsule overlay sets may only contain semantic surfaces (${CAPSULE_ALLOWED_GROUPS.join(' / ')}) — a "${g}" group would override shared foundation paths in that capsule's build`);
+  }
 }
 
 // ---- code-only.json / responsive.json value shapes -------------------------
