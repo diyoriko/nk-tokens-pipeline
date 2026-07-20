@@ -5,6 +5,16 @@ documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows the
 policy at the bottom of this file.
 
+## [3.0.0] — 2026-07-20
+
+### Removed
+- **Award badges dropped** — the `./badges/*` export subpath and the four raster
+  badge assets (`badge-roundel/star/rocket/mono`) are removed to keep the package
+  **vector-only and lean** (they were embedded-PNG illustrations, ~270 kB). The
+  badges remain available in the Figma Brand Assets page; re-add them here only
+  if a consumer needs them. Major bump per the versioning policy (a published
+  export path was removed) — there were no known consumers of `./badges/*`.
+
 ## [2.8.0] — 2026-07-20
 
 ### Changed
