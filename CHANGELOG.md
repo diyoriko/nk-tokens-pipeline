@@ -332,7 +332,9 @@ patches, a breaking restructure in a minor). The policy is binding from 2.6.0:
 every release gets a changelog entry, and renames ship in a major or not at
 all — prefer additive deprecation.
 
-One documented exception: the 2.6.0 `@diyoriko` → `@novakid` namespace and
-registry move ships as a minor because the old package had zero external
-consumers (adoption begins with 2.6.0) — see the 2.6.0 entry. With consumers
-on Nexus, the same change would be a major.
+No exceptions. (A paragraph here used to carve one out for a 2.6.0 `@diyoriko`
+→ `@novakid` namespace move "as a minor". That release never happened — PR #120
+was reverted — so the exception described a history that does not exist, and it
+contradicted the Major rule two paragraphs above, which names a registry move
+as breaking. Removed 2026-07-23. The real move to `@novakid/design-system` on
+Nexus ships as a new package identity starting at 1.0.0.)
