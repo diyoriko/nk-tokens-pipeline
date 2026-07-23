@@ -1,0 +1,683 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --nk-color-violet-100: #f7f5ff; /** = Magnolia (LDS) */
+  --nk-color-violet-200: #cfcffd; /** ≈ Melrose Mid (LDS) */
+  --nk-color-violet-300: #aaa8fb; /** ≈ Melrose (LDS) */
+  --nk-color-violet-400: #887dfa; /** ≈ Daisy Bush Mid (LDS) */
+  --nk-color-violet-500: #6d46fc; /** Main — brand violet */
+  --nk-color-violet-600: #572bd7; /** ≈ Daisy Bush (LDS) */
+  --nk-color-violet-700: #420eae; /** ≈ Daisy Bush (LDS) */
+  --nk-color-violet-800: #2e1781; /** = Daisy Bush Dark (LDS) */
+  --nk-color-violet-900: #170751; /** = Persian Indigo Dark (LDS) */
+  --nk-color-violet-1000: #070026;
+  --nk-color-blue-100: #f3f7ff; /** ≈ Patterns Blue (LDS) */
+  --nk-color-blue-200: #bad2fd;
+  --nk-color-blue-300: #82adfb;
+  --nk-color-blue-400: #4784f9;
+  --nk-color-blue-500: #0a58ea; /** Main (gen true-blue) (LDS) */
+  --nk-color-blue-600: #0645bd;
+  --nk-color-blue-700: #023392;
+  --nk-color-blue-800: #00216a;
+  --nk-color-blue-900: #001046;
+  --nk-color-blue-1000: #00002c;
+  --nk-color-magenta-100: #f9f1fe; /** = Heliotrope Light (LDS) */
+  --nk-color-magenta-200: #eed4fd;
+  --nk-color-magenta-300: #dfabf7; /** = Heliotrope Mid (LDS) */
+  --nk-color-magenta-400: #d78ffb;
+  --nk-color-magenta-500: #c76ef2; /** Main — brand magenta */
+  --nk-color-magenta-600: #a14ec7; /** ≈ Heliotrope Dark (LDS) */
+  --nk-color-magenta-700: #7c309d; /** ≈ Heliotrope Dark (LDS) */
+  --nk-color-magenta-800: #581074;
+  --nk-color-magenta-900: #330146;
+  --nk-color-magenta-1000: #11001b;
+  --nk-color-coral-100: #fff3f3; /** = Chablis (LDS) */
+  --nk-color-coral-200: #fed4cf; /** ≈ Persimmon Light (LDS) */
+  --nk-color-coral-300: #fdb2aa; /** ≈ Persimmon Mid (LDS) */
+  --nk-color-coral-400: #fc8c84; /** ≈ Persimmon Mid (LDS) */
+  --nk-color-coral-500: #ff5a56; /** Main — brand coral */
+  --nk-color-coral-600: #d23a3a; /** ≈ Persimmon Dark (LDS) */
+  --nk-color-coral-700: #a5161f;
+  --nk-color-coral-800: #730710;
+  --nk-color-coral-900: #430105;
+  --nk-color-coral-1000: #190000;
+  --nk-color-green-100: #e9fbf0; /** = White Ice (LDS) */
+  --nk-color-green-200: #d1fcd6;
+  --nk-color-green-300: #b7fdbb;
+  --nk-color-green-400: #9afd9e;
+  --nk-color-green-500: #79fd7f; /** Main — brand green */
+  --nk-color-green-600: #4cc855; /** ≈ Apple (LDS) */
+  --nk-color-green-700: #1c952c; /** ≈ Snake (LDS) */
+  --nk-color-green-800: #0b6318;
+  --nk-color-green-900: #023407;
+  --nk-color-green-1000: #000c00;
+  --nk-color-orange-100: #fff3e7; /** = Orange Light (LDS) */
+  --nk-color-orange-200: #fee7ce; /** ≈ Orange Light (LDS) */
+  --nk-color-orange-300: #fdcd9b; /** ≈ Orange Mid (LDS) */
+  --nk-color-orange-400: #fcb86b; /** ≈ Orange Mid (LDS) */
+  --nk-color-orange-500: #ffa000; /** Main — brand orange */
+  --nk-color-orange-600: #c67e18;
+  --nk-color-orange-700: #925c0e; /** ≈ Orange Dark (LDS) */
+  --nk-color-orange-800: #623c05;
+  --nk-color-orange-900: #361e00;
+  --nk-color-orange-1000: #110400;
+  --nk-color-yellow-100: #fff9cc; /** ≈ Gin Fizz (LDS) */
+  --nk-color-yellow-200: #fff5ad;
+  --nk-color-yellow-300: #fff08a;
+  --nk-color-yellow-400: #ffeb60;
+  --nk-color-yellow-500: #ffe60a; /** Main — brand yellow */
+  --nk-color-yellow-600: #c6b321; /** ≈ Lemon Dark (LDS) */
+  --nk-color-yellow-700: #908215;
+  --nk-color-yellow-800: #5e5509;
+  --nk-color-yellow-900: #312b01;
+  --nk-color-yellow-1000: #0a0700;
+  --nk-color-grey-100: #f5f5f5; /** ≈ Alabaster (LDS) */
+  --nk-color-grey-200: #d7d7d7; /** ≈ Mischka (LDS) */
+  --nk-color-grey-300: #b9b9b9; /** ≈ Silver (LDS) */
+  --nk-color-grey-400: #9b9b9b;
+  --nk-color-grey-500: #7f7f7f; /** ≈ Jumbo (LDS) */
+  --nk-color-grey-600: #636363; /** ≈ Jumbo (LDS) */
+  --nk-color-grey-700: #484b48; /** = Outer Space (LDS) */
+  --nk-color-grey-800: #303030; /** ≈ Black (LDS) */
+  --nk-color-grey-900: #1a1a1a; /** = Near-black (LDS) */
+  --nk-color-grey-1000: #060606;
+  --nk-color-white-100: rgba(255, 255, 255, 0.05); /** White alpha — over dark/colour surfaces */
+  --nk-color-white-200: rgba(255, 255, 255, 0.1); /** White alpha — over dark/colour surfaces */
+  --nk-color-white-300: rgba(255, 255, 255, 0.2); /** White alpha — over dark/colour surfaces */
+  --nk-color-white-400: rgba(255, 255, 255, 0.4); /** White alpha — over dark/colour surfaces */
+  --nk-color-white-500: rgba(255, 255, 255, 0.7); /** White alpha — over dark/colour surfaces */
+  --nk-color-white-600: rgba(255, 255, 255, 0.8); /** White alpha — over dark/colour surfaces */
+  --nk-color-white-700: rgba(255, 255, 255, 0.85); /** White alpha — over dark/colour surfaces */
+  --nk-color-white-800: rgba(255, 255, 255, 0.9); /** White alpha — over dark/colour surfaces */
+  --nk-color-white-900: rgba(255, 255, 255, 0.95); /** White alpha — over dark/colour surfaces */
+  --nk-color-white-1000: #ffffff; /** White alpha — over dark/colour surfaces */
+  --nk-color-black-100: rgba(12, 12, 13, 0.05); /** Black alpha — over light surfaces */
+  --nk-color-black-160: rgba(12, 12, 13, 0.08); /** Black alpha — over light surfaces */
+  --nk-color-black-200: rgba(12, 12, 13, 0.1); /** Black alpha — over light surfaces */
+  --nk-color-black-220: rgba(12, 12, 13, 0.12); /** Black alpha — over light surfaces */
+  --nk-color-black-240: rgba(12, 12, 13, 0.14); /** Black alpha — over light surfaces */
+  --nk-color-black-260: rgba(12, 12, 13, 0.16); /** Black alpha — over light surfaces */
+  --nk-color-black-300: rgba(12, 12, 13, 0.2); /** Black alpha — over light surfaces */
+  --nk-color-black-400: rgba(12, 12, 13, 0.4); /** Black alpha — over light surfaces */
+  --nk-color-black-500: rgba(12, 12, 13, 0.7); /** Black alpha — over light surfaces */
+  --nk-color-black-600: rgba(12, 12, 13, 0.8); /** Black alpha — over light surfaces */
+  --nk-color-black-700: rgba(12, 12, 13, 0.85); /** Black alpha — over light surfaces */
+  --nk-color-black-800: rgba(12, 12, 13, 0.9); /** Black alpha — over light surfaces */
+  --nk-color-black-900: rgba(12, 12, 13, 0.95); /** Black alpha — over light surfaces */
+  --nk-color-black-1000: #0c0c0d; /** Black alpha — over light surfaces */
+  --nk-color-background-base-primary: #ffffff; /** Page canvas - the default app surface. → White/1000 */
+  --nk-color-background-base-primary-hover: #f5f5f5; /** Hover on the page canvas (rows, list items). → Grey/100 · ≈ Alabaster */
+  --nk-color-background-base-secondary: #f5f5f5; /** First raised surface - cards and panels. → Grey/100 · ≈ Alabaster */
+  --nk-color-background-base-secondary-hover: #d7d7d7; /** Hover of the card surface. → Grey/200 · ≈ Mischka */
+  --nk-color-background-base-tertiary: #d7d7d7; /** Second surface level - wells, table stripes, insets. → Grey/200 · ≈ Mischka */
+  --nk-color-background-base-tertiary-hover: #b9b9b9; /** Hover of the inset surface. → Grey/300 · ≈ Silver */
+  --nk-color-background-base-inverse: #1a1a1a; /** Inverted page surface - near-black base for dark sections in light mode. Pair with Text/Icon *-Inverse. → Grey/900 */
+  --nk-color-background-base-inverse-hover: #303030; /** Hover on the inverted surface - lightens one step toward contrast. → Grey/800 */
+  --nk-color-background-neutral-primary: #484b48; /** Solid neutral fill - secondary buttons, chips, toggle-off. → Grey/700 · = Outer Space */
+  --nk-color-background-neutral-primary-hover: #303030; /** Hover of the solid neutral fill. → Grey/800 · ≈ Black */
+  --nk-color-background-neutral-secondary: #d7d7d7; /** Light neutral fill - subtle chips, pills, table headers. → Grey/200 · ≈ Mischka */
+  --nk-color-background-neutral-secondary-hover: #b9b9b9; /** Hover of the light neutral fill. → Grey/300 · ≈ Silver */
+  --nk-color-background-neutral-tertiary: #f5f5f5; /** Faintest neutral fill - quiet backgrounds. → Grey/100 · ≈ Alabaster */
+  --nk-color-background-neutral-tertiary-hover: #d7d7d7; /** Hover of the faint neutral fill. → Grey/200 · ≈ Mischka */
+  --nk-color-background-brand-magenta-primary: #c76ef2; /** Magenta brand fill - primary actions and strong emphasis. → Magenta/500 · Main */
+  --nk-color-background-brand-magenta-primary-hover: #d78ffb; /** Hover of the magenta brand fill (one step away from its text colour). → Magenta/400 */
+  --nk-color-background-brand-magenta-secondary: #eed4fd; /** Magenta tint - selected states, secondary emphasis. → Magenta/200 */
+  --nk-color-background-brand-magenta-secondary-hover: #dfabf7; /** Hover of the magenta tint. → Magenta/300 · = Heliotrope Mid */
+  --nk-color-background-brand-magenta-tertiary: #f9f1fe; /** Faintest magenta tint - soft backgrounds, highlights. → Magenta/100 · = Heliotrope Light */
+  --nk-color-background-brand-magenta-tertiary-hover: #eed4fd; /** Hover of the faint magenta tint. → Magenta/200 */
+  --nk-color-background-brand-magenta-strong: #7c309d; /** Deep brand surface - dark magenta section (hero, footer, banner), 2 steps past Primary. White foreground. → Magenta/700 */
+  --nk-color-background-brand-magenta-strong-hover: #581074; /** Hover on the deep brand surface - darkens one more step. → Magenta/800 */
+  --nk-color-background-brand-coral-primary: #ff5a56; /** Coral brand fill - primary actions and strong emphasis. → Coral/500 · Main */
+  --nk-color-background-brand-coral-primary-hover: #fc8c84; /** Hover of the coral brand fill (one step away from its text colour). → Coral/400 · ≈ Persimmon Mid */
+  --nk-color-background-brand-coral-secondary: #fed4cf; /** Coral tint - selected states, secondary emphasis. → Coral/200 · ≈ Persimmon Light */
+  --nk-color-background-brand-coral-secondary-hover: #fdb2aa; /** Hover of the coral tint. → Coral/300 · ≈ Persimmon Mid */
+  --nk-color-background-brand-coral-tertiary: #fff3f3; /** Faintest coral tint - soft backgrounds, highlights. → Coral/100 · = Chablis */
+  --nk-color-background-brand-coral-tertiary-hover: #fed4cf; /** Hover of the faint coral tint. → Coral/200 · ≈ Persimmon Light */
+  --nk-color-background-brand-coral-strong: #a5161f; /** Deep brand surface - dark coral section (hero, footer, banner), 2 steps past Primary. White foreground. → Coral/700 */
+  --nk-color-background-brand-coral-strong-hover: #730710; /** Hover on the deep brand surface - darkens one more step. → Coral/800 */
+  --nk-color-background-brand-green-primary: #79fd7f; /** Green brand fill - primary actions and strong emphasis. → Green/500 · Main */
+  --nk-color-background-brand-green-primary-hover: #9afd9e; /** Hover of the green brand fill (one step away from its text colour). → Green/400 */
+  --nk-color-background-brand-green-secondary: #d1fcd6; /** Green tint - selected states, secondary emphasis. → Green/200 */
+  --nk-color-background-brand-green-secondary-hover: #b7fdbb; /** Hover of the green tint. → Green/300 */
+  --nk-color-background-brand-green-tertiary: #e9fbf0; /** Faintest green tint - soft backgrounds, highlights. → Green/100 · = White Ice */
+  --nk-color-background-brand-green-tertiary-hover: #d1fcd6; /** Hover of the faint green tint. → Green/200 */
+  --nk-color-background-brand-green-strong: #1c952c; /** Deep brand surface - dark green section (hero, footer, banner), 2 steps past Primary. White foreground. → Green/700 */
+  --nk-color-background-brand-green-strong-hover: #0b6318; /** Hover on the deep brand surface - darkens one more step. → Green/800 */
+  --nk-color-background-brand-orange-primary: #ffa000; /** Orange brand fill - primary actions and strong emphasis. → Orange/500 · Main */
+  --nk-color-background-brand-orange-primary-hover: #fcb86b; /** Hover of the orange brand fill (one step away from its text colour). → Orange/400 · ≈ Orange Mid */
+  --nk-color-background-brand-orange-secondary: #fee7ce; /** Orange tint - selected states, secondary emphasis. → Orange/200 · ≈ Orange Light */
+  --nk-color-background-brand-orange-secondary-hover: #fdcd9b; /** Hover of the orange tint. → Orange/300 · ≈ Orange Mid */
+  --nk-color-background-brand-orange-tertiary: #fff3e7; /** Faintest orange tint - soft backgrounds, highlights. → Orange/100 · = Orange Light */
+  --nk-color-background-brand-orange-tertiary-hover: #fee7ce; /** Hover of the faint orange tint. → Orange/200 · ≈ Orange Light */
+  --nk-color-background-brand-orange-strong: #925c0e; /** Deep brand surface - dark orange section (hero, footer, banner), 2 steps past Primary. White foreground. → Orange/700 */
+  --nk-color-background-brand-orange-strong-hover: #623c05; /** Hover on the deep brand surface - darkens one more step. → Orange/800 */
+  --nk-color-background-brand-blue-primary: #0a58ea; /** Blue brand fill - primary actions and strong emphasis. → Blue/500 · Main (gen true-blue) */
+  --nk-color-background-brand-blue-primary-hover: #0645bd; /** Hover of the blue brand fill (one step away from its text colour). → Blue/600 */
+  --nk-color-background-brand-blue-secondary: #bad2fd; /** Blue tint - selected states, secondary emphasis. → Blue/200 */
+  --nk-color-background-brand-blue-secondary-hover: #82adfb; /** Hover of the blue tint. → Blue/300 */
+  --nk-color-background-brand-blue-tertiary: #f3f7ff; /** Faintest blue tint - soft backgrounds, highlights. → Blue/100 · ≈ Patterns Blue */
+  --nk-color-background-brand-blue-tertiary-hover: #bad2fd; /** Hover of the faint blue tint. → Blue/200 */
+  --nk-color-background-brand-blue-strong: #023392; /** Deep brand surface - dark blue section (hero, footer, banner), 2 steps past Primary. White foreground. → Blue/700 */
+  --nk-color-background-brand-blue-strong-hover: #00216a; /** Hover on the deep brand surface - darkens one more step. → Blue/800 */
+  --nk-color-background-success-bold: #79fd7f; /** Solid success fill - positive results, confirmations. Banners, badges, toasts. → Green/500 · Main */
+  --nk-color-background-success-light: #e9fbf0; /** Success tint - soft banners, row highlights. → Green/100 · = White Ice */
+  --nk-color-background-success-bold-hover: #9afd9e; /** Hover for bold success fills — follows the hover law. → Green/400 */
+  --nk-color-background-success-light-hover: #d1fcd6; /** Hover for light success tints (one step darker). → Green/200 */
+  --nk-color-background-warning-bold: #ffa000; /** Solid warning fill - caution, attention needed. Banners, badges, toasts. → Orange/500 · Main */
+  --nk-color-background-warning-light: #fff3e7; /** Warning tint - soft banners, row highlights. → Orange/100 · = Orange Light */
+  --nk-color-background-warning-bold-hover: #fcb86b; /** Hover for bold warning fills — follows the hover law. → Orange/400 · ≈ Orange Mid */
+  --nk-color-background-warning-light-hover: #fee7ce; /** Hover for light warning tints (one step darker). → Orange/200 · ≈ Orange Light */
+  --nk-color-background-danger-bold: #ff5a56; /** Solid danger fill - errors, destructive actions. Banners, badges, toasts. → Coral/500 · Main */
+  --nk-color-background-danger-light: #fff3f3; /** Danger tint - soft banners, row highlights. → Coral/100 · = Chablis */
+  --nk-color-background-danger-bold-hover: #fc8c84; /** Hover for bold danger fills — follows the hover law. → Coral/400 · ≈ Persimmon Mid */
+  --nk-color-background-danger-light-hover: #fed4cf; /** Hover for light danger tints (one step darker). → Coral/200 · ≈ Persimmon Light */
+  --nk-color-background-disabled-primary: #d7d7d7; /** Fill for disabled controls. → Grey/200 · ≈ Mischka */
+  --nk-color-background-info-bold: #0a58ea; /** Solid info fill - neutral information. Banners, badges, toasts. → Blue/500 · Main (gen true-blue) */
+  --nk-color-background-info-light: #f3f7ff; /** Info tint - soft banners, row highlights. → Blue/100 · ≈ Patterns Blue */
+  --nk-color-background-info-bold-hover: #0645bd; /** Hover for bold info fills — follows the hover law. → Blue/600 */
+  --nk-color-background-info-light-hover: #bad2fd; /** Hover for light info tints (one step darker). → Blue/200 */
+  --nk-color-background-overlay-default: rgba(12, 12, 13, 0.2); /** Dim layer under popovers/dropdowns (black 20%). → Black/300 */
+  --nk-color-background-overlay-inverse: rgba(255, 255, 255, 0.2); /** Light overlay on dark imagery/video; inverse of Overlay/Default. → White/300 */
+  --nk-color-background-scrim-default: rgba(12, 12, 13, 0.7); /** Blocking layer under modals; also darkens photos for text (black 70%). → Black/500 */
+  --nk-color-background-frosted-default: rgba(255, 255, 255, 0.85); /** Frosted translucent surface (bars, menus over scroll) - pair with Blur/400 background blur. → White/700 */
+  --nk-color-background-frosted-inverse: rgba(12, 12, 13, 0.4); /** Dark glass plate over media - player controls, badges on imagery; pair with Blur/* when frosted. → Black/400 */
+  --nk-color-background-selected-default: #f7f5ff; /** Selected item background - active menu row, chosen date, highlighted table row. → Violet/100 · = Magnolia */
+  --nk-color-background-brand-yellow-primary: #ffe60a; /** Yellow brand fill - primary actions and strong emphasis. → Yellow/500 · Main */
+  --nk-color-background-brand-yellow-primary-hover: #ffeb60; /** Hover of the yellow brand fill (one step away from its text colour). → Yellow/400 */
+  --nk-color-background-brand-yellow-secondary: #fff5ad; /** Yellow tint - selected states, secondary emphasis. → Yellow/200 */
+  --nk-color-background-brand-yellow-secondary-hover: #fff08a; /** Hover of the yellow tint. → Yellow/300 */
+  --nk-color-background-brand-yellow-tertiary: #fff9cc; /** Faintest yellow tint - soft backgrounds, highlights. → Yellow/100 · ≈ Gin Fizz */
+  --nk-color-background-brand-yellow-tertiary-hover: #fff5ad; /** Hover of the faint yellow tint. → Yellow/200 */
+  --nk-color-background-brand-yellow-strong: #908215; /** Deep brand surface - dark yellow section (hero, footer, banner), 2 steps past Primary. White foreground. → Yellow/700 */
+  --nk-color-background-brand-yellow-strong-hover: #5e5509; /** Hover on the deep brand surface - darkens one more step. → Yellow/800 */
+  --nk-color-background-brand-violet-primary: #6d46fc; /** Violet brand fill - primary actions and strong emphasis. → Violet/500 · Main */
+  --nk-color-background-brand-violet-primary-hover: #572bd7; /** Hover of the violet brand fill (one step away from its text colour). → Violet/600 · ≈ Daisy Bush */
+  --nk-color-background-brand-violet-secondary: #cfcffd; /** Violet tint - selected states, secondary emphasis. → Violet/200 · ≈ Melrose Mid */
+  --nk-color-background-brand-violet-secondary-hover: #aaa8fb; /** Hover of the violet tint. → Violet/300 · ≈ Melrose */
+  --nk-color-background-brand-violet-tertiary: #f7f5ff; /** Faintest violet tint - soft backgrounds, highlights. → Violet/100 · = Magnolia */
+  --nk-color-background-brand-violet-tertiary-hover: #cfcffd; /** Hover of the faint violet tint. → Violet/200 · ≈ Melrose Mid */
+  --nk-color-background-brand-violet-strong: #420eae; /** Deep brand surface - dark violet section (hero, footer, banner), 2 steps past Primary. White foreground. → Violet/700 */
+  --nk-color-background-brand-violet-strong-hover: #2e1781; /** Hover on the deep brand surface - darkens one more step. → Violet/800 */
+  --nk-color-text-default-primary: #1a1a1a; /** Main text on light surfaces. → Grey/900 · = Near-black */
+  --nk-color-text-default-secondary: #636363; /** Muted text - captions, meta, labels (6:1). → Grey/600 · ≈ Jumbo */
+  --nk-color-text-default-tertiary: #9b9b9b; /** Decorative text ONLY (2.8:1) - never hints or placeholders, those use Secondary. → Grey/400 */
+  --nk-color-text-default-primary-inverse: #ffffff; /** Inverse of Default/Primary — white text on dark / inverse / neutral-solid surfaces (was Text/On-Neutral). → White/1000 */
+  --nk-color-text-brand-magenta-primary: #7c309d; /** Magenta accent text on light surfaces. → Magenta/700 · ≈ Heliotrope Dark */
+  --nk-color-text-brand-magenta-secondary: #a14ec7; /** Muted magenta text on light surfaces — softer/secondary brand emphasis (large text & accents, not body). → Magenta/600 */
+  --nk-color-text-brand-magenta-primary-inverse: #c76ef2; /** Bright magenta text for dark / inverse / brand surfaces (e.g. yellow on violet). On light backgrounds use Primary instead. → Magenta/500 */
+  --nk-color-text-brand-magenta-on-primary: #330146; /** magenta/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Magenta/900 */
+  --nk-color-text-brand-magenta-on-secondary: #330146; /** Text on the magenta tint (Secondary). → Magenta/900 */
+  --nk-color-text-brand-magenta-on-tertiary: #330146; /** Text on the faint magenta tint. → Magenta/900 */
+  --nk-color-text-brand-magenta-on-strong: #ffffff; /** Text on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-text-brand-coral-primary: #a5161f; /** Coral accent text on light surfaces. → Coral/700 */
+  --nk-color-text-brand-coral-secondary: #d23a3a; /** Muted coral text on light surfaces — softer/secondary brand emphasis (large text & accents, not body). → Coral/600 */
+  --nk-color-text-brand-coral-primary-inverse: #ff5a56; /** Bright coral text for dark / inverse / brand surfaces (e.g. yellow on violet). On light backgrounds use Primary instead. → Coral/500 */
+  --nk-color-text-brand-coral-on-primary: #430105; /** coral/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Coral/900 */
+  --nk-color-text-brand-coral-on-secondary: #430105; /** Text on the coral tint (Secondary). → Coral/900 */
+  --nk-color-text-brand-coral-on-tertiary: #430105; /** Text on the faint coral tint. → Coral/900 */
+  --nk-color-text-brand-coral-on-strong: #ffffff; /** Text on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-text-brand-green-primary: #1c952c; /** Bright accent (/700) — 3:1 large text only, not small body. → Green/700 · ≈ Snake */
+  --nk-color-text-brand-green-secondary: #4cc855; /** Muted green text on light surfaces — softer/secondary brand emphasis (large text & accents, not body). → Green/600 */
+  --nk-color-text-brand-green-primary-inverse: #79fd7f; /** Bright green text for dark / inverse / brand surfaces (e.g. yellow on violet). On light backgrounds use Primary instead. → Green/500 */
+  --nk-color-text-brand-green-on-primary: #023407; /** green/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Green/900 */
+  --nk-color-text-brand-green-on-secondary: #023407; /** Text on the green tint (Secondary). → Green/900 */
+  --nk-color-text-brand-green-on-tertiary: #023407; /** Text on the faint green tint. → Green/900 */
+  --nk-color-text-brand-green-on-strong: #ffffff; /** Text on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-text-brand-orange-primary: #925c0e; /** Orange accent text on light surfaces. → Orange/700 · ≈ Orange Dark */
+  --nk-color-text-brand-orange-secondary: #c67e18; /** Muted orange text on light surfaces — softer/secondary brand emphasis (large text & accents, not body). → Orange/600 */
+  --nk-color-text-brand-orange-primary-inverse: #ffa000; /** Bright orange text for dark / inverse / brand surfaces (e.g. yellow on violet). On light backgrounds use Primary instead. → Orange/500 */
+  --nk-color-text-brand-orange-on-primary: #361e00; /** orange/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Orange/900 */
+  --nk-color-text-brand-orange-on-secondary: #361e00; /** Text on the orange tint (Secondary). → Orange/900 */
+  --nk-color-text-brand-orange-on-tertiary: #361e00; /** Text on the faint orange tint. → Orange/900 */
+  --nk-color-text-brand-orange-on-strong: #ffffff; /** Text on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-text-brand-blue-primary: #023392; /** Blue accent text on light surfaces. → Blue/700 */
+  --nk-color-text-brand-blue-secondary: #0645bd; /** Muted blue text on light surfaces — softer/secondary brand emphasis (large text & accents, not body). → Blue/600 */
+  --nk-color-text-brand-blue-primary-inverse: #0a58ea; /** Bright blue text for dark / inverse / brand surfaces (e.g. yellow on violet). On light backgrounds use Primary instead. → Blue/500 */
+  --nk-color-text-brand-blue-on-primary: #ffffff; /** White — blue/500 is dark enough for white (AA). Light-main hues use hue/900. → White/1000 */
+  --nk-color-text-brand-blue-on-secondary: #001046; /** Text on the blue tint (Secondary). → Blue/900 */
+  --nk-color-text-brand-blue-on-tertiary: #001046; /** Text on the faint blue tint. → Blue/900 */
+  --nk-color-text-brand-blue-on-strong: #ffffff; /** Text on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-text-success-on-bold: #023407; /** Hue/900 - this status bold is light, white would fail contrast (white-text-hues rule). → Green/900 */
+  --nk-color-text-success-on-light: #0b6318; /** Success text on its Light tint. → Green/800 */
+  --nk-color-text-warning-on-bold: #361e00; /** Hue/900 - this status bold is light, white would fail contrast (white-text-hues rule). → Orange/900 */
+  --nk-color-text-warning-on-light: #925c0e; /** Warning text on its Light tint. → Orange/700 · ≈ Orange Dark */
+  --nk-color-text-danger-on-bold: #430105; /** Hue/900 - this status bold is light, white would fail contrast (white-text-hues rule). → Coral/900 */
+  --nk-color-text-danger-on-light: #a5161f; /** Danger text on its Light tint. → Coral/700 */
+  --nk-color-text-disabled-primary: #9b9b9b; /** Disabled text — WCAG exempts inactive components from contrast minimums. → Grey/400 */
+  --nk-color-text-info-on-bold: #ffffff; /** White - info bold (blue) is dark enough for white. Same white-text rule as brand colours. → White/1000 */
+  --nk-color-text-info-on-light: #023392; /** Info text on its Light tint. → Blue/700 */
+  --nk-color-text-brand-yellow-primary: #908215; /** Bright accent (/700) — 3:1 large text only, not small body. → Yellow/700 */
+  --nk-color-text-brand-yellow-secondary: #c6b321; /** Muted yellow text on light surfaces — softer/secondary brand emphasis (large text & accents, not body). → Yellow/600 */
+  --nk-color-text-brand-yellow-primary-inverse: #ffe60a; /** Bright yellow text for dark / inverse / brand surfaces (e.g. yellow on violet). On light backgrounds use Primary instead. → Yellow/500 */
+  --nk-color-text-brand-yellow-on-primary: #312b01; /** yellow/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Yellow/900 */
+  --nk-color-text-brand-yellow-on-secondary: #312b01; /** Text on the yellow tint (Secondary). → Yellow/900 */
+  --nk-color-text-brand-yellow-on-tertiary: #312b01; /** Text on the faint yellow tint. → Yellow/900 */
+  --nk-color-text-brand-yellow-on-strong: #ffffff; /** Text on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-text-utilities-on-overlay: #ffffff; /** Text/icon on overlay & scrim surfaces. → White/1000 */
+  --nk-color-text-brand-violet-primary: #420eae; /** Violet accent text on light surfaces. → Violet/700 · ≈ Daisy Bush */
+  --nk-color-text-brand-violet-secondary: #572bd7; /** Muted violet text on light surfaces — softer/secondary brand emphasis (large text & accents, not body). → Violet/600 */
+  --nk-color-text-brand-violet-primary-inverse: #6d46fc; /** Bright violet text for dark / inverse / brand surfaces (e.g. yellow on violet). On light backgrounds use Primary instead. → Violet/500 */
+  --nk-color-text-brand-violet-on-primary: #ffffff; /** White — violet/500 is dark enough for white (AA). Light-main hues use hue/900. → White/1000 */
+  --nk-color-text-brand-violet-on-secondary: #170751; /** Text on the violet tint (Secondary). → Violet/900 · = Persian Indigo Dark */
+  --nk-color-text-brand-violet-on-tertiary: #170751; /** Text on the faint violet tint. → Violet/900 · = Persian Indigo Dark */
+  --nk-color-text-brand-violet-on-strong: #ffffff; /** Text on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-text-link-default: #420eae; /** Hyperlink colour. → Violet/700 · ≈ Daisy Bush */
+  --nk-color-text-link-visited: #7c309d; /** Visited hyperlink colour. → Magenta/700 · ≈ Heliotrope Dark */
+  --nk-color-icon-default-primary: #1a1a1a; /** Main icons on light surfaces. → Grey/900 · = Near-black */
+  --nk-color-icon-default-secondary: #636363; /** Muted icons - captions, meta, labels (6:1). → Grey/600 · ≈ Jumbo */
+  --nk-color-icon-default-tertiary: #9b9b9b; /** Decorative icons ONLY (2.8:1) - never hints or placeholders, those use Secondary. → Grey/400 */
+  --nk-color-icon-default-primary-inverse: #ffffff; /** Inverse of Default/Primary — white icons on dark / inverse / neutral-solid surfaces (was Icon/On-Neutral). → White/1000 */
+  --nk-color-icon-brand-magenta-primary: #7c309d; /** Magenta accent icons on light surfaces. → Magenta/700 · ≈ Heliotrope Dark */
+  --nk-color-icon-brand-magenta-on-primary: #330146; /** magenta/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Magenta/900 */
+  --nk-color-icon-brand-magenta-on-secondary: #330146; /** Icons on the magenta tint (Secondary). → Magenta/900 */
+  --nk-color-icon-brand-magenta-on-tertiary: #330146; /** Icons on the faint magenta tint. → Magenta/900 */
+  --nk-color-icon-brand-magenta-on-strong: #ffffff; /** Icon on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-icon-brand-coral-primary: #a5161f; /** Coral accent icons on light surfaces. → Coral/700 */
+  --nk-color-icon-brand-coral-on-primary: #430105; /** coral/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Coral/900 */
+  --nk-color-icon-brand-coral-on-secondary: #430105; /** Icons on the coral tint (Secondary). → Coral/900 */
+  --nk-color-icon-brand-coral-on-tertiary: #430105; /** Icons on the faint coral tint. → Coral/900 */
+  --nk-color-icon-brand-coral-on-strong: #ffffff; /** Icon on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-icon-brand-green-primary: #1c952c; /** Green accent icons on light surfaces. → Green/700 · ≈ Snake */
+  --nk-color-icon-brand-green-on-primary: #023407; /** green/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Green/900 */
+  --nk-color-icon-brand-green-on-secondary: #023407; /** Icons on the green tint (Secondary). → Green/900 */
+  --nk-color-icon-brand-green-on-tertiary: #023407; /** Icons on the faint green tint. → Green/900 */
+  --nk-color-icon-brand-green-on-strong: #ffffff; /** Icon on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-icon-brand-orange-primary: #925c0e; /** Orange accent icons on light surfaces. → Orange/700 · ≈ Orange Dark */
+  --nk-color-icon-brand-orange-on-primary: #361e00; /** orange/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Orange/900 */
+  --nk-color-icon-brand-orange-on-secondary: #361e00; /** Icons on the orange tint (Secondary). → Orange/900 */
+  --nk-color-icon-brand-orange-on-tertiary: #361e00; /** Icons on the faint orange tint. → Orange/900 */
+  --nk-color-icon-brand-orange-on-strong: #ffffff; /** Icon on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-icon-brand-blue-primary: #023392; /** Blue accent icons on light surfaces. → Blue/700 */
+  --nk-color-icon-brand-blue-on-primary: #ffffff; /** White — blue/500 is dark enough for white (AA). Light-main hues use hue/900. → White/1000 */
+  --nk-color-icon-brand-blue-on-secondary: #001046; /** Icons on the blue tint (Secondary). → Blue/900 */
+  --nk-color-icon-brand-blue-on-tertiary: #001046; /** Icons on the faint blue tint. → Blue/900 */
+  --nk-color-icon-brand-blue-on-strong: #ffffff; /** Icon on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-icon-success-on-bold: #023407; /** Hue/900 - this status bold is light, white would fail contrast (white-text-hues rule). → Green/900 */
+  --nk-color-icon-success-on-light: #0b6318; /** Success icons on its Light tint. → Green/800 */
+  --nk-color-icon-warning-on-bold: #361e00; /** Hue/900 - this status bold is light, white would fail contrast (white-text-hues rule). → Orange/900 */
+  --nk-color-icon-warning-on-light: #925c0e; /** Warning icons on its Light tint. → Orange/700 · ≈ Orange Dark */
+  --nk-color-icon-danger-on-bold: #430105; /** Hue/900 - this status bold is light, white would fail contrast (white-text-hues rule). → Coral/900 */
+  --nk-color-icon-danger-on-light: #a5161f; /** Danger icons on its Light tint. → Coral/700 */
+  --nk-color-icon-disabled-primary: #9b9b9b; /** Disabled icons - WCAG-exempt. → Grey/400 */
+  --nk-color-icon-info-on-bold: #ffffff; /** White - info bold (blue) is dark enough for white. Same white-text rule as brand colours. → White/1000 */
+  --nk-color-icon-info-on-light: #023392; /** Info icons on its Light tint. → Blue/700 */
+  --nk-color-icon-brand-yellow-primary: #908215; /** Yellow accent icons on light surfaces. → Yellow/700 */
+  --nk-color-icon-brand-yellow-on-primary: #312b01; /** yellow/900 — the main /500 is light, white would fail contrast. Violet/blue use white. → Yellow/900 */
+  --nk-color-icon-brand-yellow-on-secondary: #312b01; /** Icons on the yellow tint (Secondary). → Yellow/900 */
+  --nk-color-icon-brand-yellow-on-tertiary: #312b01; /** Icons on the faint yellow tint. → Yellow/900 */
+  --nk-color-icon-brand-yellow-on-strong: #ffffff; /** Icon on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-icon-brand-violet-primary: #420eae; /** Violet accent icons on light surfaces. → Violet/700 · ≈ Daisy Bush */
+  --nk-color-icon-brand-violet-on-primary: #ffffff; /** White — violet/500 is dark enough for white (AA). Light-main hues use hue/900. → White/1000 */
+  --nk-color-icon-brand-violet-on-secondary: #170751; /** Icons on the violet tint (Secondary). → Violet/900 · = Persian Indigo Dark */
+  --nk-color-icon-brand-violet-on-tertiary: #170751; /** Icons on the faint violet tint. → Violet/900 · = Persian Indigo Dark */
+  --nk-color-icon-brand-violet-on-strong: #ffffff; /** Icon on the deep brand surface (Strong / Strong-Hover). White. → White/1000 */
+  --nk-color-border-default-primary: #d7d7d7; /** Quiet hairline - dividers, quiet cards. Decorative (exempt from 3:1). → Grey/200 · ≈ Mischka */
+  --nk-color-border-default-secondary: #7f7f7f; /** Functional border - inputs, selects. Meets 3:1 on light surfaces. Hover state: step up to Tertiary. → Grey/500 · ≈ Jumbo */
+  --nk-color-border-default-tertiary: #484b48; /** Strong border - input hover/active, emphasised frames. → Grey/700 · = Outer Space */
+  --nk-color-border-focus-default: #572bd7; /** Keyboard focus ring on light surfaces. → Violet/600 · ≈ Daisy Bush */
+  --nk-color-border-focus-on-fill: #1a1a1a; /** Focus ring sitting on bright/brand fills. → Grey/900 · = Near-black */
+  --nk-color-border-brand-magenta-primary: #7c309d; /** Readable magenta border - meets 3:1 on light surfaces. → Magenta/700 · ≈ Heliotrope Dark */
+  --nk-color-border-brand-magenta-secondary: #c76ef2; /** Decorative magenta border (= main /500), exempt from 3:1 - pair with a fill/tint. → Magenta/500 · Main */
+  --nk-color-border-brand-magenta-tertiary: #dfabf7; /** Soft magenta frame - on tinted cards and surfaces. → Magenta/300 · = Heliotrope Mid */
+  --nk-color-border-brand-coral-primary: #a5161f; /** Readable coral border - meets 3:1 on light surfaces. → Coral/700 */
+  --nk-color-border-brand-coral-secondary: #ff5a56; /** Decorative coral border (= main /500), exempt from 3:1 - pair with a fill/tint. → Coral/500 · Main */
+  --nk-color-border-brand-coral-tertiary: #fdb2aa; /** Soft coral frame - on tinted cards and surfaces. → Coral/300 · ≈ Persimmon Mid */
+  --nk-color-border-brand-green-primary: #1c952c; /** Readable green border - meets 3:1 on light surfaces. → Green/700 · ≈ Snake */
+  --nk-color-border-brand-green-secondary: #79fd7f; /** Decorative green border (= main /500), exempt from 3:1 - pair with a fill/tint. → Green/500 · Main */
+  --nk-color-border-brand-green-tertiary: #b7fdbb; /** Soft green frame - on tinted cards and surfaces. → Green/300 */
+  --nk-color-border-brand-orange-primary: #925c0e; /** Readable orange border - meets 3:1 on light surfaces. → Orange/700 · ≈ Orange Dark */
+  --nk-color-border-brand-orange-secondary: #ffa000; /** Decorative orange border (= main /500), exempt from 3:1 - pair with a fill/tint. → Orange/500 · Main */
+  --nk-color-border-brand-orange-tertiary: #fdcd9b; /** Soft orange frame - on tinted cards and surfaces. → Orange/300 · ≈ Orange Mid */
+  --nk-color-border-brand-blue-primary: #023392; /** Readable blue border - meets 3:1 on light surfaces. → Blue/700 */
+  --nk-color-border-brand-blue-secondary: #0a58ea; /** Decorative blue border (= main /500), exempt from 3:1 - pair with a fill/tint. → Blue/500 · Main (gen true-blue) */
+  --nk-color-border-brand-blue-tertiary: #82adfb; /** Soft blue frame - on tinted cards and surfaces. → Blue/300 */
+  --nk-color-border-success-primary: #1c952c; /** Functional success border - keeps 3:1 on light surfaces. → Green/700 · ≈ Snake */
+  --nk-color-border-success-secondary: #79fd7f; /** Decorative success border (main hue) - pair with a fill. → Green/500 · Main */
+  --nk-color-border-success-tertiary: #b7fdbb; /** Soft success frame on its Light tint. → Green/300 */
+  --nk-color-border-warning-primary: #c67e18; /** Functional warning border - keeps 3:1 on light surfaces. → Orange/600 */
+  --nk-color-border-warning-secondary: #ffa000; /** Decorative warning border (main hue) - pair with a fill. → Orange/500 · Main */
+  --nk-color-border-warning-tertiary: #fdcd9b; /** Soft warning frame on its Light tint. → Orange/300 · ≈ Orange Mid */
+  --nk-color-border-danger-primary: #d23a3a; /** Functional danger border - keeps 3:1 on light surfaces. → Coral/600 · ≈ Persimmon Dark */
+  --nk-color-border-danger-secondary: #ff5a56; /** Decorative danger border (main hue) - pair with a fill. → Coral/500 · Main */
+  --nk-color-border-danger-tertiary: #fdb2aa; /** Soft danger frame on its Light tint. → Coral/300 · ≈ Persimmon Mid */
+  --nk-color-border-disabled-default: #d7d7d7; /** Border of disabled controls. → Grey/200 · ≈ Mischka */
+  --nk-color-border-info-primary: #0645bd; /** Functional info border - keeps 3:1 on light surfaces. → Blue/600 */
+  --nk-color-border-info-secondary: #0a58ea; /** Decorative info border (main hue) - pair with a fill. → Blue/500 · Main (gen true-blue) */
+  --nk-color-border-info-tertiary: #82adfb; /** Soft info frame on its Light tint. → Blue/300 */
+  --nk-color-border-selected-default: #572bd7; /** Border/indicator of the selected item. → Violet/600 · ≈ Daisy Bush */
+  --nk-color-border-brand-yellow-primary: #908215; /** Readable yellow border - meets 3:1 on light surfaces. → Yellow/700 */
+  --nk-color-border-brand-yellow-secondary: #ffe60a; /** Decorative yellow border (= main /500), exempt from 3:1 - pair with a fill/tint. → Yellow/500 · Main */
+  --nk-color-border-brand-yellow-tertiary: #fff08a; /** Soft yellow frame - on tinted cards and surfaces. → Yellow/300 */
+  --nk-color-border-utilities-swatch: rgba(12, 12, 13, 0.2); /** Hairline for colour swatches/thumbnails so light fills keep an edge. → Black/300 */
+  --nk-color-border-brand-violet-primary: #420eae; /** Readable violet border - meets 3:1 on light surfaces. → Violet/700 · ≈ Daisy Bush */
+  --nk-color-border-brand-violet-secondary: #6d46fc; /** Decorative violet border (= main /500), exempt from 3:1 - pair with a fill/tint. → Violet/500 · Main */
+  --nk-color-border-brand-violet-tertiary: #aaa8fb; /** Soft violet frame - on tinted cards and surfaces. → Violet/300 · ≈ Melrose */
+  --nk-color-data-viz-1: #6d46fc; /** Categorical chart palette: assign by series order (1..8), never by meaning. Statuses cover semantic colour. → Violet/500 · Main */
+  --nk-color-data-viz-2: #79fd7f; /** Categorical chart palette: assign by series order (1..8), never by meaning. Statuses cover semantic colour. → Green/500 · Main */
+  --nk-color-data-viz-3: #ff5a56; /** Categorical chart palette: assign by series order (1..8), never by meaning. Statuses cover semantic colour. → Coral/500 · Main */
+  --nk-color-data-viz-4: #ffa000; /** Categorical chart palette: assign by series order (1..8), never by meaning. Statuses cover semantic colour. → Orange/500 · Main */
+  --nk-color-data-viz-5: #0a58ea; /** Categorical chart palette: assign by series order (1..8), never by meaning. Statuses cover semantic colour. → Blue/500 · Main (gen true-blue) */
+  --nk-color-data-viz-6: #c76ef2; /** Categorical chart palette: assign by series order (1..8), never by meaning. Statuses cover semantic colour. → Magenta/500 · Main */
+  --nk-color-data-viz-7: #ffe60a; /** Categorical chart palette: assign by series order (1..8), never by meaning. Statuses cover semantic colour. → Yellow/500 · Main */
+  --nk-color-data-viz-8: #7f7f7f; /** Categorical chart palette: assign by series order (1..8), never by meaning. Statuses cover semantic colour. → Grey/500 · ≈ Jumbo */
+  --nk-color-social-whatsapp: #25d366; /** WhatsApp vendor brand constant - share buttons. Foreground white per vendor guidelines. External colour: exempt from our ramps and contract. */
+  --nk-color-social-telegram: #229ed9; /** Telegram vendor brand constant (flat mid of official 2AABEE-229ED9 gradient) - share buttons. Foreground white. External: exempt from ramps/contract. */
+  --nk-color-social-facebook: #1877f2; /** Facebook vendor brand constant - share/login buttons. Foreground white per vendor guidelines. External: exempt from ramps/contract. */
+  --nk-color-social-vk: #0077ff; /** VK vendor brand constant (2021+ blue) - share/login buttons. Foreground white. External: exempt from ramps/contract. */
+  --nk-color-social-messenger: #0084ff; /** Facebook Messenger vendor brand constant - share buttons. Foreground white per vendor guidelines. External: exempt from ramps/contract. */
+  --nk-color-social-x: #000000; /** X (formerly Twitter) vendor brand constant (2023 rebrand black) - share buttons. Foreground white. External: exempt from ramps/contract. */
+  --nk-color-social-viber: #7360f2; /** Viber vendor brand constant - share buttons. Foreground white per vendor guidelines. External: exempt from ramps/contract. */
+  --nk-color-social-line: #06c755; /** LINE vendor brand constant (2020+ green) - share buttons. Foreground white per vendor guidelines. External: exempt from ramps/contract. */
+  --nk-color-social-kakaotalk: #fee500; /** KakaoTalk vendor brand constant (Kakao yellow) - share buttons. Foreground near-black #3C1E1E per vendor guidelines (NOT white). External: exempt from ramps/contract. */
+  --nk-color-alpha-white-100: rgba(255, 255, 255, 0.05); /** White at 5% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/100 */
+  --nk-color-alpha-white-200: rgba(255, 255, 255, 0.1); /** White at 10% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/200 */
+  --nk-color-alpha-white-300: rgba(255, 255, 255, 0.2); /** White at 20% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/300 */
+  --nk-color-alpha-white-400: rgba(255, 255, 255, 0.4); /** White at 40% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/400 */
+  --nk-color-alpha-white-500: rgba(255, 255, 255, 0.7); /** White at 70% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/500 */
+  --nk-color-alpha-white-600: rgba(255, 255, 255, 0.8); /** White at 80% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/600 */
+  --nk-color-alpha-white-700: rgba(255, 255, 255, 0.85); /** White at 85% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/700 */
+  --nk-color-alpha-white-800: rgba(255, 255, 255, 0.9); /** White at 90% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/800 */
+  --nk-color-alpha-white-900: rgba(255, 255, 255, 0.95); /** White at 95% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/900 */
+  --nk-color-alpha-white-1000: #ffffff; /** White at 100% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → White/1000 */
+  --nk-color-alpha-black-100: rgba(12, 12, 13, 0.05); /** Black at 5% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/100 */
+  --nk-color-alpha-black-160: rgba(12, 12, 13, 0.08); /** Black at 8% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/160 */
+  --nk-color-alpha-black-200: rgba(12, 12, 13, 0.1); /** Black at 10% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/200 */
+  --nk-color-alpha-black-220: rgba(12, 12, 13, 0.12); /** Black at 12% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/220 */
+  --nk-color-alpha-black-240: rgba(12, 12, 13, 0.14); /** Black at 14% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/240 */
+  --nk-color-alpha-black-260: rgba(12, 12, 13, 0.16); /** Black at 16% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/260 */
+  --nk-color-alpha-black-300: rgba(12, 12, 13, 0.2); /** Black at 20% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/300 */
+  --nk-color-alpha-black-400: rgba(12, 12, 13, 0.4); /** Black at 40% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/400 */
+  --nk-color-alpha-black-500: rgba(12, 12, 13, 0.7); /** Black at 70% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/500 */
+  --nk-color-alpha-black-600: rgba(12, 12, 13, 0.8); /** Black at 80% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/600 */
+  --nk-color-alpha-black-700: rgba(12, 12, 13, 0.85); /** Black at 85% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/700 */
+  --nk-color-alpha-black-800: rgba(12, 12, 13, 0.9); /** Black at 90% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/800 */
+  --nk-color-alpha-black-900: rgba(12, 12, 13, 0.95); /** Black at 95% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/900 */
+  --nk-color-alpha-black-1000: #0c0c0d; /** Black at 100% alpha - transparency utility (scrims, dividers, borders, hovers) over any surface. → Black/1000 */
+  --nk-color-gradient-brand-spark: linear-gradient(135deg, #6d46fc 0%, #c76ef2 100%); /** Hero duotone of the two brand mains - primary banners, big CTAs. White text. */
+  --nk-color-gradient-deep-space: linear-gradient(160deg, #2e1781 0%, #0645bd 100%); /** Dark hero - headers, footers, premium blocks. White text, pairs with Frosted/Inverse. */
+  --nk-color-gradient-sunrise: linear-gradient(120deg, #fc8c84 0%, #ffeb60 100%); /** Warm promo duotone - marketing pops, celebration banners. Dark text (hue/900). */
+  --nk-color-gradient-mango: linear-gradient(135deg, #ffa000 0%, #ffeb60 100%); /** Energetic accent - streaks, rewards, gamification. Dark text. */
+  --nk-color-gradient-lagoon: linear-gradient(135deg, #0a58ea 0%, #9afd9e 100%); /** Fresh duotone - progress and success heroes. White text on the blue end only - prefer large type. */
+  --nk-color-gradient-berry: linear-gradient(135deg, #a14ec7 0%, #ff5a56 100%); /** Saturated duotone - bold editorial blocks. White text. */
+  --nk-color-gradient-aurora: linear-gradient(150deg, #6d46fc 0%, #d78ffb 55%, #fdb2aa 100%); /** Aurora tri-stop with uneven stops (2026 trend) - hero backgrounds; pair with grain/blur overlay. White text near the violet end. */
+  --nk-color-gradient-mint-air: linear-gradient(135deg, #d1fcd6 0%, #bad2fd 100%); /** Ultra-subtle light wash - section backgrounds, cards. Dark text. */
+  --nk-color-gradient-canvas-wash: linear-gradient(180deg, #f7f5ff 0%, #f3f7ff 100%); /** Barely-there page wash (ultra-subtle trend) - page tops, empty states. Dark text. */
+  --nk-color-gradient-night-glow: linear-gradient(145deg, #170751 0%, #7c309d 100%); /** Dark premium glow - pricing, pro features; pair with Backdrop/Glass plates. White text. */
+  --nk-size-space-0: 0px; /** 0 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-100: 4px; /** 4 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-150: 6px; /** 6 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-200: 8px; /** 8 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-300: 12px; /** 12 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-400: 16px; /** 16 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-500: 20px; /** 20 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-600: 24px; /** 24 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-800: 32px; /** 32 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-1000: 40px; /** 40 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-1200: 48px; /** 48 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-1600: 64px; /** 64 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-1800: 72px; /** 72 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-2000: 80px; /** 80 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-2200: 88px; /** 88 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-2400: 96px; /** 96 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-3200: 128px; /** 128 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-4000: 160px; /** 160 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-050: 2px; /** 2 px — Polaris ×25 (name = px × 25) */
+  --nk-size-space-negative-100: -4px; /** -4 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-150: -6px; /** -6 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-200: -8px; /** -8 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-300: -12px; /** -12 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-400: -16px; /** -16 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-500: -20px; /** -20 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-600: -24px; /** -24 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-800: -32px; /** -32 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-1000: -40px; /** -40 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-1200: -48px; /** -48 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-1600: -64px; /** -64 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-1800: -72px; /** -72 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-2000: -80px; /** -80 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-2200: -88px; /** -88 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-2400: -96px; /** -96 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-3200: -128px; /** -128 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-4000: -160px; /** -160 px — negative gap (overlaps/pulls) */
+  --nk-size-space-negative-050: -2px; /** -2 px — negative gap (overlaps/pulls) */
+  --nk-size-radius-0: 0px; /** No rounding — sharp corners (0px). The explicit 'none' radius, mirrors Space/0 · Depth/0. → 0 */
+  --nk-size-radius-100: 4px; /** 4 px */
+  --nk-size-radius-150: 6px; /** Small rounding (6px) — compact buttons, dense controls, small cards. → 6 */
+  --nk-size-radius-200: 8px; /** 8 px */
+  --nk-size-radius-300: 12px; /** 12 px */
+  --nk-size-radius-400: 16px; /** 16 px */
+  --nk-size-radius-500: 20px; /** 20 px */
+  --nk-size-radius-600: 24px; /** 24 px */
+  --nk-size-radius-800: 32px; /** 32 px */
+  --nk-size-radius-900: 40px; /** 40 px */
+  --nk-size-radius-050: 2px; /** Fine rounding (2px) — small chips, tags, inputs, badges, social tiles. → 2 */
+  --nk-size-radius-full: 9999px; /** Fully rounded */
+  --nk-size-stroke-border: 1px; /** Default hairline for inputs, cards, dividers (1px). */
+  --nk-size-icon-small: 24px; /** Icon box 24px - dense UI - list rows, inline chips. */
+  --nk-size-icon-medium: 32px; /** Icon box 32px - the default - buttons, nav, inputs. */
+  --nk-size-icon-large: 40px; /** Icon box 40px - hero spots, feature tiles, empty states. */
+  --nk-size-blur-100: 4px; /** Shadow geometry: blur radius (4px) used by the Drop-Shadow styles. Not a layout value. */
+  --nk-size-blur-200: 8px; /** Shadow geometry: blur radius (8px) used by the Drop-Shadow styles. Not a layout value. */
+  --nk-size-blur-300: 12px; /** Shadow geometry: blur radius (12px) used by the Drop-Shadow styles. Not a layout value. */
+  --nk-size-blur-400: 16px; /** Shadow geometry: blur radius (16px) used by the Drop-Shadow styles. Not a layout value. */
+  --nk-size-blur-500: 24px; /** Shadow geometry: blur radius (24px) used by the Drop-Shadow styles. Not a layout value. */
+  --nk-size-blur-600: 32px; /** Shadow geometry: blur radius (32px) used by the Drop-Shadow styles. Not a layout value. */
+  --nk-size-blur-700: 36px; /** Shadow geometry: blur radius (36px) used by the Drop-Shadow styles. Not a layout value. */
+  --nk-size-depth-0: 0px; /** Shadow geometry: zero offset - ambient layers and spread-only shadows. Not a layout value. */
+  --nk-size-depth-100: 4px; /** Shadow geometry: vertical offset (4px) for the Drop-Shadow styles - deeper = further. Not a layout value. */
+  --nk-size-depth-200: 8px; /** Shadow geometry: vertical offset (8px) for the Drop-Shadow styles - deeper = further. Not a layout value. */
+  --nk-size-depth-300: 12px; /** Shadow geometry: vertical offset (12px) for the Drop-Shadow styles - deeper = further. Not a layout value. */
+  --nk-size-depth-400: 16px; /** Shadow geometry: vertical offset (16px) for the Drop-Shadow styles - deeper = further. Not a layout value. */
+  --nk-size-depth-025: 1px; /** Shadow geometry: vertical offset (1px) for the Drop-Shadow styles - deeper = further. Not a layout value. */
+  --nk-size-focus-ring: 2px; /** Width of the focus ring itself (CSS outline-width). */
+  --nk-size-focus-offset: 2px; /** GAP between element edge and focus ring (CSS outline-offset) — spacing, not a stroke. Not applicable inside Figma. */
+  --nk-typography-family-sans: Mikado;
+  --nk-typography-weight-regular: 400;
+  --nk-typography-weight-bold: 700;
+  --nk-typography-size-10: 10px;
+  --nk-typography-size-12: 12px;
+  --nk-typography-size-14: 14px;
+  --nk-typography-size-16: 16px;
+  --nk-typography-size-18: 18px;
+  --nk-typography-size-20: 20px;
+  --nk-typography-size-24: 24px;
+  --nk-typography-size-28: 28px; /** Subtitle zone — smooths the 24→32 gap. */
+  --nk-typography-size-32: 32px;
+  --nk-typography-size-36: 36px;
+  --nk-typography-size-40: 40px;
+  --nk-typography-size-48: 48px;
+  --nk-typography-size-60: 60px;
+  --nk-typography-size-72: 72px; /** Hero display for landings. */
+  --nk-typography-line-height-100: 1;
+  --nk-typography-line-height-110: 1.1;
+  --nk-typography-line-height-120: 1.2;
+  --nk-typography-line-height-130: 1.3;
+  --nk-typography-line-height-140: 1.4;
+  --nk-typography-line-height-150: 1.5;
+  --nk-typography-letter-spacing-none: 0px;
+  --nk-typography-letter-spacing-wide: 0.5px;
+  --nk-typography-letter-spacing-wider: 1px;
+  --nk-typography-display-lg-font-family: Mikado;
+  --nk-typography-display-lg-font-weight: 700;
+  --nk-typography-display-lg-font-size: 60px;
+  --nk-typography-display-lg-line-height: 100%;
+  --nk-typography-display-lg-letter-spacing: 0px;
+  --nk-typography-display-md-font-family: Mikado;
+  --nk-typography-display-md-font-weight: 700;
+  --nk-typography-display-md-font-size: 48px;
+  --nk-typography-display-md-line-height: 100%;
+  --nk-typography-display-md-letter-spacing: 0px;
+  --nk-typography-display-sm-font-family: Mikado;
+  --nk-typography-display-sm-font-weight: 700;
+  --nk-typography-display-sm-font-size: 40px;
+  --nk-typography-display-sm-line-height: 100%;
+  --nk-typography-display-sm-letter-spacing: 0px;
+  --nk-typography-display-xs-font-family: Mikado;
+  --nk-typography-display-xs-font-weight: 700;
+  --nk-typography-display-xs-font-size: 36px;
+  --nk-typography-display-xs-line-height: 100%;
+  --nk-typography-display-xs-letter-spacing: 0px;
+  --nk-typography-heading-lg-font-family: Mikado;
+  --nk-typography-heading-lg-font-weight: 700;
+  --nk-typography-heading-lg-font-size: 32px;
+  --nk-typography-heading-lg-line-height: 130%;
+  --nk-typography-heading-lg-letter-spacing: 0px;
+  --nk-typography-heading-md-font-family: Mikado;
+  --nk-typography-heading-md-font-weight: 700;
+  --nk-typography-heading-md-font-size: 24px;
+  --nk-typography-heading-md-line-height: 130%;
+  --nk-typography-heading-md-letter-spacing: 0px;
+  --nk-typography-heading-sm-font-family: Mikado;
+  --nk-typography-heading-sm-font-weight: 700;
+  --nk-typography-heading-sm-font-size: 20px;
+  --nk-typography-heading-sm-line-height: 130%;
+  --nk-typography-heading-sm-letter-spacing: 0px;
+  --nk-typography-heading-xs-font-family: Mikado;
+  --nk-typography-heading-xs-font-weight: 700;
+  --nk-typography-heading-xs-font-size: 16px;
+  --nk-typography-heading-xs-line-height: 130%;
+  --nk-typography-heading-xs-letter-spacing: 0px;
+  --nk-typography-heading-lg-regular-font-family: Mikado;
+  --nk-typography-heading-lg-regular-font-weight: 400;
+  --nk-typography-heading-lg-regular-font-size: 32px;
+  --nk-typography-heading-lg-regular-line-height: 130%;
+  --nk-typography-heading-lg-regular-letter-spacing: 0px;
+  --nk-typography-heading-md-regular-font-family: Mikado;
+  --nk-typography-heading-md-regular-font-weight: 400;
+  --nk-typography-heading-md-regular-font-size: 24px;
+  --nk-typography-heading-md-regular-line-height: 130%;
+  --nk-typography-heading-md-regular-letter-spacing: 0px;
+  --nk-typography-heading-sm-regular-font-family: Mikado;
+  --nk-typography-heading-sm-regular-font-weight: 400;
+  --nk-typography-heading-sm-regular-font-size: 20px;
+  --nk-typography-heading-sm-regular-line-height: 130%;
+  --nk-typography-heading-sm-regular-letter-spacing: 0px;
+  --nk-typography-heading-xs-regular-font-family: Mikado;
+  --nk-typography-heading-xs-regular-font-weight: 400;
+  --nk-typography-heading-xs-regular-font-size: 16px;
+  --nk-typography-heading-xs-regular-line-height: 130%;
+  --nk-typography-heading-xs-regular-letter-spacing: 0px;
+  --nk-typography-body-lg-font-family: Mikado;
+  --nk-typography-body-lg-font-weight: 400;
+  --nk-typography-body-lg-font-size: 18px;
+  --nk-typography-body-lg-line-height: 140%;
+  --nk-typography-body-lg-letter-spacing: 0px;
+  --nk-typography-body-md-font-family: Mikado;
+  --nk-typography-body-md-font-weight: 400;
+  --nk-typography-body-md-font-size: 16px;
+  --nk-typography-body-md-line-height: 140%;
+  --nk-typography-body-md-letter-spacing: 0px;
+  --nk-typography-body-sm-font-family: Mikado;
+  --nk-typography-body-sm-font-weight: 400;
+  --nk-typography-body-sm-font-size: 14px;
+  --nk-typography-body-sm-line-height: 140%;
+  --nk-typography-body-sm-letter-spacing: 0px;
+  --nk-typography-body-lg-strong-font-family: Mikado;
+  --nk-typography-body-lg-strong-font-weight: 700;
+  --nk-typography-body-lg-strong-font-size: 18px;
+  --nk-typography-body-lg-strong-line-height: 140%;
+  --nk-typography-body-lg-strong-letter-spacing: 0px;
+  --nk-typography-body-md-strong-font-family: Mikado;
+  --nk-typography-body-md-strong-font-weight: 700;
+  --nk-typography-body-md-strong-font-size: 16px;
+  --nk-typography-body-md-strong-line-height: 140%;
+  --nk-typography-body-md-strong-letter-spacing: 0px;
+  --nk-typography-body-sm-strong-font-family: Mikado;
+  --nk-typography-body-sm-strong-font-weight: 700;
+  --nk-typography-body-sm-strong-font-size: 14px;
+  --nk-typography-body-sm-strong-line-height: 140%;
+  --nk-typography-body-sm-strong-letter-spacing: 0px;
+  --nk-typography-label-lg-font-family: Mikado;
+  --nk-typography-label-lg-font-weight: 700;
+  --nk-typography-label-lg-font-size: 16px;
+  --nk-typography-label-lg-line-height: 100%;
+  --nk-typography-label-lg-letter-spacing: 0.5px;
+  --nk-typography-label-sm-font-family: Mikado;
+  --nk-typography-label-sm-font-weight: 700;
+  --nk-typography-label-sm-font-size: 14px;
+  --nk-typography-label-sm-line-height: 100%;
+  --nk-typography-label-sm-letter-spacing: 0.5px;
+  --nk-typography-caption-default-font-family: Mikado;
+  --nk-typography-caption-default-font-weight: 400;
+  --nk-typography-caption-default-font-size: 12px;
+  --nk-typography-caption-default-line-height: 140%;
+  --nk-typography-caption-default-letter-spacing: 0px;
+  --nk-typography-caption-strong-font-family: Mikado;
+  --nk-typography-caption-strong-font-weight: 700;
+  --nk-typography-caption-strong-font-size: 12px;
+  --nk-typography-caption-strong-line-height: 140%;
+  --nk-typography-caption-strong-letter-spacing: 0px;
+  --nk-typography-overline-default-font-family: Mikado;
+  --nk-typography-overline-default-font-weight: 700;
+  --nk-typography-overline-default-font-size: 10px;
+  --nk-typography-overline-default-line-height: 150%;
+  --nk-typography-overline-default-letter-spacing: 1px;
+  --nk-effect-drop-shadow-100: 0px 1px 4px 0px #0C0C0D14;
+  --nk-effect-drop-shadow-200: 0px 1px 4px 0px #0C0C0D0D, 0px 4px 8px 0px #0C0C0D1F;
+  --nk-effect-drop-shadow-300: 0px 1px 4px 0px #0C0C0D0D, 0px 4px 16px 0px #0C0C0D24;
+  --nk-effect-drop-shadow-400: 0px 1px 4px 0px #0C0C0D0D, 0px 8px 24px 0px #0C0C0D29;
+  --nk-effect-drop-shadow-500: 0px 1px 4px 0px #0C0C0D0D, 0px 12px 32px 0px #0C0C0D29;
+  --nk-effect-drop-shadow-600: 0px 16px 36px 0px #0C0C0D33;
+  --nk-effect-inner-shadow-100: inset 0px 1px 4px 0px #0C0C0D14;
+  --nk-effect-inner-shadow-200: inset 0px 4px 8px 0px #0C0C0D29;
+  --nk-effect-backdrop-overlay: 8px; /** Backdrop blur for overlays - pair with Background/Overlay/*. */
+  --nk-effect-backdrop-scrim: 16px; /** Backdrop blur for scrims behind modals. */
+  --nk-effect-backdrop-glass: 24px; /** Frosted glass - pair with Background/Frosted/Default. */
+  --nk-effect-backdrop-heavy: 40px; /** Heaviest backdrop blur - hero media, Background/Frosted/Inverse. */
+  --nk-effect-opacity-0: 0; /** Opacity scale step (0%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-10: 0.1; /** Opacity scale step (10%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-20: 0.2; /** Opacity scale step (20%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-30: 0.3; /** Opacity scale step (30%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-40: 0.4; /** Opacity scale step (40%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-50: 0.5; /** Opacity scale step (50%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-60: 0.6; /** Opacity scale step (60%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-70: 0.7; /** Opacity scale step (70%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-80: 0.8; /** Opacity scale step (80%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-90: 0.9; /** Opacity scale step (90%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-100: 1; /** Opacity scale step (100%). Prefer the roles (Disabled 40 / Muted 60); if you bind one scale value repeatedly - promote it to a named role. */
+  --nk-effect-opacity-disabled: 0.4; /** Layer opacity for disabled elements - percent (Figma binds it as 40%); code gets 0.4. */
+  --nk-effect-opacity-muted: 0.6; /** Layer opacity for de-emphasised elements - percent (60%); code gets 0.6. */
+  --nk-motion-duration-fast: 100ms;
+  --nk-motion-duration-base: 200ms;
+  --nk-motion-duration-slow: 300ms;
+  --nk-motion-duration-slower: 500ms;
+  --nk-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --nk-motion-easing-decelerate: cubic-bezier(0, 0, 0, 1);
+  --nk-motion-easing-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --nk-z-index-base: 0;
+  --nk-z-index-dropdown: 1000;
+  --nk-z-index-sticky: 1100;
+  --nk-z-index-overlay: 1200;
+  --nk-z-index-modal: 1300;
+  --nk-z-index-toast: 1400;
+  --nk-responsive-mobile-device: mobile; /** Breakpoint id. Media-query tier; also the Figma grid style Grid/Mobile. */
+  --nk-responsive-mobile-breakpoint-min: 0px; /** min-width where the mobile tier activates (0px). Use for CSS media queries / container queries. */
+  --nk-responsive-mobile-device-width: 375px; /** Canonical mobile design width (375px). From Brand-book Grid S. In Figma bind a template frame width; apply grid style Grid/Mobile. */
+  --nk-responsive-mobile-columns: 2; /** Grid columns (2). Embodied by Figma grid style Grid/Mobile (Brand-book Grid S). */
+  --nk-responsive-mobile-gutter: 16px; /** Gutter between columns (16px). Column item-spacing. */
+  --nk-responsive-mobile-margin: 16px; /** Outer page margin (16px). Template side padding. */
+  --nk-responsive-mobile-root-font-size: 16px; /** Root rem base (16px) = Typography Primitives Size/16. Constant across breakpoints. */
+  --nk-responsive-tablet-device: tablet; /** Breakpoint id. Media-query tier; also the Figma grid style Grid/Tablet. */
+  --nk-responsive-tablet-breakpoint-min: 768px; /** min-width where the tablet tier activates (768px). Use for CSS media queries / container queries. */
+  --nk-responsive-tablet-device-width: 768px; /** Canonical tablet design width (768px). From Brand-book Grid M. In Figma bind a template frame width; apply grid style Grid/Tablet. */
+  --nk-responsive-tablet-columns: 8; /** Grid columns (8). Embodied by Figma grid style Grid/Tablet (Brand-book Grid M). */
+  --nk-responsive-tablet-gutter: 16px; /** Gutter between columns (16px). Column item-spacing. */
+  --nk-responsive-tablet-margin: 24px; /** Outer page margin (24px). Template side padding. */
+  --nk-responsive-tablet-root-font-size: 16px; /** Root rem base (16px) = Typography Primitives Size/16. Constant across breakpoints. */
+  --nk-responsive-desktop-device: desktop; /** Breakpoint id. Media-query tier; also the Figma grid style Grid/Desktop. */
+  --nk-responsive-desktop-breakpoint-min: 1280px; /** min-width where the desktop tier activates (1280px). Use for CSS media queries / container queries. */
+  --nk-responsive-desktop-device-width: 1440px; /** Canonical desktop design width (1440px). From Brand-book 12-columns L (1280) / XL (1440), 80px columns centered. In Figma bind a template frame width; apply grid style Grid/Desktop. */
+  --nk-responsive-desktop-columns: 12; /** Grid columns (12). Embodied by Figma grid style Grid/Desktop (Brand-book 12-columns L (1280) / XL (1440), 80px columns centered). */
+  --nk-responsive-desktop-gutter: 16px; /** Gutter between columns (16px). Column item-spacing. */
+  --nk-responsive-desktop-margin: 152px; /** Outer page margin (152px - centers the 12x80 grid at 1440). Template side padding. */
+  --nk-responsive-desktop-root-font-size: 16px; /** Root rem base (16px) = Typography Primitives Size/16. Constant across breakpoints. */
+  --nk-responsive-wide-device: wide; /** Breakpoint id. Marketing / XXL tier; also the Figma grid style Grid/Wide. */
+  --nk-responsive-wide-breakpoint-min: 1920px; /** min-width where the wide (XXL) tier activates (1920px). Use for CSS media queries / container queries. */
+  --nk-responsive-wide-device-width: 1920px; /** Canonical wide design width (1920px). From Brand-book 12-columns XXL, 104px columns centered. In Figma bind a template frame width; apply grid style Grid/Wide. */
+  --nk-responsive-wide-columns: 12; /** Grid columns (12). Embodied by Figma grid style Grid/Wide (Brand-book 12-columns XXL, 104px columns centered). */
+  --nk-responsive-wide-gutter: 32px; /** Gutter between columns (32px on the XXL / wide tier). Column item-spacing. */
+  --nk-responsive-wide-margin: 160px; /** Outer page margin (160px - centers the 12x104 grid at 1920). Template side padding. */
+  --nk-responsive-wide-root-font-size: 16px; /** Root rem base (16px) = Typography Primitives Size/16. Constant across breakpoints. */
+}
