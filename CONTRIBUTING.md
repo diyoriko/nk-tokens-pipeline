@@ -2,7 +2,7 @@
 
 `tokens/tokens.json` is the source of truth. Style Dictionary generates the
 CSS / Dart / TS outputs, grid, and assets; everything ships as
-`@diyoriko/nk-tokens` on GitHub Packages (a move to `@novakid` on the Novakid
+`@novakid/design-system` on the Novakid Nexus registry (moved from the personal
 Nexus registry is planned but not started). This doc is the distilled
 process — [`CLAUDE.md`](CLAUDE.md) holds the full working rules, and
 [`docs/USAGE.md`](docs/USAGE.md) covers consuming the outputs.
@@ -74,7 +74,7 @@ checklist in [`foundations/CAPSULES.md`](foundations/CAPSULES.md).
 3. Tag `v*` on the merge commit — tags are **admin-only**
    (`protect-release-tags` ruleset). `publish-tokens.yml` refuses tags whose
    commit is not on `main` and tags that don't match `package.json` version.
-4. The workflow publishes to GitHub Packages and creates the GitHub Release.
+4. Jenkins publishes to Nexus on the push to `master`. There is no tag step and no Release.
    The Storybook Pages redeploys from every `develop` push (not `main`), so a
    release tag doesn't need to touch it.
 

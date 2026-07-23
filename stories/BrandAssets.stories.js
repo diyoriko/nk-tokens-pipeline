@@ -31,7 +31,7 @@ export const Logo = () => {
     const svg = fit(logoRaw[`../build/logo/${file}`] ?? '');
     return `<div style="border:1px solid ${BORDER};border-radius:12px;overflow:hidden">
         <div style="height:110px;display:flex;align-items:center;justify-content:center;padding:18px;background:#fff">${svg}</div>
-        <code style="display:block;padding:8px 12px;border-top:1px solid ${BORDER};font-size:10.5px;color:${MUTED}">@diyoriko/nk-tokens/logo/${file}</code>
+        <code style="display:block;padding:8px 12px;border-top:1px solid ${BORDER};font-size:10.5px;color:${MUTED}">@novakid/design-system/logo/${file}</code>
       </div>`;
   };
   // mono tinted in the 6 Figma brand colours (white shown on a dark surface).
@@ -51,7 +51,7 @@ export const Logo = () => {
   };
   return shell(
     '<h1 style="font-size:20px;margin:0 0 4px">Logo</h1>' +
-    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:80ch">Two marks — <b>Symbol</b> (rocket) and <b>Wordmark</b> (lockup). Each ships a fixed-violet primary and a <code>-mono</code> variant that paints with <code>currentColor</code>, so it tints to any of the six brand colours via CSS <code>color</code>. Import: <code>@diyoriko/nk-tokens/logo/&lt;file&gt;</code>.</p>` +
+    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:80ch">Two marks — <b>Symbol</b> (rocket) and <b>Wordmark</b> (lockup). Each ships a fixed-violet primary and a <code>-mono</code> variant that paints with <code>currentColor</code>, so it tints to any of the six brand colours via CSS <code>color</code>. Import: <code>@novakid/design-system/logo/&lt;file&gt;</code>.</p>` +
     '<h2 style="font-size:13px;margin:18px 0 8px">Primary (fixed violet)</h2>' +
     `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px">${primary('logo-symbol')}${primary('logo-wordmark')}</div>` +
     '<h2 style="font-size:13px;margin:24px 0 8px">Mono, tinted (<code>logo-symbol-mono</code> · <code>logo-wordmark-mono</code>)</h2>' +
@@ -66,12 +66,12 @@ export const Patterns = () => {
     const svg = (patternRaw[`../build/patterns/${file}`] ?? '').replace('<svg', '<svg style="display:block;width:100%;height:auto"');
     return `<div style="border:1px solid ${BORDER};border-radius:12px;overflow:hidden">
         ${svg}
-        <code style="display:block;padding:8px 12px;border-top:1px solid ${BORDER};font-size:10.5px;color:${MUTED}">@diyoriko/nk-tokens/patterns/${file}</code>
+        <code style="display:block;padding:8px 12px;border-top:1px solid ${BORDER};font-size:10.5px;color:${MUTED}">@novakid/design-system/patterns/${file}</code>
       </div>`;
   }).join('');
   return shell(
     '<h1 style="font-size:20px;margin:0 0 4px">Patterns</h1>' +
-    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:80ch">${patternManifest.length} brand background patterns (1024×613, all vector). Import: <code>@diyoriko/nk-tokens/patterns/&lt;file&gt;</code>.</p>` +
+    `<p style="color:${MUTED};margin:0 0 16px;font-size:12px;max-width:80ch">${patternManifest.length} brand background patterns (1024×613, all vector). Import: <code>@novakid/design-system/patterns/&lt;file&gt;</code>.</p>` +
     `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">${cards}</div>`
   );
 };

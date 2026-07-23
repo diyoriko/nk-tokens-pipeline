@@ -33,7 +33,7 @@ export const TeamCapsules = () => {
   root.style.cssText = `padding:24px 28px;font-family:${FONT}`;
 
   let html = '<h1 style="font-size:20px;margin:0 0 4px">Team capsules</h1>' +
-    `<p style="color:${MUTED};margin:0 0 18px;font-size:12px;max-width:70ch">One shared foundation, one brand slot per team. A capsule is <b>core + Parent Area base + the team overlay</b>; the overlay re-points only the shared brand slot (<code>Brand-Violet/*</code>, <code>Link</code>, <code>Selected</code>). The default package (<code>@diyoriko/nk-tokens</code>) is value-identical to <code>capsules/parent-area</code>. In Figma these are the <b>modes</b> on the Color collection.</p>` +
+    `<p style="color:${MUTED};margin:0 0 18px;font-size:12px;max-width:70ch">One shared foundation, one brand slot per team. A capsule is <b>core + Parent Area base + the team overlay</b>; the overlay re-points only the shared brand slot (<code>Brand-Violet/*</code>, <code>Link</code>, <code>Selected</code>). The default package (<code>@novakid/design-system</code>) is value-identical to <code>capsules/parent-area</code>. In Figma these are the <b>modes</b> on the Color collection.</p>` +
     '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px">';
 
   const entries = Object.entries(capsuleCss).sort(([a], [b]) => a.localeCompare(b));
@@ -55,7 +55,7 @@ export const TeamCapsules = () => {
     }
     html += `<div class="${cls}" style="border:1px solid ${BORDER};border-radius:16px;padding:18px 20px">
       <div style="font-weight:700;font-size:14px;text-transform:capitalize">${slug.replace('-', ' ')}</div>
-      <code style="color:${MUTED};font-size:10.5px;display:block;margin:2px 0 12px">@diyoriko/nk-tokens/capsules/${slug}/css/variables.css</code>
+      <code style="color:${MUTED};font-size:10.5px;display:block;margin:2px 0 12px">@novakid/design-system/capsules/${slug}/css/variables.css</code>
       ${rows}
       <div style="margin-top:12px;display:flex;gap:8px">
         <span style="flex:1;text-align:center;font-size:12px;font-weight:700;padding:9px 0;border-radius:999px;background:var(--nk-color-background-brand-violet-primary);color:var(--nk-color-text-brand-violet-on-primary)">Primary action</span>

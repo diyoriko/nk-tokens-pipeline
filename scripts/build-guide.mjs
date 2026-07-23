@@ -119,8 +119,8 @@ const SECTIONS = [
 // ---------------------------------------------------------------- page
 const html = `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Novakid DS — как всё устроено</title>
-<meta name="description" content="Архитектура дизайн-системы Novakid: слои, где что лежит, как читать имя токена, как собрать свою семантику и как система меняется.">
+<title>Novakid DS — подключить и пользоваться</title>
+<meta name="description" content="Как подключить дизайн-систему Novakid в Figma, где увидеть примитивы и как собрать на них свою семантику. Плюс архитектура: слои, язык токенов и как система меняется.">
 <style>
 :root{--violet:#6d46fc;--ink:#170751;--body:#3b3a52;--dim:#6f6d85;--line:#e6e4f0;
  --bg:#fff;--panel:#faf9ff;--code:#f4f2fd;--tint:#f7f5ff;
@@ -314,8 +314,15 @@ ${SECTIONS.map(([id, t]) => `<li><a href="#${id}">${esc(t)}</a></li>`).join('\n'
   <div class="note">
     <p><b>Третья строка — та, ради которой обычно и спрашивают.</b> Скоупы прячут примитив только
     из выпадашек свойств на канвасе. В редакторе переменных, когда ты выбираешь алиас, библиотека
-    отдаёт всю коллекцию целиком. Это и есть задуманный путь: примитив не красит макет напрямую,
-    но питает твою семантику. Как это собрать — <a href="#own">следующий раздел</a>.</p>
+    отдаёт всю коллекцию целиком — все ${primitives.length} примитивов. Это и есть задуманный путь:
+    примитив не красит макет напрямую, но питает твою семантику.
+    Как это собрать — <a href="#own">следующий раздел</a>.</p>
+  </div>
+  <div class="note warn">
+    <p><b>Если примитивов в алиасах нет — почти всегда не включена библиотека.</b> В файле, где она
+    выключена, доступно ровно ноль коллекций: не «мало токенов», а пусто. Это и выглядит как «мне
+    не дали доступ». Вернись на <a href="#connect">шаг 1</a> и проверь, что
+    <b>Novakid DS Foundations</b> включена именно в этом файле.</p>
   </div>
   <p>Почему так сделано: если красить фреймы прямо в <code>Violet/500</code>, смена бренда
      превращается в ручной обход всех макетов. Семантика — прослойка, которая позволяет поменять
@@ -625,5 +632,5 @@ writeFileSync(resolve(ROOT, 'guide-dist/index.html'), html);
 
 console.log(
   `✓ Designer guide: guide-dist/index.html (${(html.length / 1024).toFixed(0)} kB, ${SECTIONS.length} sections, ` +
-    `${legacy.length} legacy names) — architecture + collaboration; values live in the Storybook.`
+    `${legacy.length} legacy names) — how-to first, then architecture; values live in the Storybook.`
 );

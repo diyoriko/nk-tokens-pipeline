@@ -2,7 +2,7 @@
 
 Novakid design tokens. `tokens/tokens.json` is the source of truth; Style Dictionary
 generates `--nk-*` CSS + a `NkColors` Dart class + a typed TS tree, plus a grid CSS layer
-and an SVG/React asset bundle. Published as **`@diyoriko/nk-tokens`** (GitHub Packages) and
+and an SVG/React asset bundle. Published as **`@novakid/design-system`** (Novakid Nexus) and
 as a token-catalogue **Storybook** on GitHub Pages
 ([diyoriko.github.io/nk-tokens-pipeline](https://diyoriko.github.io/nk-tokens-pipeline/)).
 
@@ -50,7 +50,7 @@ collection — see [`foundations/CAPSULES.md`](./foundations/CAPSULES.md)) — p
 | `Typography` | semantic | role Text Styles — `Display · Heading · Body · Label · Caption · Overline` (composites in source → Figma Text Styles) |
 | `Effect` | — | `drop-shadow` (100–600) · `inner-shadow` (100–200) → Figma Effect Styles; `backdrop` blur radii + `opacity` scale (roles + 0–100) |
 | `Parent Area` | capsule | the **base brand overlay** (violet) — layered into the default build and under every team capsule. In Figma: the default mode of `Color`. |
-| `Demo Team` | capsule | worked-example team overlay (magenta rebrand of the shared brand slot) → `@diyoriko/nk-tokens/capsules/demo-team`. In Figma: the `Demo Team` mode. |
+| `Demo Team` | capsule | worked-example team overlay (magenta rebrand of the shared brand slot) → `@novakid/design-system/capsules/demo-team`. In Figma: the `Demo Team` mode. |
 | `responsive` *(code-only)* | — | breakpoint grid — `Mobile / Tablet / Desktop / Wide` (from the Brand-book Grids). Drives `build/css/grid.css` + the Figma grid styles. |
 | `motion` + `z-index` *(code-only)* | — | duration / easing scales + a stacking scale |
 
@@ -161,24 +161,26 @@ Add or change a token in **`tokens/tokens.json`** (the only source of truth), th
 
 ## Consuming the outputs (devs)
 
-Published as **`@diyoriko/nk-tokens`** to **GitHub Packages** on every `v*` tag.
+Published as **`@novakid/design-system`** to the **Novakid Nexus** registry by the corporate
+Jenkins job, on every push to `master`.
 
 ```ini
 # .npmrc in the consumer
-@diyoriko:registry=https://npm.pkg.github.com
-# GitHub Packages requires auth even for reads:
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+@novakid:registry=https://nexus.novakidschool.com/repository/npm-hosted/
+# Nexus requires auth even for reads. The credential is injected from the environment;
+# never commit it (see npmrc.example, which is the pattern every @novakid repo uses):
+//nexus.novakidschool.com/repository/npm-hosted/:_auth=${NPM_TOKEN}
 ```
 
-> **Migration planned:** the package will move to the `@novakid` scope on the
-> Novakid Nexus registry (`nexus.novakidschool.com`) once devops provisions the
-> credentials — see [`CLAUDE.md`](./CLAUDE.md) § Release. Until then it stays
-> `@diyoriko` on GitHub Packages (zero production consumers today).
+> **Renamed 2026-07-23.** Previously `@diyoriko/nk-tokens` on GitHub Packages, published
+> from a personal repository. The rename was free because the package had zero production
+> consumers; version numbering restarts at `1.0.0` under the new identity. See
+> [`CHANGELOG.md`](./CHANGELOG.md).
 ```ts
-import '@diyoriko/nk-tokens/css/variables.css';      // injects :root { --nk-* }
-import '@diyoriko/nk-tokens/css/grid.css';           // .nk-container / .nk-grid / .nk-col-*
-import { tokens } from '@diyoriko/nk-tokens';         // typed token tree
-import { Home, HeartFill } from '@diyoriko/nk-tokens/icons/react';
+import '@novakid/design-system/css/variables.css';      // injects :root { --nk-* }
+import '@novakid/design-system/css/grid.css';           // .nk-container / .nk-grid / .nk-col-*
+import { tokens } from '@novakid/design-system';         // typed token tree
+import { Home, HeartFill } from '@novakid/design-system/icons/react';
 ```
 ```tsx
 <Button sx={{ bgcolor: 'var(--nk-color-background-brand-violet-primary)' }} />
@@ -188,8 +190,8 @@ import { Home, HeartFill } from '@diyoriko/nk-tokens/icons/react';
 ([`foundations/CAPSULES.md`](./foundations/CAPSULES.md)):
 
 ```ts
-import '@diyoriko/nk-tokens/capsules/demo-team/css/variables.css'; // magenta rebrand of the brand slot
-import demoTokens from '@diyoriko/nk-tokens/capsules/demo-team';    // typed tree, same shape
+import '@novakid/design-system/capsules/demo-team/css/variables.css'; // magenta rebrand of the brand slot
+import demoTokens from '@novakid/design-system/capsules/demo-team';    // typed tree, same shape
 ```
 
 ---

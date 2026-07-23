@@ -26,7 +26,7 @@ it. **If the push added or renamed variables**, refresh the scopes snapshot (§3
 setting scopes on the new variables (§4).
 
 TS sync config (verified in file plugin data): provider `github`,
-repo `diyoriko/nk-tokens-pipeline`, branch `develop`, path `tokens/tokens.json`,
+repo `novakidschool/novakid-design-system`, branch `develop`, path `tokens/tokens.json`,
 format `dtcg`.
 
 ## 2. Code changed tokens — designer updates Figma (code → Figma)
