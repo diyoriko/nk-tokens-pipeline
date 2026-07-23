@@ -1,6 +1,6 @@
 # Security policy
 
-This repo publishes the `@diyoriko/nk-tokens` design-token package (CSS / Dart / TS
+This repo publishes the `@novakid/design-system` design-token package (CSS / Dart / TS
 outputs + SVG assets).
 
 **It does ship runtime code.** `build/icons/react.js` is a React component module that

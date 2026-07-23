@@ -1,14 +1,17 @@
-# nk-tokens-pipeline — working rules
+# novakid-design-system — working rules
 
 Novakid design tokens. `tokens/tokens.json` is the source of truth; Style Dictionary
-generates CSS / Dart / TS + grid + assets; published as `@diyoriko/nk-tokens` to
-GitHub Packages (auth via the built-in `GITHUB_TOKEN`) and as a Storybook on GitHub
-Pages (from `develop`).
+generates CSS / Dart / TS + grid + assets; published as **`@novakid/design-system`**
+to the Novakid Nexus registry.
 
-> **Migration deferred:** a move to the `@novakid` scope on the Novakid Nexus
-> registry is pre-wired but NOT started (needs a `NEXUS_NPM_TOKEN` from devops + a
-> repo-governance call — the repo is a personal public repo). Until then everything
-> stays on personal infra: `@diyoriko` on GitHub Packages, Storybook on GitHub Pages.
+> **Publishing is not ours.** The Jenkins job in `novakid-devops`
+> (`devops/jenkins/pipelines/frontend/Jenkinsfile_FrontendNPMLibPublish`, registered in
+> `devops/jenkins/dsl/MultiBranchDSL` with `gitBranches: 'master'`) runs
+> `cp npmrc.example .npmrc && npm i && npm run build && npm publish` on **every push to
+> `master`**. Hence two hard requirements on this repo: `npmrc.example` must exist at the
+> root, and `com_novakid_nodejs_build_version` must pin Node 22 — without it the job
+> falls back to 20.15.1 and Style Dictionary 5 will not run. Our half is
+> `bitbucket-pipelines.yml`: it gates pull requests and never publishes.
 
 ## Branch flow (do not bypass)
 
@@ -72,8 +75,9 @@ enforced by `scripts/check-scopes.mjs`:
 
 ## Release
 
-- Tag `v*` on `main` → `publish-tokens.yml` publishes to **GitHub Packages** (auth via
-  `GITHUB_TOKEN`) **and creates the GitHub Release** (generated notes). The Storybook is
+- **A merge into `master` is a release.** Jenkins publishes on the push, with no version
+  check of its own, so the PR gate (`scripts/check-version-bump.mjs`) requires the bump in
+  the pull request. Bump with `npm version patch|minor|major --no-commit-hooks`. The Storybook is
   redeployed by `deploy-storybook.yml` on every **`develop`** push (not `main`), so a
   release tag no longer needs to touch Pages. Respect ≤3 releases/week.
 - Guards (rulesets + workflow): `v*` tags are admin-only (`protect-release-tags`); publish

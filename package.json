@@ -1,6 +1,6 @@
 {
-  "name": "@diyoriko/nk-tokens",
-  "version": "4.0.0",
+  "name": "@novakid/design-system",
+  "version": "1.0.0",
   "type": "module",
   "description": "Novakid design tokens \u2014 generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "license": "UNLICENSED",
@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/diyoriko/nk-tokens-pipeline.git"
+    "url": "git+ssh://git@bitbucket.org/novakidschool/novakid-design-system.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://nexus.novakidschool.com/repository/npm-hosted/"
   },
   "files": [
     "build"
@@ -62,7 +62,7 @@
   },
   "scripts": {
     "build": "npm run build:tokens && npm run build:assets && npm run build:guide && node scripts/check-exports.mjs",
-    "build:tokens": "node scripts/lint-tokens.mjs && node scripts/check-capsule-consistency.mjs && node build-tokens.mjs && node scripts/build-grid-css.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-styles.mjs && node scripts/check-outputs.mjs && node scripts/check-capsule-gates.mjs",
+    "build:tokens": "node scripts/check-no-legacy-refs.mjs && node scripts/lint-tokens.mjs && node scripts/check-capsule-consistency.mjs && node build-tokens.mjs && node scripts/build-grid-css.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-styles.mjs && node scripts/check-outputs.mjs && node scripts/check-capsule-gates.mjs",
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs",
     "build:guide": "node scripts/build-guide.mjs",
@@ -79,7 +79,8 @@
     "test": "node --test tests/gates.test.mjs && node tests/snapshot-outputs.mjs",
     "test:pack": "node tests/pack-smoke.mjs",
     "test:snapshot": "node tests/snapshot-outputs.mjs",
-    "snapshot:update": "node tests/snapshot-outputs.mjs --update"
+    "snapshot:update": "node tests/snapshot-outputs.mjs --update",
+    "check:legacy": "node scripts/check-no-legacy-refs.mjs"
   },
   "engines": {
     "node": ">=22"

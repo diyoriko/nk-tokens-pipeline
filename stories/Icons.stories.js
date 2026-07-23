@@ -23,8 +23,8 @@ export default { title: 'Assets/Icons' };
 // Render sizes only — the source grid is always 24 (viewBox '0 0 24 24').
 const SIZES = [16, 20, 24, 32, 40, 48];
 
-const USAGE = `<code style="color:${MUTED};font-size:10.5px">import { icons } from '@diyoriko/nk-tokens/icons'</code> · ` +
-  `<code style="color:${MUTED};font-size:10.5px">@diyoriko/nk-tokens/icons/react</code> · ` +
+const USAGE = `<code style="color:${MUTED};font-size:10.5px">import { icons } from '@novakid/design-system/icons'</code> · ` +
+  `<code style="color:${MUTED};font-size:10.5px">@novakid/design-system/icons/react</code> · ` +
   `sprite: <code style="color:${MUTED};font-size:10.5px">&lt;use href="#nk-&lt;name&gt;"/&gt;</code>`;
 
 export const Library = () => {

@@ -1,9 +1,40 @@
 # Changelog
 
-All notable changes to the published package (`@diyoriko/nk-tokens`) are
+All notable changes to the published package (`@novakid/design-system`, previously
+`@diyoriko/nk-tokens`) are
 documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows the
 policy at the bottom of this file.
+
+## 1.0.0 — 2026-07-23
+
+**Renamed, re-registered, and renumbered.** `@diyoriko/nk-tokens` on GitHub Packages
+becomes **`@novakid/design-system`** on the Novakid Nexus registry
+(`nexus.novakidschool.com/repository/npm-hosted/`), published by the corporate Jenkins
+job on every push to `master`.
+
+Version numbering restarts at `1.0.0`. This is a new package identity on a new registry,
+not a continuation: `@novakid/design-system@5.0.0` would send people looking for versions
+1–4 that never existed under that name. Everything up to 4.0.0 below is the history of
+`@diyoriko/nk-tokens` and is kept for the record.
+
+The rename cost nothing because the package had **zero production consumers** — nothing
+in `novakid-parent-mf` or any other repository depended on it. The same change after
+adoption would have been a genuine migration.
+
+### Changed
+- package `name` → `@novakid/design-system`; `publishConfig.registry` → Nexus;
+  `repository.url` → the Bitbucket repository `novakidschool/novakid-design-system`
+- install and authentication instructions everywhere: `@novakid` scope pinned at Nexus,
+  credential injected from the environment via `npmrc.example` — the pattern every other
+  `@novakid` repository already documents
+- release model: a merge into `master` **is** the release. Jenkins publishes on the push
+  and has no version check of its own, so the pull-request gate
+  (`scripts/check-version-bump.mjs`) requires the bump in the PR itself
+
+### Unchanged
+- every token name, value, CSS custom property, TS path, Dart const, icon name and
+  export subpath. Only the package identity moved
 
 ## [4.0.0] — 2026-07-20
 
