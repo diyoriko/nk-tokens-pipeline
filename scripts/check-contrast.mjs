@@ -4,8 +4,8 @@
 import fs from 'node:fs';
 
 // No arg → the canonical build (byte-identical default behaviour). An optional
-// CSS path arg (cwd-relative) lets the per-capsule gate run the same contract
-// against build/capsules/<slug>/css/variables.css.
+// CSS path arg (cwd-relative) lets the same contract be run against any built
+// variables.css — kept for ad-hoc checks now that the per-capsule gate is gone.
 const cssTarget = process.argv[2]
   ? new URL(process.argv[2], `file://${process.cwd()}/`)
   : new URL('../build/css/variables.css', import.meta.url);

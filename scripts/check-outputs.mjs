@@ -8,14 +8,13 @@
 // Run by `npm run build:tokens` after the build; exits 1 on any violation.
 import fs from 'node:fs';
 import path from 'node:path';
-import { CAPSULES } from '../capsules/capsules.config.mjs';
 
 const root = new URL('../build/', import.meta.url).pathname;
 const violations = [];
 
-// Collect the default build + every REGISTERED capsule build. Every file is
+// Collect the default build. Every file is
 // REQUIRED — a platform silently dropped from style-dictionary.config.mjs (or a
-// capsule loop that never ran) must fail here, not ship a package with dangling
+// a build step that never ran) must fail here, not ship a package with dangling
 // exports while all gates stay green. The registry, not readdir, defines the
 // set: a directory that happens to exist proves nothing about what must.
 const targets = { css: [], dart: [], ts: [] };
@@ -32,7 +31,6 @@ const addTree = (base, label) => {
   }
 };
 addTree(root, 'build/');
-for (const cap of CAPSULES) addTree(path.join(root, 'capsules', cap.slug), `build/capsules/${cap.slug}/`);
 // grid.css is REQUIRED too: build:tokens runs build-grid-css.mjs before this
 // gate, so a missing file means the pipeline order broke (a fresh checkout
 // would otherwise publish without the grid ever being validated).
@@ -71,6 +69,18 @@ for (const file of [...targets.css, ...targets.dart, ...targets.ts]) {
   const body = fs.readFileSync(file, 'utf8');
   for (const bad of ['NaN', 'undefined'])
     if (body.includes(bad)) violations.push(`${rel(file)}: contains "${bad}" — an unresolved reference or bad parse leaked into output`);
+}
+
+// ---- no capsule artifacts -------------------------------------------------
+// Capsules were removed 2026-07-23 (see CHANGELOG). The loop that used to sweep
+// build/capsules/ went with them, and `files: ["build"]` ships whatever is on disk —
+// so a stale directory from an older checkout, or a reintroduced capsule build, would
+// silently enlarge the tarball with output nothing declares. This is not hypothetical:
+// 12 stale files survived the removal and were only caught by the output snapshot.
+// Fails closed, like every other gate here.
+if (fs.existsSync(path.join(root, 'capsules'))) {
+  console.error('✗ Output shapes: build/capsules/ exists — capsules were removed; delete it, or restore the registry and its gates deliberately.');
+  process.exit(1);
 }
 
 if (violations.length) {

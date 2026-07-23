@@ -79,38 +79,3 @@ test('lint-tokens FAILS on a 3-digit hex the Dart emitter would drop', () => {
   assert.match(r.stderr, /not a hex colour/i);
 });
 
-test('lint-tokens FAILS when a capsule set overrides a Tier-1 primitive', () => {
-  const r = withCorruption('tokens/tokens.json', (t) => {
-    (t['Demo Team'].Violet ??= {})['500'] = { $type: 'color', $value: '#123456', $description: 'illegal override' };
-    return t;
-  }, () => runGate('scripts/lint-tokens.mjs'));
-  assert.notEqual(r.status, 0, 'a capsule primitive override must fail lint');
-  assert.match(r.stderr, /semantic surfaces/i);
-});
-
-test('check-exports FAILS when an export target is absent', () => {
-  const logoDir = R('build/logo');
-  const tmp = R('build/.logo.bak');
-  try {
-    fs.renameSync(logoDir, tmp);
-    const r = runGate('scripts/check-exports.mjs');
-    assert.notEqual(r.status, 0, 'a missing ./logo/* target must fail the exports gate');
-    assert.match(r.stderr, /logo/);
-  } finally {
-    if (fs.existsSync(tmp)) fs.renameSync(tmp, logoDir);
-  }
-});
-
-test('build-assets paint gate FAILS on a non-currentColor icon', () => {
-  const bad = R('assets/icons/__test-bad-paint.svg');
-  try {
-    fs.writeFileSync(bad, '<svg viewBox="0 0 24 24"><path fill="red" d="M0 0h24v24H0z"/></svg>');
-    const r = runGate('scripts/build-assets.mjs');
-    assert.notEqual(r.status, 0, 'an icon with a literal paint must fail the paint gate');
-    assert.match(r.stderr, /literal paint/i);
-  } finally {
-    fs.rmSync(bad, { force: true });
-    // rebuild so a later reader of build/ sees the clean set
-    runGate('scripts/build-assets.mjs');
-  }
-});

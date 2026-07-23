@@ -57,7 +57,7 @@ for (const sub of Object.keys(pkg.exports)) {
 // JS entrypoints that must load through Node with NO react installed — react is
 // an OPTIONAL peer, so the core token surfaces must never hard-require it.
 // (`/icons/react` legitimately needs react and is tested separately, below.)
-const JS_ENTRYPOINTS = [name, name + '/icons', name + '/capsules/parent-area', name + '/capsules/demo-team'];
+const JS_ENTRYPOINTS = [name, name + '/icons'];
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'nk-pack-smoke-'));
 try {
@@ -86,9 +86,9 @@ try {
   fs.writeFileSync(path.join(proj, 'esm.mjs'), esm);
   console.log(run('node', ['esm.mjs'], proj));
 
-  // CJS: require the dual-published entrypoints (the '.' and capsule subpaths
-  // declare a `require` condition — this is where ERR_REQUIRE_ESM would bite).
-  const cjsTargets = [name, name + '/capsules/parent-area', name + '/capsules/demo-team'];
+  // CJS: require the dual-published entrypoint (the '.' subpath declares a
+  // `require` condition — this is where ERR_REQUIRE_ESM would bite).
+  const cjsTargets = [name];
   const cjs = cjsTargets.map((s, i) => `const c${i} = require('${s}'); if (!c${i}) throw new Error('empty CJS require: ${s}');`).join('\n') +
     `\nconsole.log('cjs ok:', ${cjsTargets.length}, 'entrypoints');`;
   fs.writeFileSync(path.join(proj, 'cjs.cjs'), cjs);
