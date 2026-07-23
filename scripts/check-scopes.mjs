@@ -55,6 +55,67 @@ if (snap['Color']) {
   }
 }
 
+// ---- PARITY vs the token sources ----------------------------------------
+// Without this the gate is self-approving: it only ever reads the snapshot, so renaming a
+// collection makes the semantic laws skip silently, emptying the file reports "0 variables
+// pass", and a NEW token is invisible forever. Each check below has a mutation it catches.
+//
+// The exclusions are real structural facts, not fudge factors:
+//   · Gradient/*    — Figma paint styles, not variables (a variable cannot hold a gradient)
+//   · Drop-Shadow/*, Inner-Shadow/* — Figma effect styles, same reason
+//   · Responsive    — 7 variables carrying per-tier MODES, so responsive.json's 28 leaves
+//                     (7 × Mobile/Tablet/Desktop/Wide) collapse to 7 names
+const srcTokens = JSON.parse(fs.readFileSync(new URL('../tokens/tokens.json', import.meta.url), 'utf8'));
+const srcResponsive = JSON.parse(fs.readFileSync(new URL('../tokens/responsive.json', import.meta.url), 'utf8'));
+
+const leafNames = (node, path = []) => {
+  const out = [];
+  for (const [k, v] of Object.entries(node || {})) {
+    if (!v || typeof v !== 'object') continue;
+    if ('$value' in v) out.push([...path, k].join('/'));
+    else out.push(...leafNames(v, [...path, k]));
+  }
+  return out;
+};
+const isStyleNotVariable = (n) => /^(Gradient|Drop-Shadow|Inner-Shadow)\//.test(n);
+
+const EXPECTED = {
+  'Color Primitives': () => leafNames(srcTokens['Color Primitives']),
+  // Parent Area is the base brand overlay — the same Figma variables in another mode.
+  Color: () => [...new Set([...leafNames(srcTokens.Color), ...leafNames(srcTokens['Parent Area'])])],
+  Size: () => leafNames(srcTokens.Size),
+  'Typography Primitives': () => leafNames(srcTokens['Typography Primitives']),
+  Effect: () => leafNames(srcTokens.Effect),
+  Responsive: () => [
+    ...new Set(leafNames(srcResponsive).map((n) => n.replace(/^responsive\//, '').split('/').slice(1).join('/'))),
+  ],
+};
+
+// 1. the snapshot must describe exactly these collections — a rename would otherwise
+//    make every law above skip while still printing a success line
+const present = collections(snap);
+for (const want of Object.keys(EXPECTED))
+  if (!present.includes(want)) violations.push(`snapshot is missing the "${want}" collection — was it renamed in Figma?`);
+for (const got of present)
+  if (!(got in EXPECTED)) violations.push(`snapshot has an unknown collection "${got}" — add it to EXPECTED or fix the name`);
+
+// 2. names must agree in both directions
+for (const [col, expectedFn] of Object.entries(EXPECTED)) {
+  if (!snap[col]) continue; // already reported above
+  const have = Object.keys(snap[col]);
+  const want = expectedFn().filter((n) => !isStyleNotVariable(n));
+  if (want.length === 0) violations.push(`${col}: derived 0 expected names — the source mapping is broken`);
+  if (have.length === 0) violations.push(`${col}: snapshot section is empty`);
+  const missing = want.filter((n) => !have.includes(n));
+  const extra = have.filter((n) => !want.includes(n));
+  for (const n of missing.slice(0, 20))
+    violations.push(`${col}|${n}: in the tokens but not in the snapshot — refresh it (RUNBOOK §3) so the new variable is scoped`);
+  if (missing.length > 20) violations.push(`${col}: …and ${missing.length - 20} more missing from the snapshot`);
+  for (const n of extra.slice(0, 20))
+    violations.push(`${col}|${n}: in the snapshot but NOT in the tokens — a deleted token, or an orphan variable left in Figma`);
+  if (extra.length > 20) violations.push(`${col}: …and ${extra.length - 20} more absent from the tokens`);
+}
+
 let total = 0;
 for (const col of collections(snap)) total += Object.keys(snap[col]).length;
 
