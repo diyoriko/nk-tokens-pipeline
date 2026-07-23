@@ -21,18 +21,26 @@ plan. Read-only scripts are safe to run anytime; write scripts say what they mut
 
 ## 1. Designer pushed tokens in Tokens Studio (Figma → code) — routine
 
-Nothing to do here: TS opens a PR to `develop` (`tokens/tokens.json`, DTCG), CI gates
-it. **If the push added or renamed variables**, refresh the scopes snapshot (§3) after
-setting scopes on the new variables (§4).
+TS pushes to the **`tokens-studio`** branch on Bitbucket; from there a PR into `master`
+runs the gates. **If the push added or renamed variables**, refresh the scopes snapshot
+(§3) after setting scopes on the new variables (§4).
 
-TS sync config (verified in file plugin data): provider `github`,
-repo `novakidschool/novakid-design-system`, branch `develop`, path `tokens/tokens.json`,
-format `dtcg`.
+TS sync config (Settings → Sync providers → Bitbucket): repo
+`novakidschool/novakid-design-system`, branch **`tokens-studio`**, path
+`tokens/tokens.json`, format **W3C DTCG**. Auth is the Atlassian API token (user email +
+token), NOT committed. The old GitHub provider was removed on the move — do not re-add it.
+
+> **`tokens-studio` is a fixed working branch, never `master`.** A direct push to `master`
+> is a release and is blocked by branch permissions. The flow is: Push from the plugin →
+> `tokens-studio` → open a PR into `master` → the version bump goes in that PR
+> (`scripts/check-version-bump.mjs` requires it, because the Jenkins job publishes on the
+> merge and has no version check of its own). Pull before every Push, or the plugin's
+> local state overwrites what arrived from git.
 
 ## 2. Code changed tokens — designer updates Figma (code → Figma)
 
 1. Merge the PR into `develop` first (gates must pass).
-2. In Tokens Studio: **Pull from GitHub** (develop) → review the diff in TS →
+2. In Tokens Studio: **Pull** (`tokens-studio`) → review the diff in TS →
    **Update variables** (TS keeps variable IDs — bindings survive; renames must be
    done in the TS UI, never in raw git, or Figma gets a new variable + an orphan).
 3. Styles (Text/Effect): TS **Export styles** with the repo's export settings
