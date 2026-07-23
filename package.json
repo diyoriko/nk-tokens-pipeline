@@ -2,7 +2,7 @@
   "name": "@diyoriko/nk-tokens",
   "version": "4.0.0",
   "type": "module",
-  "description": "Novakid design tokens — generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
+  "description": "Novakid design tokens \u2014 generated --nk-* CSS / Dart / TS from the Figma -> Tokens Studio -> Style Dictionary pipeline.",
   "license": "UNLICENSED",
   "sideEffects": [
     "./build/css/variables.css",
@@ -76,8 +76,10 @@
     "check:scopes": "node scripts/check-scopes.mjs",
     "check:styles": "node scripts/check-styles.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs",
-    "test": "node --test tests/gates.test.mjs",
-    "test:pack": "node tests/pack-smoke.mjs"
+    "test": "node --test tests/gates.test.mjs && node tests/snapshot-outputs.mjs",
+    "test:pack": "node tests/pack-smoke.mjs",
+    "test:snapshot": "node tests/snapshot-outputs.mjs",
+    "snapshot:update": "node tests/snapshot-outputs.mjs --update"
   },
   "engines": {
     "node": ">=22"
