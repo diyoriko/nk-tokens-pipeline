@@ -1,6 +1,7 @@
 node_modules/
 build/
 storybook-static/
+guide-dist/
 *.log
 .DS_Store
 foundations/_audit/*.html

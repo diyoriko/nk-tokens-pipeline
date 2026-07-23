@@ -1,46 +1,46 @@
 import { FONT, MUTED, BORDER } from './_helpers.js';
 
-export default { title: 'Tokens/Semantic intents' };
+// The "when to use what" prose that used to live here is now the designer guide
+// (scripts/build-guide.mjs), which generates it from tokens.json instead of restating it
+// by hand — one place to change, and it cannot drift from the tokens. This story is the
+// entry point to the guide from the Storybook sidebar.
+export default { title: 'Tokens/Guide' };
 
-const SECTIONS = [
-  ['Background — what surface / fill to reach for', [
-    ['base', 'Structural surfaces — page canvas + card/panel layers. primary=white, secondary/tertiary=grey layers.'],
-    ['neutral', 'Solid neutral component fill with no brand colour — secondary button, neutral chip, toggle-off.'],
-    ['brand-violet', 'Primary brand fill — primary button, brand emphasis. (the #6D46FC anchor)'],
-    ['brand-yellow', 'Accent fill — highlights, badges, marketing pops. Foreground is always dark.'],
-    ['brand-magenta / blue / green / orange / coral', 'Decorative brand accents — illustrative surfaces, category colours.'],
-    ['success', 'Positive status surface — confirmation banners, success states.'],
-    ['warning', 'Caution status surface — warnings, attention-needed.'],
-    ['danger', 'Error / destructive surface — errors, delete confirmations.'],
-    ['disabled', 'Inert / unavailable surface.'],
-  ]],
-  ['Text / Icon — foreground', [
-    ['default', 'Body text & icons on light surfaces. primary (main), secondary (muted), tertiary (faint).'],
-    ['brand-* / success / warning / danger', 'Coloured text/icon — links, status labels, emphasised numerals.'],
-    ['on-*', 'Foreground that sits ON a coloured fill — e.g. on-brand-violet = white text on the violet button.'],
-    ['disabled', 'Inert text / icon.'],
-  ]],
-  ['Border', [
-    ['default', 'Neutral borders — inputs, dividers, cards. hover for interactive.'],
-    ['brand-* / success / warning / danger', 'Coloured borders — active / status states.'],
-    ['focus', 'Focus ring (keyboard / a11y).'],
-    ['disabled', 'Inert border.'],
-  ]],
+const LINKS = [
+  ['С чего начать', 'start', 'Четыре правила первого дня.'],
+  ['Как читать имя токена', 'naming', 'Поверхность / назначение / вариант.'],
+  ['Правило пары', 'pairs', 'Каждому фону — свой On-* для текста и иконки.'],
+  ['Свои токены для поверхности', 'own', 'Своя коллекция или капсула — дерево решений.'],
+  ['Старые имена', 'legacy', 'Во что превратился цвет из лендинговой системы.'],
+  ['Поиск по всем токенам', 'browser', 'Имя, CSS-переменная, значение, описание.'],
 ];
 
-export const Intents = () => {
+export const ForDesigners = () => {
   const el = document.createElement('div');
-  el.style.cssText = `padding:32px;font-family:${FONT};max-width:920px;line-height:1.5`;
+  el.style.cssText = `padding:32px;font-family:${FONT};max-width:820px;line-height:1.55`;
   el.innerHTML = `
-    <h2 style="margin:0 0 6px">Semantic intents — when to use what</h2>
-    <p style="color:${MUTED};margin:0 0 8px;font-size:14px">Variants per intent: <b>primary</b> (strong) → <b>secondary</b> (light tint) → <b>tertiary</b> (lightest); <code>-hover</code> = the interactive hover of each. Detailed per-component usage is documented with each component, not here.</p>
-    ${SECTIONS.map(([title, rows]) => `
-      <h3 style="font:800 12px/1 ${FONT};text-transform:uppercase;letter-spacing:.08em;color:${MUTED};margin:28px 0 10px;padding-bottom:8px;border-bottom:1px solid ${BORDER}">${title}</h3>
-      ${rows.map(([name, desc]) => `
-        <div style="display:flex;gap:18px;padding:7px 0">
-          <code style="flex:0 0 230px;font-weight:700;font-size:13px">${name}</code>
+    <h2 style="margin:0 0 8px">Гайд для дизайнеров</h2>
+    <p style="color:${MUTED};margin:0 0 22px;font-size:14px">
+      Как пользоваться токенами в Figma: что где лежит, как выбрать токен, чего делать нельзя
+      и что делать, если нужного токена нет. Собирается из тех же токенов, что и этот Storybook,
+      поэтому не расходится с системой.
+    </p>
+    <a href="./guide/" target="_blank" rel="noopener"
+       style="display:inline-block;background:#6d46fc;color:#fff;text-decoration:none;
+              padding:11px 20px;border-radius:9px;font-weight:600;font-size:15px">Открыть гайд →</a>
+    <p style="color:${MUTED};margin:14px 0 26px;font-size:13px">
+      Ссылка ведёт на опубликованный гайд рядом со Storybook. Локально (<code>npm run storybook</code>)
+      он не собран — запусти <code>npm run build:guide</code> и открой <code>guide-dist/index.html</code>.
+    </p>
+    <div style="border-top:1px solid ${BORDER};padding-top:18px">
+      ${LINKS.map(
+        ([title, hash, desc]) => `
+        <div style="display:flex;gap:18px;padding:8px 0;align-items:baseline">
+          <a href="./guide/#${hash}" target="_blank" rel="noopener"
+             style="flex:0 0 250px;color:#6d46fc;text-decoration:none;font-weight:700;font-size:13px">${title}</a>
           <div style="font-size:14px">${desc}</div>
-        </div>`).join('')}
-    `).join('')}`;
+        </div>`
+      ).join('')}
+    </div>`;
   return el;
 };
