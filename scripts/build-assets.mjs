@@ -112,6 +112,15 @@ fs.writeFileSync(B('icons/index.d.ts'),
 // a11y — aria-hidden + focusable=false unless an aria-label / title is passed,
 // then role="img" + an in-SVG <title>; (3) no children/dangerouslySetInnerHTML
 // collision — children are stripped before the spread.
+//
+// `title` is rendered as a real React child, NOT concatenated into the innerHTML
+// payload. That is a security boundary, not a style choice: SVG <title> is an HTML
+// integration point in the fragment-parsing algorithm, so anything interpolated into
+// it is parsed as HTML — `<image src=x onerror=…>` becomes a live `<img onerror>`.
+// The prop is documented as an "Accessible name", i.e. exactly the place a consumer
+// passes a teacher's or a child's name straight from the API. React escapes children,
+// so there is nothing left to escape by hand. The generated (trusted) icon body keeps
+// its innerHTML path, moved into a nested <g> — a transparent group, visually inert.
 const REACT_FACTORY = `import React from 'react';
 import { icons } from './index.js';
 
@@ -120,12 +129,16 @@ const make = (name) => {
     const { title, children, ...rest } = props || {};
     const labelled = title != null || rest['aria-label'] != null || rest['aria-labelledby'] != null;
     const a11y = labelled ? { role: 'img' } : { 'aria-hidden': true, focusable: false };
-    return /*#__PURE__*/React.createElement('svg', {
-      xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24',
-      width: '1em', height: '1em', fill: 'none',
-      ...a11y, ...rest, ref,
-      dangerouslySetInnerHTML: { __html: (title != null ? '<title>' + title + '</title>' : '') + icons[name] },
-    });
+    return /*#__PURE__*/React.createElement(
+      'svg',
+      {
+        xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 24 24',
+        width: '1em', height: '1em', fill: 'none',
+        ...a11y, ...rest, ref,
+      },
+      title != null ? /*#__PURE__*/React.createElement('title', null, title) : null,
+      /*#__PURE__*/React.createElement('g', { dangerouslySetInnerHTML: { __html: icons[name] } })
+    );
   });
   Icon.displayName = name;
   return Icon;

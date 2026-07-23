@@ -1,7 +1,19 @@
 # Security policy
 
 This repo publishes the `@diyoriko/nk-tokens` design-token package (CSS / Dart / TS
-outputs + SVG assets). It ships no runtime server code and handles no user data.
+outputs + SVG assets).
+
+**It does ship runtime code.** `build/icons/react.js` is a React component module that
+accepts consumer-supplied props, and a consuming app will pass user-derived strings into
+them — a teacher's name, a child's name — through the documented `title` ("Accessible
+name") prop. Treat it as an attack surface when reviewing changes to
+`scripts/build-assets.mjs`, which generates it. In particular: **never interpolate a prop
+into the `dangerouslySetInnerHTML` payload.** SVG `<title>` is an HTML integration point in
+the fragment-parsing algorithm, so a string placed there is parsed as HTML; the `title`
+prop is therefore rendered as a React child, and only the generated icon body — trusted,
+produced by our own build — uses the innerHTML path.
+
+The package handles no user data of its own and contains no server code.
 
 ## Reporting a vulnerability
 
