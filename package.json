@@ -62,7 +62,7 @@
   },
   "scripts": {
     "build": "npm run build:tokens && npm run build:assets && npm run build:guide && node scripts/check-exports.mjs",
-    "build:tokens": "node scripts/check-no-legacy-refs.mjs && node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/build-grid-css.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-styles.mjs && node scripts/check-outputs.mjs",
+    "build:tokens": "node scripts/run-gates.mjs",
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs && node scripts/check-icon-shakeability.mjs",
     "build:guide": "node scripts/build-guide.mjs",
