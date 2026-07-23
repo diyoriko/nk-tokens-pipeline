@@ -568,12 +568,39 @@ ${SECTIONS.map(([id, t]) => `<li><a href="#${id}">${esc(t)}</a></li>`).join('\n'
       <li>Итог: контраст никем не проверен и сломается при смене бренда</li>
     </ul></div>
   </div>
-  <p>Контраст всех таких пар проверяется автоматически при каждом изменении токенов. Если пара
-     перестаёт проходить по контрасту, сборка падает и изменение не доезжает до продукта.
-     Но защита работает <b>только для пар</b> — собрал вручную «фон отсюда, текст оттуда»,
-     и защиты нет.</p>
   <h3>Пары для основного бренда</h3>
   ${pairTable('Violet')}
+
+  <h3>Насколько этому можно доверять</h3>
+  <p>Честно, без приукрашивания — по итогам аудита пайплайна от 2026-07-23.</p>
+  <p>Автоматическая проверка контраста существует и падает на регрессии, но она покрывает
+     <b>список из 100 пар</b>, а не все сочетания. Из ${semantics.filter((s) => s.c && s.c.startsWith('--nk-color')).length}
+     цветовых переменных в проверке участвует меньше половины. Каждый передний план сверяется
+     только с белым и с той единственной поверхностью, по которой он назван.</p>
+  <p>Практический вывод: <b>пары <code>On-*</code> проверены, произвольные сочетания — нет.</b>
+     Если ставишь текст на поверхность, которая не названа в его имени, проверь контраст сам.</p>
+  <div class="note bad">
+    <p><b>Известные проблемные сочетания в текущей версии.</b> Проверено расчётом по WCAG 2.x
+    на собранных значениях — эти комбинации не проходят порог, и автоматика их не видит.
+    Пока не починены, не используй:</p>
+    <table class="t" style="margin-top:10px">
+      <thead><tr><th>Сочетание</th><th>Контраст</th><th>Нужно</th></tr></thead>
+      <tbody>
+        <tr><td><code>Border/Focus/Default</code> на <code>Background/Base/Inverse</code></td><td class="num">2.26:1</td><td class="num">3.0</td></tr>
+        <tr><td><code>Text/Default/Secondary</code> на <code>Background/Base/Tertiary</code></td><td class="num">4.17:1</td><td class="num">4.5</td></tr>
+        <tr><td><code>Text/Default/Secondary</code> на <code>Background/Base/Secondary-Hover</code></td><td class="num">4.17:1</td><td class="num">4.5</td></tr>
+        <tr><td><code>Border/Default/Secondary</code> на <code>Background/Base/Tertiary</code></td><td class="num">2.78:1</td><td class="num">3.0</td></tr>
+        <tr><td><code>Border/Focus/On-Fill</code> на <code>Background/Brand-Blue/Primary</code></td><td class="num">2.98:1</td><td class="num">3.0</td></tr>
+      </tbody>
+    </table>
+    <p>Два первых стоит запомнить отдельно. Кольцо фокуса на тёмной секции практически не видно —
+    это ломает навигацию с клавиатуры. А <code>Background/Base/Secondary-Hover</code> и
+    <code>Background/Base/Tertiary</code> — это одно и то же значение, то есть падающая
+    поверхность — обычная карточка в состоянии наведения, а не редкий угол.</p>
+    <p>Починка запланирована: контракт контраста будет выводиться из дерева токенов, а не
+    поддерживаться списком. До этого — вторичный текст на третичном фоне лучше заменить на
+    <code>Text/Default/Primary</code>.</p>
+  </div>
 </section>
 
 <section id="brands">
