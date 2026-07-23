@@ -20,3 +20,6 @@ reports/
 
 # working backlog — local only (public repo until the Bitbucket move)
 BACKLOG.md
+
+# local secrets — never committed
+.env.local

@@ -44,9 +44,22 @@ if (fs.existsSync(iconsIndex)) {
   const m = fs.readFileSync(iconsIndex, 'utf8').match(/export const iconNames = (\[[^\]]*\])/);
   const names = m ? JSON.parse(m[1]) : [];
   if (!names.length) violations.push('build/icons/index.js: iconNames is empty — assets/icons produced zero icons');
+  // react.js is a re-export barrel — one module per icon under build/icons/react/ — so the
+  // count lives in the `export { X } from './react/X.js'` lines, not in `export const`.
+  // (It was `export const` until the tree-shakeability fix: a single shared map plus
+  // `icons[name]` cost 53 kB gzip for six icons because no bundler can split a dynamic
+  // property read.) Both the barrel and the modules on disk are checked, so a barrel that
+  // silently loses a line fails even though every file still exists.
   const react = fs.readFileSync(path.join(root, 'build/icons/react.js'), 'utf8');
-  const compCount = (react.match(/export const /g) ?? []).length;
-  if (compCount !== names.length) violations.push(`build/icons/react.js: ${compCount} components ≠ ${names.length} icons in the manifest`);
+  const reExports = (react.match(/^export \{ \w+ \} from '\.\/react\/\w+\.js';$/gm) ?? []).length;
+  if (reExports !== names.length)
+    violations.push(`build/icons/react.js: ${reExports} re-exports ≠ ${names.length} icons in the manifest`);
+  const moduleDir = path.join(root, 'build/icons/react');
+  const modules = fs.existsSync(moduleDir)
+    ? fs.readdirSync(moduleDir).filter((f) => f.endsWith('.js') && f !== '_factory.js').length
+    : 0;
+  if (modules !== names.length)
+    violations.push(`build/icons/react/: ${modules} modules ≠ ${names.length} icons in the manifest`);
 }
 
 if (violations.length) {
