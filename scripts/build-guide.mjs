@@ -1,16 +1,26 @@
 // Build the designer-facing guide (guide-dist/index.html).
 //
-// SCOPE — read this before adding anything. The guide explains the ARCHITECTURE and how to
-// collaborate with the system. It deliberately does NOT catalogue values: swatches, scales,
-// type ramps, shadows and grids live in the Storybook, which is generated from the same build
-// and is better at showing them. Every time you want to add a table of tokens here, add a link
-// to the Storybook story instead.
+// SCOPE — read this before adding anything. The guide answers the three questions a designer
+// actually arrives with — how do I switch this on, where do I see the primitives, how do I build
+// my own semantics on top of them — and only then explains the architecture that makes those
+// answers make sense. It deliberately does NOT catalogue values: swatches, scales, type ramps,
+// shadows and grids live in the Storybook, which is generated from the same build and shows them
+// better. Every time you want to add a table of tokens here, add a link to a Storybook story.
 //
-// What belongs here: how the pieces connect, what the layers are, how to read a token name,
-// how to get your own semantics, what happens when a token changes, what not to do.
+// ORDER IS PART OF THE CONTENT. The practical spine (start → connect → primitives → own) comes
+// FIRST; architecture follows and justifies it. Both earlier versions of this page led with
+// theory, and on 2026-07-23 a designer who needed exactly these three answers could not get them
+// out of it — she asked for "access to your primitives", which is not a thing that needs granting.
+// That is the bug this order fixes. Do not re-bury the how-to under the explanation.
 //
-// Counts and the legacy lookup are generated from tokens.json + the built CSS, so the page
-// cannot claim something the system does not have.
+// What belongs here: how to enable the library, where primitives are visible and where they are
+// deliberately not, the step-by-step for your own collection, how the pieces connect, how to read
+// a token name, what happens when a token changes, what not to do.
+//
+// Counts and the legacy lookup are derived from tokens.json, the scopes snapshot and
+// responsive.json, so the page cannot claim something the system does not have. The built CSS
+// is only checked for existence — a precondition proving `npm run build:tokens` has run, since
+// a guide generated against a stale tree would describe a system nobody is shipping.
 //
 // Run: node scripts/build-guide.mjs   (wired into `npm run build`)
 // Output: guide-dist/index.html — deliberately NOT under build/, so it is not packed into the
