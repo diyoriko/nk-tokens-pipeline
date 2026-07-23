@@ -155,7 +155,7 @@ Add or change a token in **`tokens/tokens.json`** (the only source of truth), th
 2. **Scope it** — semantics get a single scope (`FRAME_FILL` / `TEXT_FILL` / `SHAPE_FILL` / `STROKE_COLOR`), never `ALL_SCOPES`; primitives stay hidden. Scopes live only in Figma, so they're versioned in `tokens/scopes.snapshot.json` and enforced by `check:scopes` — refresh the snapshot (`node scripts/check-scopes.mjs --live <figma-dump.json> --update`) when you add a scoped variable.
 3. **Describe it** — every semantic needs a `$description` (the lint gate requires 100% coverage and the design laws are encoded there).
 4. **Run the gates** — `npm run build` chains `lint → build → contrast → scopes`, each `exit 1` on failure. Add the new `on-*` / text / border pairing to the contrast contract if you introduce one.
-5. **Branch flow** — edit on a feature branch → PR to `develop`; `main` is the released line (see [`CLAUDE.md`](./CLAUDE.md)). External teams building their *own* semantics on top of the primitives: [`foundations/BUILD-ON-PRIMITIVES.md`](./foundations/BUILD-ON-PRIMITIVES.md).
+5. **Branch flow** — edit on a feature branch → PR to `develop`; `main` is the released line (see [`CLAUDE.md`](./CLAUDE.md)). Designers — including teams that want their *own* semantics on top of the primitives — are served by the [designer guide](#designer-guide), not by this section.
 
 ---
 
@@ -201,6 +201,19 @@ The token catalogue is published to **GitHub Pages** from `develop`:
 redeploys it, so the public showcase always reflects the latest merged work —
 no promote-to-`main` needed just to update the catalogue. For in-progress
 previews before merging, run it locally with `npm run storybook`.
+
+## Designer guide
+
+**https://diyoriko.github.io/nk-tokens-pipeline/guide/** — the single designer-facing
+document: what lives where, how to read a token name, the `On-*` pairing rule, the
+own-collection-vs-capsule decision tree, legacy name lookup, and a search over every
+token. In Russian, since its readers are the design team.
+
+It is **generated** by [`scripts/build-guide.mjs`](./scripts/build-guide.mjs) from
+`tokens.json` + the scopes snapshot + the built CSS, so it cannot drift from the system
+it documents — a new token is a new row without anyone editing prose. Built by
+`npm run build:guide` into `guide-dist/` (deliberately outside `build/`, so it is never
+packed into the npm tarball) and copied into the Pages artifact by `deploy-storybook.yml`.
 
 ---
 

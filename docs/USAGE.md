@@ -4,6 +4,10 @@ Package: `@diyoriko/nk-tokens`. One source of truth (Figma → Tokens Studio →
 repo), four consumable layers. Everything below is generated into `build/` and
 shipped in the npm package.
 
+> **This page is for engineers.** Designers working in Figma want the
+> [designer guide](https://diyoriko.github.io/nk-tokens-pipeline/guide/) instead —
+> token naming, the `On-*` pairing rule, own-collection vs capsule, and token search.
+
 > **Install first:** the package lives on **GitHub Packages** — point the
 > `@diyoriko` scope at `https://npm.pkg.github.com` in your `.npmrc` with a
 > `GITHUB_TOKEN` (see [README § Consuming the outputs](../README.md#consuming-the-outputs-devs)),
