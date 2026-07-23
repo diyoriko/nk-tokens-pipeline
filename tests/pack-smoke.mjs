@@ -86,8 +86,8 @@ try {
   fs.writeFileSync(path.join(proj, 'esm.mjs'), esm);
   console.log(run('node', ['esm.mjs'], proj));
 
-  // CJS: require the dual-published entrypoints (the '.' and capsule subpaths
-  // declare a `require` condition — this is where ERR_REQUIRE_ESM would bite).
+  // CJS: require the dual-published entrypoint (the '.' subpath declares a
+  // `require` condition — this is where ERR_REQUIRE_ESM would bite).
   const cjsTargets = [name];
   const cjs = cjsTargets.map((s, i) => `const c${i} = require('${s}'); if (!c${i}) throw new Error('empty CJS require: ${s}');`).join('\n') +
     `\nconsole.log('cjs ok:', ${cjsTargets.length}, 'entrypoints');`;
