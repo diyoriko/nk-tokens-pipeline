@@ -1,0 +1,80 @@
+# nk-tokens-pipeline — pull-request gates
+#
+# OWNERSHIP, so nobody has to guess:
+#   · THIS FILE gates pull requests. It never publishes.
+#   · PUBLISHING is Jenkins, owned by devops — novakid-devops:
+#     devops/jenkins/pipelines/frontend/Jenkinsfile_FrontendNPMLibPublish, registered in
+#     devops/jenkins/dsl/MultiBranchDSL with `gitBranches: 'master'`. It runs
+#     `cp npmrc.example .npmrc && npm i && npm run build && npm publish` on every push to
+#     master. Nothing here duplicates it and nothing here needs to change for it.
+#
+# The same split novakid-parent-mf already uses: Bitbucket Pipelines for PR checks,
+# Jenkins for delivery.
+#
+# DO NOT set `withPRs: true` on the Jenkins job to get PR coverage — the multibranch job
+# would run the PUBLISH Jenkinsfile on pull requests. That is what this file is for.
+#
+# No repository variables are needed: nothing here touches Nexus. Dependencies resolve
+# from the public registry (the package has no @novakid dependencies of its own — verified
+# against package.json), so no credential is required to build or test.
+
+image: node:22 # must match .nvmrc and package.json engines — Style Dictionary 5 needs >=22
+
+definitions:
+  caches:
+    npm: ~/.npm
+  steps:
+    - step: &gates
+        name: Build, gates and tests
+        size: 2x
+        max-time: 20
+        caches: [npm]
+        script:
+          # `npm ci` (not `npm i`) so the lockfile is authoritative here even though the
+          # Jenkins publish job uses `npm i`. A PR that only passes with a floated
+          # dependency should be red.
+          - npm ci
+          # The full chain: lint-tokens → capsule consistency → build → grid → contrast →
+          # scopes → styles → output shapes → capsule gates → assets → guide → exports.
+          - npm run build
+          # Gate regression suite (proves the gates fail closed) + the output snapshot.
+          - npm test
+          # The gate tests mutate real files and restore them in `finally`; if one ever
+          # fails to restore, the next build silently starts from a corrupted tree.
+          - git diff --exit-code || (echo "a gate test did not restore a mutated file" && exit 1)
+          # Consumer's-eye check: pack a real tarball, install it into a scratch project,
+          # resolve every exports subpath, and prove the package loads without React.
+          - npm run test:pack
+          # The Storybook is the public catalogue; a story that breaks should be red on the
+          # PR, not discovered after the merge.
+          - npx storybook build
+
+pipelines:
+  pull-requests:
+    # Any PR: the full gate chain.
+    "**":
+      - step: *gates
+
+    # PRs into the release branch additionally must carry a version bump, because the
+    # Jenkins job publishes on merge and has no version check of its own. Without this,
+    # a merge either overwrites a shipped version or reddens their pipeline.
+    # Bitbucket picks the most specific matching pattern, so this replaces "**" for
+    # master-targeted PRs rather than adding to it — hence the gates step is repeated.
+    master:
+      - step: *gates
+      - step:
+          name: Version bump required (publishes on merge)
+          size: 1x
+          max-time: 10
+          clone:
+            depth: full # need the destination branch to diff package.json against
+          script:
+            - git fetch origin "$BITBUCKET_PR_DESTINATION_BRANCH"
+            - node scripts/check-version-bump.mjs "origin/$BITBUCKET_PR_DESTINATION_BRANCH"
+
+  branches:
+    # Pushes to master are Jenkins' business (build + publish). Running the gates here as
+    # well is a cheap second opinion and costs nothing on a branch that only moves on a
+    # release — but it must never publish.
+    master:
+      - step: *gates
