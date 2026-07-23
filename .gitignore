@@ -17,3 +17,6 @@ reports/
 
 # npm auth — never commit a registry credential
 .npmrc
+
+# working backlog — local only (public repo until the Bitbucket move)
+BACKLOG.md
