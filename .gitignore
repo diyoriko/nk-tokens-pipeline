@@ -14,3 +14,6 @@ foundations/_archive/
 
 # local review reports (kept out of the repo)
 reports/
+
+# npm auth — never commit a registry credential
+.npmrc
