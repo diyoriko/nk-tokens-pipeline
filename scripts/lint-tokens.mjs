@@ -12,27 +12,20 @@
 // only as NaN inside generated CSS. Run by `npm run lint:tokens`
 // (and at the head of build:tokens, so every CI build and prepack is gated).
 import fs from 'node:fs';
-import { CAPSULES } from '../capsules/capsules.config.mjs';
 
 const SRC = new URL('../tokens/tokens.json', import.meta.url);
 const tokens = JSON.parse(fs.readFileSync(SRC, 'utf8'));
 
-// Core sets + capsule overlay sets. Capsule sets are per-team semantic layers
-// that live in tokens.json so designers own them in Tokens Studio; they map to
-// the `color` domain and are linted here. `Parent Area` is the BASE brand
-// overlay (in the default build); other team sets are ignored by the default
-// preprocessor. The team registry has ONE home — capsules/capsules.config.mjs —
-// so adding a team there automatically extends every law below.
-const CAPSULE_SETS = CAPSULES.map((c) => c.set);
-const KNOWN_SETS = ['Color Primitives', 'Color', 'Size', 'Typography Primitives', 'Typography', 'Effect', ...CAPSULE_SETS];
+// The six sets this file knows. An unknown set in tokens.json is a lint error:
+// Tokens Studio can invent one on a bad export, and it would silently never build.
+const KNOWN_SETS = ['Color Primitives', 'Color', 'Size', 'Typography Primitives', 'Typography', 'Effect'];
 const SET_DOMAIN = {
   'Color Primitives': 'color', Color: 'color', Size: 'size',
   'Typography Primitives': 'typography', Typography: 'typography', Effect: 'effect',
-  ...Object.fromEntries(CAPSULE_SETS.map((s) => [s, 'color'])),
 };
 // Primitives document themselves through their scale; descriptions are required
 // where designers actually pick tokens (and where we promise 100% coverage).
-const REQUIRED_DESC_SETS = ['Color', 'Size', 'Typography', 'Effect', ...CAPSULE_SETS];
+const REQUIRED_DESC_SETS = ['Color', 'Size', 'Typography', 'Effect'];
 const KNOWN_TYPES = ['color', 'dimension', 'number', 'fontFamily', 'fontWeight', 'typography', 'boxShadow'];
 
 const errors = [];
@@ -188,21 +181,6 @@ for (const set of Object.keys(tokens)) {
   walk(tokens[set], set, set);
 }
 
-// ---- capsule overlay containment -------------------------------------------
-// Capsule sets deep-merge LAST over the whole `color` domain (build-tokens.mjs
-// makeFlatten), so a capsule carrying a primitive group (Violet, Grey, Alpha, …)
-// would silently rewrite the shared Tier-1 ramps inside that capsule's build —
-// and check-capsule-consistency only checks registration, never contents.
-// Overlays are semantic-surface-only by contract.
-const CAPSULE_ALLOWED_GROUPS = ['Background', 'Text', 'Icon', 'Border'];
-for (const s of CAPSULE_SETS) {
-  if (!tokens[s]) continue;
-  for (const g of Object.keys(tokens[s])) {
-    if (g.startsWith('$')) continue;
-    if (!CAPSULE_ALLOWED_GROUPS.includes(g))
-      err(`${s}/${g}`, `capsule overlay sets may only contain semantic surfaces (${CAPSULE_ALLOWED_GROUPS.join(' / ')}) — a "${g}" group would override shared foundation paths in that capsule's build`);
-  }
-}
 
 // ---- code-only.json / responsive.json value shapes -------------------------
 // Hand-maintained files that bypass Tokens Studio but feed the same build

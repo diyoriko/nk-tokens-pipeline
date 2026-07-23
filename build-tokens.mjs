@@ -9,7 +9,6 @@
 import fs from 'node:fs/promises';
 import StyleDictionary from 'style-dictionary';
 import config from './style-dictionary.config.mjs';
-import { CAPSULES } from './capsules/capsules.config.mjs';
 
 const resolved = (t) => t.$value ?? t.value; // SD v4 puts the resolved value on $value (DTCG)
 const typeOf = (t) => t.$type ?? t.type;
@@ -105,18 +104,13 @@ const rewriteRefs = (node, rootDomain) => {
   for (const k of Object.keys(node)) if (!k.startsWith('$')) rewriteRefs(node[k], rootDomain);
 };
 
-// Team overlay set for the capsule currently building (setName -> domain).
-// Empty for the parent-area (base) build; the team's overlay for the others.
-let CAPSULE_EXTRA = {};
-
-// The flatten body, parameterized by the active set->domain map. The default
-// preprocessor passes SET_DOMAIN verbatim (so its output is unchanged); the
-// capsule preprocessor passes SET_DOMAIN plus the active capsule's overlay set.
+// The flatten body, parameterized by the active set->domain map. Kept as a factory
+// rather than inlined: it is the seam a future rebrand would reopen, and collapsing it
+// to a single call site would only have to be undone.
 const makeFlatten = (getSetDomain) => (d) => {
   const SET = getSetDomain();
-  // Merge in REGISTRY order (core sets → Parent Area base → capsule overlay), not the
-  // document's physical key order — reordering sets inside tokens.json must never
-  // change which set wins a deep-merge collision.
+  // Merge in REGISTRY order, not the document's physical key order — reordering sets
+  // inside tokens.json must never change which set wins a deep-merge collision.
   const domainSets = Object.keys(SET).filter((k) => !k.startsWith('$') && d[k]);
   if (domainSets.length) {
     const rootDomain = {};
@@ -148,10 +142,8 @@ const makeFlatten = (getSetDomain) => (d) => {
 // Default: core sets + the Parent Area base brand overlay (the default team).
 // Value-identical to pre-B2 output — Parent Area reproduces the violet brand
 // that used to live inside the Color set (proven by the build diff on merge).
-const DEFAULT_DOMAIN = { ...SET_DOMAIN, 'Parent Area': 'color' };
+const DEFAULT_DOMAIN = { ...SET_DOMAIN };
 StyleDictionary.registerPreprocessor({ name: 'nk/flatten-sets', preprocessor: makeFlatten(() => DEFAULT_DOMAIN) });
-// Capsule: core + Parent Area base + the active team overlay (deep-merged last → wins).
-StyleDictionary.registerPreprocessor({ name: 'nk/flatten-sets-capsule', preprocessor: makeFlatten(() => ({ ...DEFAULT_DOMAIN, ...CAPSULE_EXTRA })) });
 
 // ---- Dimensions: bare number in source -> px on output ------------------
 StyleDictionary.registerTransform({
@@ -256,40 +248,3 @@ const sd = new StyleDictionary(config);
 await sd.cleanAllPlatforms().catch(() => {});
 await sd.buildAllPlatforms();
 console.log('✓ Tokens built → css/variables.css · dart/nk_colors.dart · ts/{tokens.ts,.mjs,.cjs,.d.ts}');
-
-// ---- Per-capsule builds (additive) --------------------------------------
-// Each capsule = core + the Parent Area base + its own team overlay, emitted
-// under build/capsules/<slug>/. The default build above is finished and untouched;
-// every capsule remaps its buildPaths to build/capsules/<slug>/ and we rm that
-// dir first, so no capsule can ever write into build/css|dart|ts. The shared
-// register* hooks above are reused (no re-registration).
-if (process.env.NK_CAPSULES !== '0') {
-  for (const cap of CAPSULES) {
-    const outRoot = `build/capsules/${cap.slug}/`;
-    await fs.rm(outRoot, { recursive: true, force: true });
-    CAPSULE_EXTRA = cap.set ? { [cap.set]: 'color' } : {};
-    const capConfig = {
-      ...config,
-      preprocessors: ['nk/flatten-sets-capsule'],
-      platforms: Object.fromEntries(
-        Object.entries(config.platforms).map(([n, p]) => [n, { ...p, buildPath: p.buildPath.replace(/^build\//, outRoot) }]),
-      ),
-    };
-    const sdCap = new StyleDictionary(capConfig);
-    await sdCap.buildAllPlatforms();
-    console.log(`✓ Capsule ${cap.slug}${cap.set ? ` (+${cap.set})` : ''} → ${outRoot}{css,dart,ts}`);
-  }
-  CAPSULE_EXTRA = {};
-
-  // Sweep: anything under build/capsules/ that is not a registered slug is a
-  // stale artifact (a de-registered capsule, a macOS "dir 2" duplicate) — the
-  // loop above only rewrites registered slugs, and `files:["build"]` would ship
-  // the leftovers in any local `npm pack`.
-  const slugs = new Set(CAPSULES.map((c) => c.slug));
-  for (const entry of await fs.readdir('build/capsules', { withFileTypes: true }).catch(() => [])) {
-    if (entry.isDirectory() && !slugs.has(entry.name)) {
-      await fs.rm(`build/capsules/${entry.name}`, { recursive: true, force: true });
-      console.log(`✓ Removed unregistered capsule dir build/capsules/${entry.name}`);
-    }
-  }
-}

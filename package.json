@@ -30,31 +30,27 @@
     "./css/variables.css": "./build/css/variables.css",
     "./css/grid.css": "./build/css/grid.css",
     "./dart/nk_colors.dart": "./build/dart/nk_colors.dart",
-    "./capsules/parent-area": {
-      "types": "./build/capsules/parent-area/ts/tokens.d.ts",
-      "import": "./build/capsules/parent-area/ts/tokens.mjs",
-      "require": "./build/capsules/parent-area/ts/tokens.cjs"
-    },
-    "./capsules/parent-area/tokens.ts": "./build/capsules/parent-area/ts/tokens.ts",
-    "./capsules/parent-area/css/variables.css": "./build/capsules/parent-area/css/variables.css",
-    "./capsules/parent-area/dart/nk_colors.dart": "./build/capsules/parent-area/dart/nk_colors.dart",
-    "./capsules/demo-team": {
-      "types": "./build/capsules/demo-team/ts/tokens.d.ts",
-      "import": "./build/capsules/demo-team/ts/tokens.mjs",
-      "require": "./build/capsules/demo-team/ts/tokens.cjs"
-    },
-    "./capsules/demo-team/tokens.ts": "./build/capsules/demo-team/ts/tokens.ts",
-    "./capsules/demo-team/css/variables.css": "./build/capsules/demo-team/css/variables.css",
-    "./capsules/demo-team/dart/nk_colors.dart": "./build/capsules/demo-team/dart/nk_colors.dart",
     "./logo/*": "./build/logo/*",
     "./patterns/*": "./build/patterns/*",
     "./icons": {
-      "types": "./build/icons/index.d.ts",
-      "default": "./build/icons/index.js"
+      "import": {
+        "types": "./build/icons/index.d.ts",
+        "default": "./build/icons/index.js"
+      },
+      "require": {
+        "types": "./build/icons/index.d.cts",
+        "default": "./build/icons/index.cjs"
+      }
     },
     "./icons/react": {
-      "types": "./build/icons/react.d.ts",
-      "default": "./build/icons/react.js"
+      "import": {
+        "types": "./build/icons/react.d.ts",
+        "default": "./build/icons/react.js"
+      },
+      "require": {
+        "types": "./build/icons/react.d.cts",
+        "default": "./build/icons/react.cjs"
+      }
     },
     "./icons/react/*": {
       "types": "./build/icons/react/*.d.ts",
@@ -66,7 +62,7 @@
   },
   "scripts": {
     "build": "npm run build:tokens && npm run build:assets && npm run build:guide && node scripts/check-exports.mjs",
-    "build:tokens": "node scripts/check-no-legacy-refs.mjs && node scripts/lint-tokens.mjs && node scripts/check-capsule-consistency.mjs && node build-tokens.mjs && node scripts/build-grid-css.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-styles.mjs && node scripts/check-outputs.mjs && node scripts/check-capsule-gates.mjs",
+    "build:tokens": "node scripts/check-no-legacy-refs.mjs && node scripts/lint-tokens.mjs && node build-tokens.mjs && node scripts/build-grid-css.mjs && node scripts/check-contrast.mjs && node scripts/check-scopes.mjs && node scripts/check-styles.mjs && node scripts/check-outputs.mjs",
     "build:grid": "node scripts/build-grid-css.mjs",
     "build:assets": "node scripts/build-assets.mjs && node scripts/check-icon-shakeability.mjs",
     "build:guide": "node scripts/build-guide.mjs",
@@ -75,8 +71,6 @@
     "build-storybook": "npm run build && storybook build",
     "prepack": "npm run build",
     "check:contrast": "node scripts/check-contrast.mjs",
-    "check:capsules": "node scripts/check-capsule-gates.mjs",
-    "check:capsule-consistency": "node scripts/check-capsule-consistency.mjs",
     "check:scopes": "node scripts/check-scopes.mjs",
     "check:styles": "node scripts/check-styles.mjs",
     "lint:tokens": "node scripts/lint-tokens.mjs",

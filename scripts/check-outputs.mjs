@@ -8,7 +8,6 @@
 // Run by `npm run build:tokens` after the build; exits 1 on any violation.
 import fs from 'node:fs';
 import path from 'node:path';
-import { CAPSULES } from '../capsules/capsules.config.mjs';
 
 const root = new URL('../build/', import.meta.url).pathname;
 const violations = [];
@@ -32,7 +31,6 @@ const addTree = (base, label) => {
   }
 };
 addTree(root, 'build/');
-for (const cap of CAPSULES) addTree(path.join(root, 'capsules', cap.slug), `build/capsules/${cap.slug}/`);
 // grid.css is REQUIRED too: build:tokens runs build-grid-css.mjs before this
 // gate, so a missing file means the pipeline order broke (a fresh checkout
 // would otherwise publish without the grid ever being validated).
