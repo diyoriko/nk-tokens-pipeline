@@ -1,0 +1,10 @@
+# Copied verbatim to .npmrc by the Jenkins publish job
+# (novakid-devops: devops/jenkins/pipelines/frontend/Jenkinsfile_FrontendNPMLibPublish),
+# which does `cp npmrc.example .npmrc` before `npm i`. Without this file that job
+# fails on its first line. NPM_TOKEN comes from Vault (infrastructure/nexus/npm),
+# so no credential ever lives in this repository.
+#
+# The scope pin is also the dependency-confusion guard: without it an `@novakid/*`
+# install would fall through to the public registry, where the scope is unclaimed.
+@novakid:registry=https://nexus.novakidschool.com/repository/npm-hosted/
+//nexus.novakidschool.com/repository/npm-hosted/:_auth=${NPM_TOKEN}

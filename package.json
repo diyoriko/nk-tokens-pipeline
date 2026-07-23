@@ -84,6 +84,7 @@
   "engines": {
     "node": ">=22"
   },
+  "com_novakid_nodejs_build_version": "22",
   "devDependencies": {
     "@storybook/html-vite": "^10.5.2",
     "storybook": "^10.5.2",
