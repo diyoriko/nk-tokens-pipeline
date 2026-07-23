@@ -38,7 +38,15 @@ for (const sub of Object.keys(pkg.exports)) {
   if (sub === './package.json') continue;
   const spec = sub === '.' ? name : name + sub.slice(1);
   if (sub.includes('*')) {
-    const target = typeof pkg.exports[sub] === 'string' ? pkg.exports[sub] : Object.values(pkg.exports[sub])[0];
+    // Resolve against the RUNTIME condition, not `types`. Object.values()[0] used to be
+    // fine because every wildcard target was a plain string; the moment one carried
+    // { types, default } it started sampling `*.d.ts` and asking Node to load
+    // `Achievements.d.ts.js`. `types` is TypeScript's view, never the resolver's.
+    const entry = pkg.exports[sub];
+    const target =
+      typeof entry === 'string'
+        ? entry
+        : entry.default ?? entry.import ?? entry.require ?? Object.values(entry).find((v) => typeof v === 'string');
     const concrete = firstMatch(target);
     if (concrete) specifiers.push(name + '/' + path.dirname(sub).slice(2) + '/' + concrete.split('/').pop());
   } else {
